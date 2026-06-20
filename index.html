@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mastermind — Break the Code</title>
+    <meta name="description" content="Mastermind is the classic code-breaking game reimagined for iPhone. Choose your difficulty, crack the secret color code, and beat your high score.">
+    <link rel="stylesheet" href="assets/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <div class="container nav-inner">
+            <div class="logo">
+                <span class="pegs">
+                    <span class="peg" style="background:#E69F00"></span>
+                    <span class="peg" style="background:#56B4E9"></span>
+                    <span class="peg" style="background:#009E73"></span>
+                    <span class="peg" style="background:#F0E442"></span>
+                </span>
+                <span class="logo-text">Mastermind</span>
+            </div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="container hero-inner">
+            <div class="hero-text">
+                <div class="badge">Available on the App Store</div>
+                <h1>Break the Code.<br>Master the Mind.</h1>
+                <p class="hero-sub">The classic code-breaking game reimagined for iPhone. Deduce the secret color sequence before your guesses run out.</p>
+                <div class="hero-actions">
+                    <a href="#" class="btn-appstore">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                        <span>
+                            <small>Download on the</small>
+                            App Store
+                        </span>
+                    </a>
+                </div>
+                <p class="hero-note">Free · iPhone · iOS 15.6+</p>
+            </div>
+            <div class="hero-visual">
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div class="game-preview">
+                            <div class="preview-row">
+                                <span class="preview-peg filled" style="--c:#E69F00"></span>
+                                <span class="preview-peg filled" style="--c:#56B4E9"></span>
+                                <span class="preview-peg filled" style="--c:#009E73"></span>
+                                <span class="preview-peg filled" style="--c:#F0E442"></span>
+                                <span class="preview-dots">
+                                    <span class="dot black"></span><span class="dot black"></span>
+                                    <span class="dot white"></span><span class="dot empty"></span>
+                                </span>
+                            </div>
+                            <div class="preview-row">
+                                <span class="preview-peg filled" style="--c:#0072B2"></span>
+                                <span class="preview-peg filled" style="--c:#009E73"></span>
+                                <span class="preview-peg filled" style="--c:#CC79A7"></span>
+                                <span class="preview-peg filled" style="--c:#E69F00"></span>
+                                <span class="preview-dots">
+                                    <span class="dot black"></span><span class="dot white"></span>
+                                    <span class="dot empty"></span><span class="dot empty"></span>
+                                </span>
+                            </div>
+                            <div class="preview-row active">
+                                <span class="preview-peg filled" style="--c:#009E73"></span>
+                                <span class="preview-peg filled" style="--c:#E69F00"></span>
+                                <span class="preview-peg empty-peg"></span>
+                                <span class="preview-peg empty-peg"></span>
+                                <span class="preview-dots"></span>
+                            </div>
+                            <div class="preview-row">
+                                <span class="preview-peg empty-peg"></span>
+                                <span class="preview-peg empty-peg"></span>
+                                <span class="preview-peg empty-peg"></span>
+                                <span class="preview-peg empty-peg"></span>
+                                <span class="preview-dots"></span>
+                            </div>
+                            <div class="color-picker-preview">
+                                <span class="preview-peg sm" style="--c:#E69F00"></span>
+                                <span class="preview-peg sm" style="--c:#56B4E9"></span>
+                                <span class="preview-peg sm" style="--c:#009E73"></span>
+                                <span class="preview-peg sm" style="--c:#F0E442"></span>
+                                <span class="preview-peg sm" style="--c:#0072B2"></span>
+                                <span class="preview-peg sm" style="--c:#CC79A7"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2>Everything you love about Mastermind</h2>
+            <p class="section-sub">Classic gameplay with a modern twist — clean design, smart feedback, and multiple difficulty levels.</p>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>4 Difficulty Levels</h3>
+                    <p>From Easy (4 colors) to Classic with repeating colors, all the way to Hard with 5 positions. A challenge for everyone.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⏱️</div>
+                    <h3>Timed Mode</h3>
+                    <p>Race against the clock. Solve the code in under 3 minutes for double score. Only for the brave.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">♿</div>
+                    <h3>Accessible Colors</h3>
+                    <p>Colors are chosen from the Okabe-Ito palette — distinguishable for people with color blindness.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Statistics</h3>
+                    <p>Track your wins, games played, and personal best score. See how much you improve over time.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌍</div>
+                    <h3>22 Languages</h3>
+                    <p>Fully localized in Czech, English, German, French, Spanish, Japanese, Arabic, and 15 more languages.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💡</div>
+                    <h3>Smart Hints</h3>
+                    <p>Black peg = right color, right position. White peg = right color, wrong position. Just like the original.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRO -->
+    <section class="pro">
+        <div class="container pro-inner">
+            <div class="pro-text">
+                <div class="badge dark">Mastermind Pro</div>
+                <h2>Unlock the full experience</h2>
+                <p>One-time purchase. No subscription. No ads. Just the full game forever.</p>
+                <ul class="pro-list">
+                    <li><span class="check">✓</span> Classic difficulty — 6 colors with repeating allowed</li>
+                    <li><span class="check">✓</span> Hard difficulty — 6 colors, 5 positions</li>
+                    <li><span class="check">✓</span> Timed mode — double score</li>
+                    <li><span class="check">✓</span> Detailed statistics</li>
+                </ul>
+                <p class="pro-price">$0.99 · One-time payment</p>
+                <a href="#" class="btn-appstore small">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                    <span>
+                        <small>Download on the</small>
+                        App Store
+                    </span>
+                </a>
+            </div>
+            <div class="pro-visual">
+                <div class="difficulty-cards">
+                    <div class="diff-card free">
+                        <span class="diff-icon">🟢</span>
+                        <div>
+                            <strong>Easy</strong>
+                            <small>4 colors · 4 positions · 12 guesses</small>
+                        </div>
+                        <span class="tag free-tag">Free</span>
+                    </div>
+                    <div class="diff-card free">
+                        <span class="diff-icon">🟡</span>
+                        <div>
+                            <strong>Medium</strong>
+                            <small>5 colors · 4 positions · 10 guesses</small>
+                        </div>
+                        <span class="tag free-tag">Free</span>
+                    </div>
+                    <div class="diff-card pro">
+                        <span class="diff-icon">🎯</span>
+                        <div>
+                            <strong>Classic</strong>
+                            <small>6 colors · 4 positions · repeats allowed</small>
+                        </div>
+                        <span class="tag pro-tag">Pro</span>
+                    </div>
+                    <div class="diff-card pro">
+                        <span class="diff-icon">🔴</span>
+                        <div>
+                            <strong>Hard</strong>
+                            <small>6 colors · 5 positions · 8 guesses</small>
+                        </div>
+                        <span class="tag pro-tag">Pro</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="about" id="about">
+        <div class="container">
+            <h2>About Colegio Solutions</h2>
+            <p class="section-sub">A small software company based near Prague, Czech Republic.</p>
+            <div class="about-grid">
+                <div class="about-card">
+                    <h3>Who we are</h3>
+                    <p>Colegio Solutions s.r.o. is a Czech software company founded in Sibřina, a small village east of Prague. We build focused, well-crafted applications — tools and games that are simple to use and enjoyable to interact with.</p>
+                    <p>Mastermind is our first iOS game, built from the ground up with SwiftUI and a deep respect for the original board game that has challenged minds since 1970.</p>
+                </div>
+                <div class="about-card">
+                    <h3>Our values</h3>
+                    <ul class="values-list">
+                        <li><strong>Simplicity</strong> — no clutter, no dark patterns, no subscriptions.</li>
+                        <li><strong>Accessibility</strong> — colorblind-safe design, localised in 22 languages.</li>
+                        <li><strong>Fair pricing</strong> — one small payment unlocks everything. Forever.</li>
+                        <li><strong>Quality</strong> — native SwiftUI, no third-party SDKs, no ads.</li>
+                    </ul>
+                </div>
+                <div class="about-card info-card">
+                    <h3>Company info</h3>
+                    <table class="info-table">
+                        <tr><td>Company</td><td>Colegio Solutions s.r.o.</td></tr>
+                        <tr><td>IČO</td><td>24792161</td></tr>
+                        <tr><td>Address</td><td>Sibřina 250 84, Czech Republic</td></tr>
+                        <tr><td>Country</td><td>Czech Republic 🇨🇿</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="contact" id="contact">
+        <div class="container contact-inner">
+            <h2>Get in touch</h2>
+            <p>Have a question, found a bug, or want to suggest a feature? We'd love to hear from you.</p>
+            <a href="mailto:petr.vitek70@gmail.com" class="btn-email">petr.vitek70@gmail.com</a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container footer-inner">
+            <div class="footer-logo">
+                <span class="pegs">
+                    <span class="peg sm" style="background:#E69F00"></span>
+                    <span class="peg sm" style="background:#56B4E9"></span>
+                    <span class="peg sm" style="background:#009E73"></span>
+                    <span class="peg sm" style="background:#F0E442"></span>
+                </span>
+                <span>Mastermind</span>
+            </div>
+            <p class="footer-copy">© 2026 Colegio Solutions s.r.o. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="privacy.html">Privacy Policy</a>
+                <a href="terms.html">Terms of Use</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
