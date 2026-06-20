@@ -6,6 +6,36 @@
     <title>Mastermind — Break the Code</title>
     <meta name="description" content="Mastermind is the classic code-breaking game reimagined for iPhone. Choose your difficulty, crack the secret color code, and beat your high score.">
     <link rel="stylesheet" href="assets/style.css">
+    <script>
+        const DIFF_ICON = {all:'⚪',easy:'🟢',medium:'🟡',classic:'🎯',hard:'🔴'};
+        function formatTime(s){return Math.floor(s/60)+':'+(s%60).toString().padStart(2,'0');}
+        async function loadLeaderboard(diff='all', btn=null){
+            document.querySelectorAll('.lb-btn').forEach(b=>b.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+            const tbody = document.getElementById('lb-body');
+            tbody.innerHTML = '<tr><td colspan="6" class="lb-loading">Loading…</td></tr>';
+            try {
+                const r = await fetch('/api/leaderboard.php?difficulty='+diff+'&limit=20');
+                const data = await r.json();
+                if(!data.leaderboard.length){
+                    tbody.innerHTML='<tr><td colspan="6" class="lb-loading">No scores yet — be the first!</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = data.leaderboard.map(e=>`
+                    <tr>
+                        <td class="lb-rank rank-${e.rank}">${e.rank <= 3 ? ['🥇','🥈','🥉'][e.rank-1] : e.rank}</td>
+                        <td class="lb-nick">${e.nickname}</td>
+                        <td>${DIFF_ICON[e.difficulty]||''} ${e.difficulty}</td>
+                        <td>${e.guesses}</td>
+                        <td>${formatTime(e.seconds)}</td>
+                        <td class="lb-score">${e.score.toLocaleString()}</td>
+                    </tr>`).join('');
+            } catch(e){
+                tbody.innerHTML='<tr><td colspan="6" class="lb-loading">Could not load leaderboard.</td></tr>';
+            }
+        }
+        document.addEventListener('DOMContentLoaded', ()=>loadLeaderboard('all'));
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
@@ -200,6 +230,40 @@
                         <span class="tag pro-tag">Pro</span>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LEADERBOARD -->
+    <section class="leaderboard-section" id="leaderboard">
+        <div class="container">
+            <h2>🏆 Global Leaderboard</h2>
+            <p class="section-sub">Top players from around the world. Download the app and claim your spot.</p>
+
+            <div class="lb-filters">
+                <button class="lb-btn active" onclick="loadLeaderboard('all', this)">All</button>
+                <button class="lb-btn" onclick="loadLeaderboard('easy', this)">Easy</button>
+                <button class="lb-btn" onclick="loadLeaderboard('medium', this)">Medium</button>
+                <button class="lb-btn" onclick="loadLeaderboard('classic', this)">Classic</button>
+                <button class="lb-btn" onclick="loadLeaderboard('hard', this)">Hard</button>
+            </div>
+
+            <div class="lb-table-wrap">
+                <table class="lb-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Player</th>
+                            <th>Difficulty</th>
+                            <th>Guesses</th>
+                            <th>Time</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lb-body">
+                        <tr><td colspan="6" class="lb-loading">Loading…</td></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </section>
