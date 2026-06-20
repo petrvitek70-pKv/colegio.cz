@@ -1,29 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mastermind — Break the Code</title>
-    <meta name="description" content="Mastermind is the classic code-breaking game reimagined for iPhone. Choose your difficulty, crack the secret color code, and beat your high score.">
+    <meta name="description" content="Mastermind is the classic code-breaking game reimagined for iPhone and Android.">
     <link rel="stylesheet" href="assets/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="assets/i18n.js" defer></script>
     <script>
         const DIFF_ICON = {all:'⚪',easy:'🟢',medium:'🟡',classic:'🎯',hard:'🔴'};
         function formatTime(s){return Math.floor(s/60)+':'+(s%60).toString().padStart(2,'0');}
-        async function loadLeaderboard(diff='all', btn=null){
+        window._lbDiff = 'all';
+        async function loadLeaderboard(diff, btn){
+            window._lbDiff = diff || 'all';
             document.querySelectorAll('.lb-btn').forEach(b=>b.classList.remove('active'));
             if(btn) btn.classList.add('active');
+            else document.querySelector('.lb-btn')?.classList.add('active');
             const tbody = document.getElementById('lb-body');
-            tbody.innerHTML = '<tr><td colspan="6" class="lb-loading">Loading…</td></tr>';
+            const t = TRANSLATIONS[document.documentElement.lang] || TRANSLATIONS['en'];
+            tbody.innerHTML = `<tr><td colspan="6" class="lb-loading">${t.lb_loading||'Loading…'}</td></tr>`;
             try {
-                const r = await fetch('/api/leaderboard.php?difficulty='+diff+'&limit=20');
+                const r = await fetch('/api/leaderboard.php?difficulty='+window._lbDiff+'&limit=20');
                 const data = await r.json();
                 if(!data.leaderboard.length){
-                    tbody.innerHTML='<tr><td colspan="6" class="lb-loading">No scores yet — be the first!</td></tr>';
+                    tbody.innerHTML=`<tr><td colspan="6" class="lb-loading">${t.lb_empty||'No scores yet.'}</td></tr>`;
                     return;
                 }
                 tbody.innerHTML = data.leaderboard.map(e=>`
                     <tr>
-                        <td class="lb-rank rank-${e.rank}">${e.rank <= 3 ? ['🥇','🥈','🥉'][e.rank-1] : e.rank}</td>
+                        <td class="lb-rank rank-${e.rank}">${e.rank<=3?['🥇','🥈','🥉'][e.rank-1]:e.rank}</td>
                         <td class="lb-nick">${e.nickname}</td>
                         <td>${DIFF_ICON[e.difficulty]||''} ${e.difficulty}</td>
                         <td>${e.guesses}</td>
@@ -31,13 +38,11 @@
                         <td class="lb-score">${e.score.toLocaleString()}</td>
                     </tr>`).join('');
             } catch(e){
-                tbody.innerHTML='<tr><td colspan="6" class="lb-loading">Could not load leaderboard.</td></tr>';
+                tbody.innerHTML=`<tr><td colspan="6" class="lb-loading">${t.lb_error||'Could not load leaderboard.'}</td></tr>`;
             }
         }
         document.addEventListener('DOMContentLoaded', ()=>loadLeaderboard('all'));
     </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -54,9 +59,35 @@
                 <span class="logo-text">Mastermind</span>
             </div>
             <div class="nav-links">
-                <a href="#features">Features</a>
-                <a href="#about">About</a>
-                <a href="#contact">Contact</a>
+                <a href="#features" data-i18n="nav_features">Features</a>
+                <a href="#about" data-i18n="nav_about">About</a>
+                <a href="#contact" data-i18n="nav_contact">Contact</a>
+            </div>
+            <div class="lang-picker">
+                <button class="lang-toggle" onclick="this.nextElementSibling.classList.toggle('open')">🌐</button>
+                <div class="lang-dropdown">
+                    <button class="lang-btn" data-lang="cs" onclick="setLang('cs');this.closest('.lang-dropdown').classList.remove('open')">🇨🇿 Čeština</button>
+                    <button class="lang-btn" data-lang="en" onclick="setLang('en');this.closest('.lang-dropdown').classList.remove('open')">🇬🇧 English</button>
+                    <button class="lang-btn" data-lang="de" onclick="setLang('de');this.closest('.lang-dropdown').classList.remove('open')">🇩🇪 Deutsch</button>
+                    <button class="lang-btn" data-lang="fr" onclick="setLang('fr');this.closest('.lang-dropdown').classList.remove('open')">🇫🇷 Français</button>
+                    <button class="lang-btn" data-lang="es" onclick="setLang('es');this.closest('.lang-dropdown').classList.remove('open')">🇪🇸 Español</button>
+                    <button class="lang-btn" data-lang="it" onclick="setLang('it');this.closest('.lang-dropdown').classList.remove('open')">🇮🇹 Italiano</button>
+                    <button class="lang-btn" data-lang="pl" onclick="setLang('pl');this.closest('.lang-dropdown').classList.remove('open')">🇵🇱 Polski</button>
+                    <button class="lang-btn" data-lang="ru" onclick="setLang('ru');this.closest('.lang-dropdown').classList.remove('open')">🇷🇺 Русский</button>
+                    <button class="lang-btn" data-lang="ja" onclick="setLang('ja');this.closest('.lang-dropdown').classList.remove('open')">🇯🇵 日本語</button>
+                    <button class="lang-btn" data-lang="ko" onclick="setLang('ko');this.closest('.lang-dropdown').classList.remove('open')">🇰🇷 한국어</button>
+                    <button class="lang-btn" data-lang="zh" onclick="setLang('zh');this.closest('.lang-dropdown').classList.remove('open')">🇨🇳 中文</button>
+                    <button class="lang-btn" data-lang="ar" onclick="setLang('ar');this.closest('.lang-dropdown').classList.remove('open')">🇸🇦 العربية</button>
+                    <button class="lang-btn" data-lang="hi" onclick="setLang('hi');this.closest('.lang-dropdown').classList.remove('open')">🇮🇳 हिन्दी</button>
+                    <button class="lang-btn" data-lang="tr" onclick="setLang('tr');this.closest('.lang-dropdown').classList.remove('open')">🇹🇷 Türkçe</button>
+                    <button class="lang-btn" data-lang="pt" onclick="setLang('pt');this.closest('.lang-dropdown').classList.remove('open')">🇧🇷 Português</button>
+                    <button class="lang-btn" data-lang="id" onclick="setLang('id');this.closest('.lang-dropdown').classList.remove('open')">🇮🇩 Indonesia</button>
+                    <button class="lang-btn" data-lang="nl" onclick="setLang('nl');this.closest('.lang-dropdown').classList.remove('open')">🇳🇱 Nederlands</button>
+                    <button class="lang-btn" data-lang="sv" onclick="setLang('sv');this.closest('.lang-dropdown').classList.remove('open')">🇸🇪 Svenska</button>
+                    <button class="lang-btn" data-lang="th" onclick="setLang('th');this.closest('.lang-dropdown').classList.remove('open')">🇹🇭 ภาษาไทย</button>
+                    <button class="lang-btn" data-lang="vi" onclick="setLang('vi');this.closest('.lang-dropdown').classList.remove('open')">🇻🇳 Tiếng Việt</button>
+                    <button class="lang-btn" data-lang="sw" onclick="setLang('sw');this.closest('.lang-dropdown').classList.remove('open')">🇰🇪 Kiswahili</button>
+                </div>
             </div>
         </div>
     </nav>
@@ -65,26 +96,20 @@
     <section class="hero">
         <div class="container hero-inner">
             <div class="hero-text">
-                <div class="badge">Available on App Store &amp; Google Play</div>
-                <h1>Break the Code.<br>Master the Mind.</h1>
-                <p class="hero-sub">The classic code-breaking game reimagined for iPhone and Android. Deduce the secret color sequence before your guesses run out.</p>
+                <div class="badge" data-i18n="badge">Available on App Store &amp; Google Play</div>
+                <h1 data-i18n="hero_h1">Break the Code.<br>Master the Mind.</h1>
+                <p class="hero-sub" data-i18n="hero_sub">The classic code-breaking game reimagined for iPhone and Android.</p>
                 <div class="hero-actions">
                     <a href="#" class="btn-appstore">
                         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-                        <span>
-                            <small>Download on the</small>
-                            App Store
-                        </span>
+                        <span><small data-i18n="dl_appstore_small">Download on the</small><span data-i18n="dl_appstore">App Store</span></span>
                     </a>
                     <a href="#" class="btn-appstore btn-googleplay">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.76c.3.17.64.24.99.2l.1-.03L13.64 12 3.27.07l-.09-.02A1.5 1.5 0 0 0 1.5 1.5v21c0 .5.26.96.68 1.26zM16.12 9.06l2.36-2.36-8.3-4.7-6.7 6.7 6.7 6.7 8.3-4.7-2.36-2.34zM20.5 10.94l-1.5-.85 1.5-.85c.83-.48.83-1.66 0-2.14l-.83-.48.83-.48c1.38-.8 1.38-2.8 0-3.6L4.17.06A2.5 2.5 0 0 0 .5 2.26v19.48a2.5 2.5 0 0 0 3.67 2.2L20.5 15.8c1.38-.8 1.38-2.8 0-3.6-.46-.27-.46-.93 0-1.26z"/></svg>
-                        <span>
-                            <small>Get it on</small>
-                            Google Play
-                        </span>
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.76c.3.17.64.24.99.2l.1-.03L13.64 12 3.27.07l-.09-.02A1.5 1.5 0 0 0 1.5 1.5v21c0 .5.26.96.68 1.26zM16.12 9.06l2.36-2.36-8.3-4.7-6.7 6.7 6.7 6.7 8.3-4.7-2.36-2.34z"/></svg>
+                        <span><small data-i18n="dl_google_small">Get it on</small><span data-i18n="dl_google">Google Play</span></span>
                     </a>
                 </div>
-                <p class="hero-note">Free · iPhone &amp; Android · iOS 15.6+ · Android 8+</p>
+                <p class="hero-note" data-i18n="hero_note">Free · iPhone &amp; Android · iOS 15.6+ · Android 8+</p>
             </div>
             <div class="hero-visual">
                 <div class="phone-mockup">
@@ -95,20 +120,14 @@
                                 <span class="preview-peg filled" style="--c:#56B4E9"></span>
                                 <span class="preview-peg filled" style="--c:#009E73"></span>
                                 <span class="preview-peg filled" style="--c:#F0E442"></span>
-                                <span class="preview-dots">
-                                    <span class="dot black"></span><span class="dot black"></span>
-                                    <span class="dot white"></span><span class="dot empty"></span>
-                                </span>
+                                <span class="preview-dots"><span class="dot black"></span><span class="dot black"></span><span class="dot white"></span><span class="dot empty"></span></span>
                             </div>
                             <div class="preview-row">
                                 <span class="preview-peg filled" style="--c:#0072B2"></span>
                                 <span class="preview-peg filled" style="--c:#009E73"></span>
                                 <span class="preview-peg filled" style="--c:#CC79A7"></span>
                                 <span class="preview-peg filled" style="--c:#E69F00"></span>
-                                <span class="preview-dots">
-                                    <span class="dot black"></span><span class="dot white"></span>
-                                    <span class="dot empty"></span><span class="dot empty"></span>
-                                </span>
+                                <span class="preview-dots"><span class="dot black"></span><span class="dot white"></span><span class="dot empty"></span><span class="dot empty"></span></span>
                             </div>
                             <div class="preview-row active">
                                 <span class="preview-peg filled" style="--c:#009E73"></span>
@@ -118,10 +137,7 @@
                                 <span class="preview-dots"></span>
                             </div>
                             <div class="preview-row">
-                                <span class="preview-peg empty-peg"></span>
-                                <span class="preview-peg empty-peg"></span>
-                                <span class="preview-peg empty-peg"></span>
-                                <span class="preview-peg empty-peg"></span>
+                                <span class="preview-peg empty-peg"></span><span class="preview-peg empty-peg"></span><span class="preview-peg empty-peg"></span><span class="preview-peg empty-peg"></span>
                                 <span class="preview-dots"></span>
                             </div>
                             <div class="color-picker-preview">
@@ -142,40 +158,15 @@
     <!-- FEATURES -->
     <section class="features" id="features">
         <div class="container">
-            <h2>Everything you love about Mastermind</h2>
-            <p class="section-sub">Classic gameplay with a modern twist — clean design, smart feedback, and multiple difficulty levels.</p>
-
+            <h2 data-i18n="features_h2">Everything you love about Mastermind</h2>
+            <p class="section-sub" data-i18n="features_sub">Classic gameplay with a modern twist.</p>
             <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">🎯</div>
-                    <h3>4 Difficulty Levels</h3>
-                    <p>From Easy (4 colors) to Classic with repeating colors, all the way to Hard with 5 positions. A challenge for everyone.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">⏱️</div>
-                    <h3>Timed Mode</h3>
-                    <p>Race against the clock. Solve the code in under 3 minutes for double score. Only for the brave.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">♿</div>
-                    <h3>Accessible Colors</h3>
-                    <p>Colors are chosen from the Okabe-Ito palette — distinguishable for people with color blindness.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📊</div>
-                    <h3>Statistics</h3>
-                    <p>Track your wins, games played, and personal best score. See how much you improve over time.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🌍</div>
-                    <h3>22 Languages</h3>
-                    <p>Fully localized in Czech, English, German, French, Spanish, Japanese, Arabic, and 15 more languages.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">💡</div>
-                    <h3>Smart Hints</h3>
-                    <p>Black peg = right color, right position. White peg = right color, wrong position. Just like the original.</p>
-                </div>
+                <div class="feature-card"><div class="feature-icon">🎯</div><h3 data-i18n="f1_h">4 Difficulty Levels</h3><p data-i18n="f1_p">From Easy to Hard.</p></div>
+                <div class="feature-card"><div class="feature-icon">⏱️</div><h3 data-i18n="f2_h">Timed Mode</h3><p data-i18n="f2_p">Race against the clock.</p></div>
+                <div class="feature-card"><div class="feature-icon">♿</div><h3 data-i18n="f3_h">Accessible Colors</h3><p data-i18n="f3_p">Okabe-Ito palette.</p></div>
+                <div class="feature-card"><div class="feature-icon">📊</div><h3 data-i18n="f4_h">Statistics</h3><p data-i18n="f4_p">Track your progress.</p></div>
+                <div class="feature-card"><div class="feature-icon">🌍</div><h3 data-i18n="f5_h">22 Languages</h3><p data-i18n="f5_p">Fully localized.</p></div>
+                <div class="feature-card"><div class="feature-icon">💡</div><h3 data-i18n="f6_h">Smart Hints</h3><p data-i18n="f6_p">Black and white pegs.</p></div>
             </div>
         </div>
     </section>
@@ -184,67 +175,33 @@
     <section class="pro">
         <div class="container pro-inner">
             <div class="pro-text">
-                <div class="badge dark">Mastermind Pro</div>
-                <h2>Unlock the full experience</h2>
-                <p>One-time purchase. No subscription. No ads. Just the full game forever.</p>
+                <div class="badge dark" data-i18n="pro_badge">Mastermind Pro</div>
+                <h2 data-i18n="pro_h2">Unlock the full experience</h2>
+                <p data-i18n="pro_p">One-time purchase. No subscription. No ads.</p>
                 <ul class="pro-list">
-                    <li><span class="check">✓</span> Classic difficulty — 6 colors with repeating allowed</li>
-                    <li><span class="check">✓</span> Hard difficulty — 6 colors, 5 positions</li>
-                    <li><span class="check">✓</span> Timed mode — double score</li>
-                    <li><span class="check">✓</span> Detailed statistics</li>
+                    <li><span class="check">✓</span> <span data-i18n="pro_l1">Classic difficulty</span></li>
+                    <li><span class="check">✓</span> <span data-i18n="pro_l2">Hard difficulty</span></li>
+                    <li><span class="check">✓</span> <span data-i18n="pro_l3">Timed mode</span></li>
+                    <li><span class="check">✓</span> <span data-i18n="pro_l4">Detailed statistics</span></li>
                 </ul>
-                <p class="pro-price">$1.99 · One-time payment</p>
+                <p class="pro-price" data-i18n="pro_price">$1.99 · One-time payment</p>
                 <div class="hero-actions">
                     <a href="#" class="btn-appstore small">
                         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-                        <span>
-                            <small>Download on the</small>
-                            App Store
-                        </span>
+                        <span><small data-i18n="dl_appstore_small">Download on the</small><span data-i18n="dl_appstore">App Store</span></span>
                     </a>
                     <a href="#" class="btn-appstore btn-googleplay small">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.76c.3.17.64.24.99.2l.1-.03L13.64 12 3.27.07l-.09-.02A1.5 1.5 0 0 0 1.5 1.5v21c0 .5.26.96.68 1.26zM16.12 9.06l2.36-2.36-8.3-4.7-6.7 6.7 6.7 6.7 8.3-4.7-2.36-2.34zM20.5 10.94l-1.5-.85 1.5-.85c.83-.48.83-1.66 0-2.14l-.83-.48.83-.48c1.38-.8 1.38-2.8 0-3.6L4.17.06A2.5 2.5 0 0 0 .5 2.26v19.48a2.5 2.5 0 0 0 3.67 2.2L20.5 15.8c1.38-.8 1.38-2.8 0-3.6-.46-.27-.46-.93 0-1.26z"/></svg>
-                        <span>
-                            <small>Get it on</small>
-                            Google Play
-                        </span>
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.76c.3.17.64.24.99.2l.1-.03L13.64 12 3.27.07l-.09-.02A1.5 1.5 0 0 0 1.5 1.5v21c0 .5.26.96.68 1.26zM16.12 9.06l2.36-2.36-8.3-4.7-6.7 6.7 6.7 6.7 8.3-4.7-2.36-2.34z"/></svg>
+                        <span><small data-i18n="dl_google_small">Get it on</small><span data-i18n="dl_google">Google Play</span></span>
                     </a>
                 </div>
             </div>
             <div class="pro-visual">
                 <div class="difficulty-cards">
-                    <div class="diff-card free">
-                        <span class="diff-icon">🟢</span>
-                        <div>
-                            <strong>Easy</strong>
-                            <small>4 colors · 4 positions · 12 guesses</small>
-                        </div>
-                        <span class="tag free-tag">Free</span>
-                    </div>
-                    <div class="diff-card free">
-                        <span class="diff-icon">🟡</span>
-                        <div>
-                            <strong>Medium</strong>
-                            <small>5 colors · 4 positions · 10 guesses</small>
-                        </div>
-                        <span class="tag free-tag">Free</span>
-                    </div>
-                    <div class="diff-card pro">
-                        <span class="diff-icon">🎯</span>
-                        <div>
-                            <strong>Classic</strong>
-                            <small>6 colors · 4 positions · repeats allowed</small>
-                        </div>
-                        <span class="tag pro-tag">Pro</span>
-                    </div>
-                    <div class="diff-card pro">
-                        <span class="diff-icon">🔴</span>
-                        <div>
-                            <strong>Hard</strong>
-                            <small>6 colors · 5 positions · 8 guesses</small>
-                        </div>
-                        <span class="tag pro-tag">Pro</span>
-                    </div>
+                    <div class="diff-card free"><span class="diff-icon">🟢</span><div><strong>Easy</strong><small>4 colors · 4 positions · 12 guesses</small></div><span class="tag free-tag">Free</span></div>
+                    <div class="diff-card free"><span class="diff-icon">🟡</span><div><strong>Medium</strong><small>5 colors · 4 positions · 10 guesses</small></div><span class="tag free-tag">Free</span></div>
+                    <div class="diff-card pro"><span class="diff-icon">🎯</span><div><strong>Classic</strong><small>6 colors · 4 positions · repeats allowed</small></div><span class="tag pro-tag">Pro</span></div>
+                    <div class="diff-card pro"><span class="diff-icon">🔴</span><div><strong>Hard</strong><small>6 colors · 5 positions · 8 guesses</small></div><span class="tag pro-tag">Pro</span></div>
                 </div>
             </div>
         </div>
@@ -253,32 +210,26 @@
     <!-- LEADERBOARD -->
     <section class="leaderboard-section" id="leaderboard">
         <div class="container">
-            <h2>🏆 Global Leaderboard</h2>
-            <p class="section-sub">Top players from around the world. Download the app and claim your spot.</p>
-
+            <h2 data-i18n="lb_h2">🏆 Global Leaderboard</h2>
+            <p class="section-sub" data-i18n="lb_sub">Top players from around the world.</p>
             <div class="lb-filters">
-                <button class="lb-btn active" onclick="loadLeaderboard('all', this)">All</button>
-                <button class="lb-btn" onclick="loadLeaderboard('easy', this)">Easy</button>
-                <button class="lb-btn" onclick="loadLeaderboard('medium', this)">Medium</button>
-                <button class="lb-btn" onclick="loadLeaderboard('classic', this)">Classic</button>
-                <button class="lb-btn" onclick="loadLeaderboard('hard', this)">Hard</button>
+                <button class="lb-btn active" onclick="loadLeaderboard('all',this)" data-i18n="lb_all">All</button>
+                <button class="lb-btn" onclick="loadLeaderboard('easy',this)" data-i18n="lb_easy">Easy</button>
+                <button class="lb-btn" onclick="loadLeaderboard('medium',this)" data-i18n="lb_medium">Medium</button>
+                <button class="lb-btn" onclick="loadLeaderboard('classic',this)" data-i18n="lb_classic">Classic</button>
+                <button class="lb-btn" onclick="loadLeaderboard('hard',this)" data-i18n="lb_hard">Hard</button>
             </div>
-
             <div class="lb-table-wrap">
                 <table class="lb-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Player</th>
-                            <th>Difficulty</th>
-                            <th>Guesses</th>
-                            <th>Time</th>
-                            <th>Score</th>
-                        </tr>
-                    </thead>
-                    <tbody id="lb-body">
-                        <tr><td colspan="6" class="lb-loading">Loading…</td></tr>
-                    </tbody>
+                    <thead><tr>
+                        <th data-i18n="lb_rank">#</th>
+                        <th data-i18n="lb_player">Player</th>
+                        <th data-i18n="lb_diff">Difficulty</th>
+                        <th data-i18n="lb_guesses">Guesses</th>
+                        <th data-i18n="lb_time">Time</th>
+                        <th data-i18n="lb_score">Score</th>
+                    </tr></thead>
+                    <tbody id="lb-body"><tr><td colspan="6" class="lb-loading">Loading…</td></tr></tbody>
                 </table>
             </div>
         </div>
@@ -287,25 +238,25 @@
     <!-- ABOUT -->
     <section class="about" id="about">
         <div class="container">
-            <h2>About Colegio Solutions</h2>
-            <p class="section-sub">A small software company based near Prague, Czech Republic.</p>
+            <h2 data-i18n="about_h2">About Colegio Solutions</h2>
+            <p class="section-sub" data-i18n="about_sub">A small software company based near Prague, Czech Republic.</p>
             <div class="about-grid">
                 <div class="about-card">
-                    <h3>Who we are</h3>
-                    <p>Colegio Solutions s.r.o. is a Czech software company founded in Sibřina, a small village east of Prague. We build focused, well-crafted applications — tools and games that are simple to use and enjoyable to interact with.</p>
-                    <p>Mastermind is our first mobile game — built natively for iOS with SwiftUI and for Android with Kotlin &amp; Jetpack Compose — a deep respect for the original board game that has challenged minds since 1970.</p>
+                    <h3 data-i18n="about_who_h">Who we are</h3>
+                    <p data-i18n="about_who_p1">Colegio Solutions s.r.o. is a Czech software company founded in Sibřina.</p>
+                    <p data-i18n="about_who_p2">Mastermind is our first mobile game.</p>
                 </div>
                 <div class="about-card">
-                    <h3>Our values</h3>
+                    <h3 data-i18n="about_val_h">Our values</h3>
                     <ul class="values-list">
-                        <li><strong>Simplicity</strong> — no clutter, no dark patterns, no subscriptions.</li>
-                        <li><strong>Accessibility</strong> — colorblind-safe design, localised in 22 languages.</li>
-                        <li><strong>Fair pricing</strong> — one small payment unlocks everything. Forever.</li>
-                        <li><strong>Quality</strong> — native SwiftUI, no third-party SDKs, no ads.</li>
+                        <li><strong data-i18n="about_v1_h">Simplicity</strong> — <span data-i18n="about_v1_p">no clutter, no dark patterns, no subscriptions.</span></li>
+                        <li><strong data-i18n="about_v2_h">Accessibility</strong> — <span data-i18n="about_v2_p">colorblind-safe design, 22 languages.</span></li>
+                        <li><strong data-i18n="about_v3_h">Fair pricing</strong> — <span data-i18n="about_v3_p">one small payment unlocks everything. Forever.</span></li>
+                        <li><strong data-i18n="about_v4_h">Quality</strong> — <span data-i18n="about_v4_p">native SwiftUI and Kotlin/Compose, no third-party SDKs, no ads.</span></li>
                     </ul>
                 </div>
                 <div class="about-card info-card">
-                    <h3>Company info</h3>
+                    <h3 data-i18n="about_info_h">Company info</h3>
                     <table class="info-table">
                         <tr><td>Company</td><td>Colegio Solutions s.r.o.</td></tr>
                         <tr><td>IČO</td><td>24792161</td></tr>
@@ -320,8 +271,8 @@
     <!-- CONTACT -->
     <section class="contact" id="contact">
         <div class="container contact-inner">
-            <h2>Get in touch</h2>
-            <p>Have a question, found a bug, or want to suggest a feature? We'd love to hear from you.</p>
+            <h2 data-i18n="contact_h2">Get in touch</h2>
+            <p data-i18n="contact_p">Have a question, found a bug, or want to suggest a feature?</p>
             <a href="mailto:petr.vitek70@gmail.com" class="btn-email">petr.vitek70@gmail.com</a>
         </div>
     </section>
@@ -330,12 +281,7 @@
     <footer>
         <div class="container footer-inner">
             <div class="footer-logo">
-                <span class="pegs">
-                    <span class="peg sm" style="background:#E69F00"></span>
-                    <span class="peg sm" style="background:#56B4E9"></span>
-                    <span class="peg sm" style="background:#009E73"></span>
-                    <span class="peg sm" style="background:#F0E442"></span>
-                </span>
+                <span class="pegs"><span class="peg sm" style="background:#E69F00"></span><span class="peg sm" style="background:#56B4E9"></span><span class="peg sm" style="background:#009E73"></span><span class="peg sm" style="background:#F0E442"></span></span>
                 <span>Mastermind</span>
             </div>
             <p class="footer-copy">© 2026 Colegio Solutions s.r.o. All rights reserved.</p>

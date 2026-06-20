@@ -69,6 +69,31 @@ nav {
 .peg.sm { width: 10px; height: 10px; }
 
 .nav-links { display: flex; gap: 28px; }
+
+/* Language picker */
+.lang-picker { position: relative; }
+.lang-toggle {
+    background: none; border: 1px solid var(--border); border-radius: 8px;
+    color: var(--text2); font-size: 1.1rem; padding: 6px 10px; cursor: pointer;
+    transition: border-color 0.15s;
+}
+.lang-toggle:hover { border-color: var(--accent); }
+.lang-dropdown {
+    display: none; position: absolute; top: calc(100% + 8px); right: 0;
+    background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+    padding: 8px; min-width: 180px; z-index: 200;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+    opacity: 0; pointer-events: none; transform: translateY(-6px);
+    transition: opacity 0.15s, transform 0.15s;
+}
+.lang-dropdown.open { opacity: 1; pointer-events: all; transform: translateY(0); }
+.lang-btn {
+    background: none; border: none; color: var(--text2); font-size: 0.8rem;
+    padding: 6px 8px; border-radius: 8px; cursor: pointer; text-align: left;
+    white-space: nowrap; transition: background 0.1s, color 0.1s;
+}
+.lang-btn:hover { background: var(--bg3); color: var(--text); }
+.lang-btn.active { color: var(--accent); font-weight: 600; }
 .nav-links a {
     color: var(--text2);
     text-decoration: none;
