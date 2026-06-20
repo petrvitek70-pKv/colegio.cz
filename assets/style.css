@@ -144,6 +144,10 @@ h1 {
 
 .btn-appstore.small { padding: 10px 16px; font-size: 0.9rem; background: rgba(255,255,255,0.9); }
 
+.btn-googleplay { background: #01875f; color: #fff; }
+.btn-googleplay:hover { box-shadow: 0 8px 24px rgba(1,135,95,0.35); }
+.btn-googleplay.small { background: #01875f; color: #fff; }
+
 .btn-appstore svg { width: 24px; height: 24px; flex-shrink: 0; }
 
 .btn-appstore span { display: flex; flex-direction: column; line-height: 1.2; }
