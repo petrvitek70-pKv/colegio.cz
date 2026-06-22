@@ -28,11 +28,12 @@
                     tbody.innerHTML=`<tr><td colspan="6" class="lb-loading">${t.lb_empty||'No scores yet.'}</td></tr>`;
                     return;
                 }
+                const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
                 tbody.innerHTML = data.leaderboard.map(e=>`
                     <tr>
                         <td class="lb-rank rank-${e.rank}">${e.rank<=3?['🥇','🥈','🥉'][e.rank-1]:e.rank}</td>
-                        <td class="lb-nick">${e.nickname}</td>
-                        <td>${DIFF_ICON[e.difficulty]||''} ${e.difficulty}</td>
+                        <td class="lb-nick">${esc(e.nickname)}</td>
+                        <td>${DIFF_ICON[e.difficulty]||''} ${esc(e.difficulty)}</td>
                         <td>${e.guesses}</td>
                         <td>${formatTime(e.seconds)}</td>
                         <td class="lb-score">${e.score.toLocaleString()}</td>
