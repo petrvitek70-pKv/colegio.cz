@@ -24,15 +24,21 @@ $DIFFICULTY_LIMITS = [
     'hard'    => ['maxGuesses' =>  8, 'scoreMultiplier' => 6],
 ];
 
-// Maximální teoretické skóre: guessBonus=5000, timedMultiplier=2, žádná časová penalizace
-// max = 5000 * scoreMultiplier * 2
-function maxPossibleScore(array $limits): int {
-    return 5000 * $limits['scoreMultiplier'] * 2;
+// Přepočet skóre podle stejného algoritmu jako GameLogic (iOS + Android)
+function computeScore(int $guesses, int $maxGuesses, int $seconds, bool $isTimed, int $scoreMultiplier): int {
+    $guessBonus = match(true) {
+        $guesses === 1 => 5000,
+        $guesses === 2 => 3000,
+        default        => ($maxGuesses - $guesses) * 500,
+    };
+    $timePenalty    = $isTimed ? 0 : $seconds * 5;
+    $modeMultiplier = $isTimed ? 2 : 1;
+    return max(0, ($guessBonus - $timePenalty) * $scoreMultiplier * $modeMultiplier);
 }
 
-// Minimální reálný čas: každý pokus trvá aspoň 2 sekundy
+// Minimální reálný čas: každý pokus trvá aspoň 3 sekundy
 function minRealisticSeconds(int $guesses): int {
-    return $guesses * 2;
+    return $guesses * 3;
 }
 
 // Validace vstupů
@@ -52,16 +58,23 @@ if (!array_key_exists($difficulty, $DIFFICULTY_LIMITS)) {
     jsonResponse(['error' => 'Invalid difficulty'], 422);
 }
 
-$limits = $DIFFICULTY_LIMITS[$difficulty];
+$limits  = $DIFFICULTY_LIMITS[$difficulty];
+$isTimed = ($body['timed'] ?? 0) == 1;
 
 if ($guesses < 1 || $guesses > $limits['maxGuesses']) {
     jsonResponse(['error' => 'Invalid guesses for difficulty'], 422);
 }
-if ($score < 0 || $score > maxPossibleScore($limits)) {
-    jsonResponse(['error' => 'Score out of range for difficulty'], 422);
+if ($seconds < 0 || $seconds > 86400) {
+    jsonResponse(['error' => 'Invalid seconds'], 422);
 }
 if ($seconds < minRealisticSeconds($guesses)) {
     jsonResponse(['error' => 'Suspiciously fast time'], 422);
+}
+
+// Přepočet skóre — musí přesně odpovídat algoritmu hry
+$expected = computeScore($guesses, $limits['maxGuesses'], $seconds, $isTimed, $limits['scoreMultiplier']);
+if ($score !== $expected) {
+    jsonResponse(['error' => 'Score does not match game parameters'], 422);
 }
 
 // Uložení skóre
