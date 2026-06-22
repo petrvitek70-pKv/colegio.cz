@@ -16,12 +16,31 @@ if (($body['secret'] ?? '') !== API_SECRET) {
     jsonResponse(['error' => 'Unauthorized'], 401);
 }
 
+// Limity podle obtížnosti: [maxGuesses, scoreMultiplier, timedMultiplier]
+$DIFFICULTY_LIMITS = [
+    'easy'    => ['maxGuesses' => 12, 'scoreMultiplier' => 1],
+    'medium'  => ['maxGuesses' => 10, 'scoreMultiplier' => 3],
+    'classic' => ['maxGuesses' => 10, 'scoreMultiplier' => 4],
+    'hard'    => ['maxGuesses' =>  8, 'scoreMultiplier' => 6],
+];
+
+// Maximální teoretické skóre: guessBonus=5000, timedMultiplier=2, žádná časová penalizace
+// max = 5000 * scoreMultiplier * 2
+function maxPossibleScore(array $limits): int {
+    return 5000 * $limits['scoreMultiplier'] * 2;
+}
+
+// Minimální reálný čas: každý pokus trvá aspoň 2 sekundy
+function minRealisticSeconds(int $guesses): int {
+    return $guesses * 2;
+}
+
 // Validace vstupů
-$nickname = trim($body['nickname'] ?? '');
-$score    = (int)($body['score'] ?? 0);
+$nickname   = trim($body['nickname'] ?? '');
+$score      = (int)($body['score'] ?? 0);
 $difficulty = $body['difficulty'] ?? '';
-$guesses  = (int)($body['guesses'] ?? 0);
-$seconds  = (int)($body['seconds'] ?? 0);
+$guesses    = (int)($body['guesses'] ?? 0);
+$seconds    = (int)($body['seconds'] ?? 0);
 
 if (strlen($nickname) < 1 || strlen($nickname) > 20) {
     jsonResponse(['error' => 'Invalid nickname (1–20 chars)'], 422);
@@ -29,14 +48,20 @@ if (strlen($nickname) < 1 || strlen($nickname) > 20) {
 if (!preg_match('/^[\p{L}0-9 _\-\.]+$/u', $nickname)) {
     jsonResponse(['error' => 'Invalid nickname characters'], 422);
 }
-if ($score < 0 || $score > 999999) {
-    jsonResponse(['error' => 'Invalid score'], 422);
-}
-if (!in_array($difficulty, ['easy', 'medium', 'classic', 'hard'])) {
+if (!array_key_exists($difficulty, $DIFFICULTY_LIMITS)) {
     jsonResponse(['error' => 'Invalid difficulty'], 422);
 }
-if ($guesses < 1 || $guesses > 12) {
-    jsonResponse(['error' => 'Invalid guesses'], 422);
+
+$limits = $DIFFICULTY_LIMITS[$difficulty];
+
+if ($guesses < 1 || $guesses > $limits['maxGuesses']) {
+    jsonResponse(['error' => 'Invalid guesses for difficulty'], 422);
+}
+if ($score < 0 || $score > maxPossibleScore($limits)) {
+    jsonResponse(['error' => 'Score out of range for difficulty'], 422);
+}
+if ($seconds < minRealisticSeconds($guesses)) {
+    jsonResponse(['error' => 'Suspiciously fast time'], 422);
 }
 
 // Uložení skóre
