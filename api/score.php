@@ -58,8 +58,9 @@ if (!array_key_exists($difficulty, $DIFFICULTY_LIMITS)) {
     jsonResponse(['error' => 'Invalid difficulty'], 422);
 }
 
-$limits  = $DIFFICULTY_LIMITS[$difficulty];
-$isTimed = ($body['timed'] ?? 0) == 1;
+$limits      = $DIFFICULTY_LIMITS[$difficulty];
+$isTimed     = ($body['timed']      ?? 0) == 1;
+$repetition  = ($body['repetition'] ?? 0) == 1;
 
 if ($guesses < 1 || $guesses > $limits['maxGuesses']) {
     jsonResponse(['error' => 'Invalid guesses for difficulty'], 422);
@@ -72,7 +73,8 @@ if ($seconds < minRealisticSeconds($guesses)) {
 }
 
 // Přepočet skóre — musí přesně odpovídat algoritmu hry
-$expected = computeScore($guesses, $limits['maxGuesses'], $seconds, $isTimed, $limits['scoreMultiplier']);
+$scoreMultiplier = $limits['scoreMultiplier'] * ($repetition ? 2 : 1);
+$expected = computeScore($guesses, $limits['maxGuesses'], $seconds, $isTimed, $scoreMultiplier);
 if ($score !== $expected) {
     jsonResponse(['error' => 'Score does not match game parameters'], 422);
 }
