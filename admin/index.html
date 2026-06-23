@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mastermind — Správa zpětné vazby</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; background: #06060F; color: #e0e0e0; min-height: 100vh; }
+  header { background: #0d0d1f; padding: 16px 24px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid #222; }
+  header h1 { font-size: 18px; color: #F0E442; }
+  #login { max-width: 360px; margin: 80px auto; background: #0d0d1f; border-radius: 12px; padding: 32px; }
+  #login h2 { color: #F0E442; margin-bottom: 20px; }
+  input[type=password], input[type=text] { width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid #333; background: #1a1a2e; color: #e0e0e0; font-size: 15px; margin-bottom: 12px; }
+  button { background: #F0E442; color: #06060F; border: none; border-radius: 8px; padding: 10px 20px; font-weight: 700; cursor: pointer; font-size: 15px; }
+  button:hover { opacity: 0.85; }
+  button.secondary { background: #333; color: #e0e0e0; }
+  #app { display: none; padding: 24px; max-width: 1100px; margin: 0 auto; }
+  .filters { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+  .filters select { padding: 8px 12px; border-radius: 8px; border: 1px solid #333; background: #1a1a2e; color: #e0e0e0; }
+  .stats { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+  .stat { background: #0d0d1f; border-radius: 10px; padding: 14px 20px; min-width: 120px; }
+  .stat .val { font-size: 26px; font-weight: 700; color: #F0E442; }
+  .stat .lbl { font-size: 12px; color: #888; margin-top: 2px; }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; padding: 10px 12px; font-size: 12px; color: #888; border-bottom: 1px solid #222; }
+  td { padding: 12px; border-bottom: 1px solid #1a1a2e; vertical-align: top; font-size: 14px; }
+  tr:hover td { background: #0d0d1f; }
+  .cat { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; }
+  .cat-bug    { background: #3d1010; color: #ff6b6b; }
+  .cat-idea   { background: #1a2d10; color: #6bff8e; }
+  .cat-game   { background: #102030; color: #6bb5ff; }
+  .cat-praise { background: #2d2510; color: #ffdb6b; }
+  .cat-general{ background: #1a1a2e; color: #aaa; }
+  .msg { max-width: 420px; line-height: 1.5; }
+  .meta { font-size: 12px; color: #666; margin-top: 4px; }
+  .pub-btn { font-size: 12px; padding: 4px 10px; border-radius: 6px; }
+  .published { background: #1a2d10; color: #6bff8e; }
+  #error { color: #ff6b6b; margin-top: 8px; font-size: 14px; }
+  .empty { text-align: center; padding: 60px; color: #555; }
+</style>
+</head>
+<body>
+
+<div id="login">
+  <h2>🎮 Mastermind Admin</h2>
+  <input type="password" id="keyInput" placeholder="API klíč" />
+  <button onclick="doLogin()">Přihlásit</button>
+  <div id="error"></div>
+</div>
+
+<div id="app">
+  <header>
+    <h1>🎮 Zpětná vazba hráčů</h1>
+    <span id="totalLabel" style="color:#888;font-size:14px;"></span>
+  </header>
+
+  <div style="padding:24px 24px 0">
+    <div class="stats">
+      <div class="stat"><div class="val" id="s-total">—</div><div class="lbl">Celkem</div></div>
+      <div class="stat"><div class="val" id="s-bug">—</div><div class="lbl">🐛 Chyby</div></div>
+      <div class="stat"><div class="val" id="s-idea">—</div><div class="lbl">💡 Nápady</div></div>
+      <div class="stat"><div class="val" id="s-game">—</div><div class="lbl">🎮 Nové hry</div></div>
+      <div class="stat"><div class="val" id="s-praise">—</div><div class="lbl">👍 Pochvaly</div></div>
+      <div class="stat"><div class="val" id="s-pub">—</div><div class="lbl">📢 Zveřejněné</div></div>
+    </div>
+
+    <div class="filters">
+      <select id="catFilter" onchange="render()">
+        <option value="">Všechny kategorie</option>
+        <option value="bug">🐛 Chyba</option>
+        <option value="idea">💡 Nápad</option>
+        <option value="game">🎮 Nová hra</option>
+        <option value="praise">👍 Pochvala</option>
+        <option value="general">Obecné</option>
+      </select>
+      <select id="pubFilter" onchange="render()">
+        <option value="">Vše</option>
+        <option value="1">Jen zveřejněné</option>
+        <option value="0">Jen nezveřejněné</option>
+      </select>
+      <select id="platFilter" onchange="render()">
+        <option value="">Všechny platformy</option>
+        <option value="ios">iOS</option>
+        <option value="android">Android</option>
+      </select>
+    </div>
+  </div>
+
+  <div id="app" style="padding:0 24px 24px">
+    <table>
+      <thead>
+        <tr>
+          <th>Datum</th>
+          <th>Kategorie</th>
+          <th>Zpráva</th>
+          <th>Autor</th>
+          <th>Platforma</th>
+          <th>Zveřejnit</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    <div id="emptyMsg" class="empty" style="display:none">Žádné záznamy</div>
+  </div>
+</div>
+
+<script>
+const API = '/api/feedback-list.php';
+const CATS = { bug:'cat-bug', idea:'cat-idea', game:'cat-game', praise:'cat-praise', general:'cat-general' };
+const LABELS = { bug:'🐛 Chyba', idea:'💡 Nápad', game:'🎮 Nová hra', praise:'👍 Pochvala', general:'Obecné' };
+let apiKey = '';
+let allData = [];
+
+async function doLogin() {
+  apiKey = document.getElementById('keyInput').value.trim();
+  try {
+    const r = await fetch(`${API}?key=${encodeURIComponent(apiKey)}&limit=500`);
+    if (r.status === 401) { document.getElementById('error').textContent = 'Špatný klíč'; return; }
+    const json = await r.json();
+    allData = json.feedback || [];
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    updateStats();
+    render();
+  } catch(e) { document.getElementById('error').textContent = 'Chyba připojení'; }
+}
+
+function updateStats() {
+  const count = k => allData.filter(r => r.category === k).length;
+  document.getElementById('s-total').textContent  = allData.length;
+  document.getElementById('s-bug').textContent    = count('bug');
+  document.getElementById('s-idea').textContent   = count('idea');
+  document.getElementById('s-game').textContent   = count('game');
+  document.getElementById('s-praise').textContent = count('praise');
+  document.getElementById('s-pub').textContent    = allData.filter(r => r.published == 1).length;
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function render() {
+  const cat  = document.getElementById('catFilter').value;
+  const pub  = document.getElementById('pubFilter').value;
+  const plat = document.getElementById('platFilter').value;
+  let rows = allData;
+  if (cat)  rows = rows.filter(r => r.category === cat);
+  if (pub !== '')  rows = rows.filter(r => String(r.published) === pub);
+  if (plat) rows = rows.filter(r => (r.platform || '').toLowerCase() === plat);
+
+  const tbody = document.getElementById('tbody');
+  tbody.innerHTML = '';
+  document.getElementById('emptyMsg').style.display = rows.length ? 'none' : 'block';
+
+  rows.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="white-space:nowrap;color:#666">${esc(r.created_at.slice(0,16))}</td>
+      <td><span class="cat ${CATS[r.category]||'cat-general'}">${esc(LABELS[r.category]||r.category)}</span></td>
+      <td class="msg">${esc(r.message)}</td>
+      <td><div>${esc(r.name||'—')}</div><div class="meta">${esc(r.email||'')}</div></td>
+      <td style="color:#666">${esc(r.platform||'—')}<div class="meta">${esc(r.app_lang||'')}</div></td>
+      <td>
+        <button class="pub-btn ${r.published==1?'published':''}" onclick="togglePublish(${r.id},${r.published==1?0:1},this)">
+          ${r.published==1?'✅ Zveřejněno':'Zveřejnit'}
+        </button>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+async function togglePublish(id, newVal, btn) {
+  await fetch(`${API}?key=${encodeURIComponent(apiKey)}`, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({id, published: newVal}),
+  });
+  const row = allData.find(r => r.id == id);
+  if (row) row.published = newVal;
+  btn.textContent = newVal ? '✅ Zveřejněno' : 'Zveřejnit';
+  btn.classList.toggle('published', newVal == 1);
+  updateStats();
+}
+
+document.getElementById('keyInput').addEventListener('keydown', e => { if (e.key==='Enter') doLogin(); });
+</script>
+</body>
+</html>

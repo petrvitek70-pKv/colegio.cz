@@ -42,7 +42,47 @@
                 tbody.innerHTML=`<tr><td colspan="6" class="lb-loading">${t.lb_error||'Could not load leaderboard.'}</td></tr>`;
             }
         }
-        document.addEventListener('DOMContentLoaded', ()=>loadLeaderboard('all'));
+        document.addEventListener('DOMContentLoaded', ()=>{
+            loadLeaderboard('all');
+            loadFeedback();
+        });
+
+        const FB_CATS = {
+            bug:     { cs:'🐛 Chyba',    en:'🐛 Bug'      },
+            idea:    { cs:'💡 Nápad',    en:'💡 Idea'     },
+            game:    { cs:'🎮 Nová hra', en:'🎮 New game' },
+            praise:  { cs:'👍 Pochvala', en:'👍 Praise'   },
+            general: { cs:'💬 Obecné',   en:'💬 General'  },
+        };
+
+        async function loadFeedback() {
+            const grid = document.getElementById('feedbackGrid');
+            if (!grid) return;
+            try {
+                const r = await fetch('/api/feedback-public.php?limit=6');
+                const data = await r.json();
+                const lang = (navigator.language || 'en').slice(0,2);
+                if (!data.feedback || !data.feedback.length) {
+                    grid.innerHTML = '';
+                    return;
+                }
+                const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+                grid.innerHTML = data.feedback.map(f => {
+                    const cat = FB_CATS[f.category] || FB_CATS.general;
+                    const catLabel = cat[lang] || cat.en;
+                    const date = (f.created_at||'').slice(0,7);
+                    const name = f.name ? esc(f.name) : '';
+                    const plat = f.platform ? ` · ${esc(f.platform)}` : '';
+                    return `<div class="feedback-card">
+                        <span class="fb-cat fb-cat-${esc(f.category)}">${esc(catLabel)}</span>
+                        <p class="fb-msg">${esc(f.message)}</p>
+                        <div class="fb-meta">${name ? name + plat + ' · ' : ''}${date}</div>
+                    </div>`;
+                }).join('');
+            } catch(e) {
+                document.getElementById('feedbackGrid').innerHTML = '';
+            }
+        }
     </script>
 </head>
 <body>
@@ -237,6 +277,17 @@
                     </tr></thead>
                     <tbody id="lb-body"><tr><td colspan="6" class="lb-loading">Loading…</td></tr></tbody>
                 </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEEDBACK PREVIEW -->
+    <section class="feedback-section" id="feedback">
+        <div class="container">
+            <h2 data-i18n="feedback_h2">What players say</h2>
+            <p class="section-sub" data-i18n="feedback_sub">Real feedback from our community.</p>
+            <div class="feedback-grid" id="feedbackGrid">
+                <div class="feedback-loading" data-i18n="feedback_loading">Loading…</div>
             </div>
         </div>
     </section>
