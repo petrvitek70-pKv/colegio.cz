@@ -1,6 +1,7 @@
 <?php
 define('DB_PATH', __DIR__ . '/../data/scores.db');
 define('API_SECRET', 'mm_colegio_2026_xK9pQ');
+define('ADMIN_SECRET', 'SibrinaColegio19707025084');
 
 function getDb(): PDO {
     $dir = dirname(DB_PATH);
