@@ -2,3 +2,4 @@
 Thumbs.db
 data/
 *.db
+config.local.php

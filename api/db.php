@@ -1,7 +1,11 @@
 <?php
 define('DB_PATH', __DIR__ . '/../data/scores.db');
 define('API_SECRET', 'mm_colegio_2026_xK9pQ');
-define('ADMIN_SECRET', 'SibrinaColegio19707025084');
+
+// ADMIN_SECRET se načítá z konfiguračního souboru mimo repozitář
+$_cfg = __DIR__ . '/../config.local.php';
+if (file_exists($_cfg)) require_once $_cfg;
+if (!defined('ADMIN_SECRET')) define('ADMIN_SECRET', 'change-me');
 
 function getDb(): PDO {
     $dir = dirname(DB_PATH);
