@@ -12,13 +12,7 @@ if ($key !== ADMIN_SECRET) {
     jsonResponse(['error' => 'Unauthorized'], 401);
 }
 
-$dbPath = __DIR__ . '/../data/feedback.db';
-if (!file_exists($dbPath)) {
-    jsonResponse(['feedback' => []]);
-}
-
-$db = new PDO('sqlite:' . $dbPath);
-$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$db = getFeedbackDb();
 
 // Akce: zveřejnit/skrýt zprávu
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

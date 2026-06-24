@@ -15,7 +15,7 @@
   button { background: #F0E442; color: #06060F; border: none; border-radius: 8px; padding: 10px 20px; font-weight: 700; cursor: pointer; font-size: 15px; }
   button:hover { opacity: 0.85; }
   button.secondary { background: #333; color: #e0e0e0; }
-  #app { display: none; padding: 24px; max-width: 1100px; margin: 0 auto; }
+  #app { padding: 24px; max-width: 1100px; margin: 0 auto; }
   .filters { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
   .filters select { padding: 8px 12px; border-radius: 8px; border: 1px solid #333; background: #1a1a2e; color: #e0e0e0; }
   .stats { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
@@ -38,6 +38,11 @@
   .published { background: #1a2d10; color: #6bff8e; }
   #error { color: #ff6b6b; margin-top: 8px; font-size: 14px; }
   .empty { text-align: center; padding: 60px; color: #555; }
+  #app { display: none; }
+  .app-top { padding: 24px 24px 0; }
+  .app-main { padding: 0 24px 24px; }
+  td.nowrap { white-space: nowrap; color: #666; }
+  td.muted { color: #666; }
 </style>
 </head>
 <body>
@@ -52,10 +57,10 @@
 <div id="app">
   <header>
     <h1>🎮 Zpětná vazba hráčů</h1>
-    <span id="totalLabel" style="color:#888;font-size:14px;"></span>
+    <span id="totalLabel" style="color:#888;font-size:14px"></span>
   </header>
 
-  <div style="padding:24px 24px 0">
+  <div class="app-top">
     <div class="stats">
       <div class="stat"><div class="val" id="s-total">—</div><div class="lbl">Celkem</div></div>
       <div class="stat"><div class="val" id="s-bug">—</div><div class="lbl">🐛 Chyby</div></div>
@@ -87,7 +92,7 @@
     </div>
   </div>
 
-  <div style="padding:0 24px 24px">
+  <div class="app-main">
     <table>
       <thead>
         <tr>
@@ -101,7 +106,7 @@
       </thead>
       <tbody id="tbody"></tbody>
     </table>
-    <div id="emptyMsg" class="empty" style="display:none">Žádné záznamy</div>
+    <div id="emptyMsg" class="empty" hidden>Žádné záznamy</div>
   </div>
 </div>
 
@@ -151,16 +156,16 @@ function render() {
 
   const tbody = document.getElementById('tbody');
   tbody.innerHTML = '';
-  document.getElementById('emptyMsg').style.display = rows.length ? 'none' : 'block';
+  document.getElementById('emptyMsg').hidden = rows.length > 0;
 
   rows.forEach(r => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td style="white-space:nowrap;color:#666">${esc(r.created_at.slice(0,16))}</td>
+      <td class="nowrap">${esc(r.created_at.slice(0,16))}</td>
       <td><span class="cat ${CATS[r.category]||'cat-general'}">${esc(LABELS[r.category]||r.category)}</span></td>
       <td class="msg">${esc(r.message)}</td>
       <td><div>${esc(r.name||'—')}</div><div class="meta">${esc(r.email||'')}</div></td>
-      <td style="color:#666">${esc(r.platform||'—')}<div class="meta">${esc(r.app_lang||'')}</div></td>
+      <td class="muted">${esc(r.platform||'—')}<div class="meta">${esc(r.app_lang||'')}</div></td>
       <td>
         <button class="pub-btn ${r.published==1?'published':''}" onclick="togglePublish(${r.id},${r.published==1?0:1},this)">
           ${r.published==1?'✅ Zveřejněno':'Zveřejnit'}

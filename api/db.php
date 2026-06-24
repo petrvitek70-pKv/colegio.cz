@@ -38,6 +38,28 @@ function jsonResponse(array $data, int $status = 200): void {
     exit;
 }
 
+function getFeedbackDb(): PDO {
+    $path = __DIR__ . '/../data/feedback.db';
+    $dir  = dirname($path);
+    if (!is_dir($dir)) mkdir($dir, 0750, true);
+    $db = new PDO('sqlite:' . $path);
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $db->exec("
+        CREATE TABLE IF NOT EXISTS feedback (
+            id         INTEGER PRIMARY KEY AUTOINCREMENT,
+            category   TEXT    NOT NULL DEFAULT 'general',
+            message    TEXT    NOT NULL,
+            name       TEXT,
+            email      TEXT,
+            platform   TEXT,
+            app_lang   TEXT,
+            published  INTEGER NOT NULL DEFAULT 0,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+    ");
+    return $db;
+}
+
 function corsHeaders(): void {
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: GET, POST, OPTIONS');

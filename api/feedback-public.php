@@ -3,13 +3,7 @@
 require_once __DIR__ . '/db.php';
 corsHeaders();
 
-$dbPath = __DIR__ . '/../data/feedback.db';
-if (!file_exists($dbPath)) {
-    jsonResponse(['feedback' => []]);
-}
-
-$db = new PDO('sqlite:' . $dbPath);
-$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$db = getFeedbackDb();
 
 $limit = min((int)($_GET['limit'] ?? 6), 20);
 

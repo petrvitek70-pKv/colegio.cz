@@ -79,7 +79,7 @@ nav {
 }
 .lang-toggle:hover { border-color: var(--accent); }
 .lang-dropdown {
-    display: none; position: absolute; top: calc(100% + 8px); right: 0;
+    position: absolute; top: calc(100% + 8px); right: 0;
     background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
     padding: 8px; min-width: 180px; z-index: 200;
     display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
@@ -578,7 +578,7 @@ footer {
 .lb-loading { text-align: center; color: var(--text3); padding: 32px !important; }
 
 /* FEEDBACK SECTION */
-.feedback-section { padding: 80px 0; background: var(--surface); }
+.feedback-section { padding: 80px 0; background: var(--bg); }
 .feedback-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));

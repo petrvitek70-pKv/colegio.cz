@@ -11,24 +11,31 @@
     <script src="assets/i18n.js" defer></script>
     <script>
         const DIFF_ICON = {all:'⚪',easy:'🟢',medium:'🟡',classic:'🎯',hard:'🔴'};
+        const FB_CATS = {
+            bug:     { cs:'🐛 Chyba',    en:'🐛 Bug'      },
+            idea:    { cs:'💡 Nápad',    en:'💡 Idea'     },
+            game:    { cs:'🎮 Nová hra', en:'🎮 New game' },
+            praise:  { cs:'👍 Pochvala', en:'👍 Praise'   },
+            general: { cs:'💬 Obecné',   en:'💬 General'  },
+        };
+
         function formatTime(s){return Math.floor(s/60)+':'+(s%60).toString().padStart(2,'0');}
+        function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
         window._lbDiff = 'all';
         async function loadLeaderboard(diff, btn){
             window._lbDiff = diff || 'all';
             document.querySelectorAll('.lb-btn').forEach(b=>b.classList.remove('active'));
-            if(btn) btn.classList.add('active');
-            else document.querySelector('.lb-btn')?.classList.add('active');
+            (btn || document.querySelector('.lb-btn'))?.classList.add('active');
             const tbody = document.getElementById('lb-body');
             const t = TRANSLATIONS[document.documentElement.lang] || TRANSLATIONS['en'];
             tbody.innerHTML = `<tr><td colspan="6" class="lb-loading">${t.lb_loading||'Loading…'}</td></tr>`;
             try {
-                const r = await fetch('/api/leaderboard.php?difficulty='+window._lbDiff+'&limit=20');
-                const data = await r.json();
+                const data = await fetch('/api/leaderboard.php?difficulty='+window._lbDiff+'&limit=20').then(r=>r.json());
                 if(!data.leaderboard.length){
                     tbody.innerHTML=`<tr><td colspan="6" class="lb-loading">${t.lb_empty||'No scores yet.'}</td></tr>`;
                     return;
                 }
-                const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
                 tbody.innerHTML = data.leaderboard.map(e=>`
                     <tr>
                         <td class="lb-rank rank-${e.rank}">${e.rank<=3?['🥇','🥈','🥉'][e.rank-1]:e.rank}</td>
@@ -42,47 +49,29 @@
                 tbody.innerHTML=`<tr><td colspan="6" class="lb-loading">${t.lb_error||'Could not load leaderboard.'}</td></tr>`;
             }
         }
-        document.addEventListener('DOMContentLoaded', ()=>{
-            loadLeaderboard('all');
-            loadFeedback();
-        });
-
-        const FB_CATS = {
-            bug:     { cs:'🐛 Chyba',    en:'🐛 Bug'      },
-            idea:    { cs:'💡 Nápad',    en:'💡 Idea'     },
-            game:    { cs:'🎮 Nová hra', en:'🎮 New game' },
-            praise:  { cs:'👍 Pochvala', en:'👍 Praise'   },
-            general: { cs:'💬 Obecné',   en:'💬 General'  },
-        };
 
         async function loadFeedback() {
             const grid = document.getElementById('feedbackGrid');
             if (!grid) return;
             try {
-                const r = await fetch('/api/feedback-public.php?limit=6');
-                const data = await r.json();
+                const data = await fetch('/api/feedback-public.php?limit=6').then(r=>r.json());
                 const lang = (navigator.language || 'en').slice(0,2);
-                if (!data.feedback || !data.feedback.length) {
-                    grid.innerHTML = '';
-                    return;
-                }
-                const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+                if (!data.feedback?.length) { grid.innerHTML = ''; return; }
                 grid.innerHTML = data.feedback.map(f => {
                     const cat = FB_CATS[f.category] || FB_CATS.general;
                     const catLabel = cat[lang] || cat.en;
-                    const date = (f.created_at||'').slice(0,7);
                     const name = f.name ? esc(f.name) : '';
                     const plat = f.platform ? ` · ${esc(f.platform)}` : '';
                     return `<div class="feedback-card">
                         <span class="fb-cat fb-cat-${esc(f.category)}">${esc(catLabel)}</span>
                         <p class="fb-msg">${esc(f.message)}</p>
-                        <div class="fb-meta">${name ? name + plat + ' · ' : ''}${date}</div>
+                        <div class="fb-meta">${name ? name + plat + ' · ' : ''}${(f.created_at||'').slice(0,7)}</div>
                     </div>`;
                 }).join('');
-            } catch(e) {
-                document.getElementById('feedbackGrid').innerHTML = '';
-            }
+            } catch(e) { grid.innerHTML = ''; }
         }
+
+        document.addEventListener('DOMContentLoaded', ()=>{ loadLeaderboard('all'); loadFeedback(); });
     </script>
 </head>
 <body>
