@@ -4,7 +4,7 @@ require_once __DIR__ . '/db.php';
 
 corsHeaders();
 
-$key = $_GET['key'] ?? ($_SERVER['HTTP_X_ADMIN_KEY'] ?? '');
+$key = $_SERVER['HTTP_X_ADMIN_KEY'] ?? '';
 if ($key !== ADMIN_SECRET) {
     jsonResponse(['error' => 'Unauthorized'], 401);
 }
