@@ -2,7 +2,10 @@
 // Admin API — vrací seznam zpětné vazby (chráněno API klíčem)
 require_once __DIR__ . '/db.php';
 
-corsHeaders();
+header('Access-Control-Allow-Origin: https://colegio.cz');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, X-Admin-Key');
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); exit; }
 
 $key = $_SERVER['HTTP_X_ADMIN_KEY'] ?? '';
 if ($key !== ADMIN_SECRET) {

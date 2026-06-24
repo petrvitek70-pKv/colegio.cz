@@ -47,6 +47,13 @@ if (strlen($message) > 2000) {
 $allowed = ['bug', 'idea', 'game', 'praise', 'general'];
 if (!in_array($category, $allowed)) $category = 'general';
 
+if ($name !== '' && strlen($name) > 100) {
+    jsonResponse(['error' => 'Name too long'], 422);
+}
+$allowed_platforms = ['ios', 'android'];
+if ($platform !== '' && !in_array($platform, $allowed_platforms)) $platform = '';
+if (strlen($appLang) > 10) $appLang = substr($appLang, 0, 10);
+
 if ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
     jsonResponse(['error' => 'Invalid email'], 422);
 }
