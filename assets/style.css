@@ -429,6 +429,17 @@ h1 {
     margin-bottom: 12px;
 }
 
+.story-card {
+    grid-column: 1 / -1;
+}
+
+.story-sig {
+    font-size: 0.9rem;
+    color: var(--accent);
+    font-style: italic;
+    margin-top: 8px;
+}
+
 .values-list {
     list-style: none;
     display: flex;
