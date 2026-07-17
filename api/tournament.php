@@ -72,11 +72,15 @@ if ($action === 'list') {
     jsonResponse(['tournaments' => $out]);
 }
 
-// ── SEED (get secret code after joining) ────────────────────────────────────
-if ($action === 'seed') {
-    $id       = (int)($_GET['id'] ?? 0);
-    $nickname = trim($_GET['nickname'] ?? '');
-    if (!$id || !$nickname) jsonResponse(['error' => 'Missing params'], 400);
+// ── SEED (get secret code after joining) — POST only, requires API secret ───
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'seed') {
+    $body     = json_decode(file_get_contents('php://input'), true) ?? [];
+    $id       = (int)($body['tournament_id'] ?? 0);
+    $nickname = trim($body['nickname'] ?? '');
+    $secret   = $body['secret'] ?? '';
+
+    if ($secret !== API_SECRET)   jsonResponse(['error' => 'Unauthorized'], 401);
+    if (!$id || !$nickname)       jsonResponse(['error' => 'Missing params'], 400);
 
     $stmt = $db->prepare("SELECT * FROM tournaments WHERE id = ?");
     $stmt->execute([$id]);
@@ -84,11 +88,10 @@ if ($action === 'seed') {
     if (!$t) jsonResponse(['error' => 'Tournament not found'], 404);
     if (tournamentStatus($t) === 'upcoming') jsonResponse(['error' => 'Tournament not started yet'], 403);
 
-    // Must be joined
     $stmt = $db->prepare("SELECT id, submitted_at FROM tournament_entries WHERE tournament_id = ? AND nickname = ?");
     $stmt->execute([$id, $nickname]);
     $entry = $stmt->fetch(PDO::FETCH_ASSOC);
-    if (!$entry) jsonResponse(['error' => 'Not joined'], 403);
+    if (!$entry)              jsonResponse(['error' => 'Not joined'], 403);
     if ($entry['submitted_at']) jsonResponse(['error' => 'Already submitted'], 403);
 
     jsonResponse(['seed' => json_decode($t['seed'])]);
