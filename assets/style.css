@@ -630,6 +630,33 @@ footer {
 }
 .feedback-loading { color: var(--text3); text-align: center; padding: 40px; }
 
+/* TOURNAMENTS */
+.tournament-section { padding: 80px 0; }
+.tournament-section h2 { font-size: 2rem; font-weight: 800; text-align: center; margin-bottom: .5rem; }
+.trn-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+}
+.trn-empty { color: var(--text3); text-align: center; padding: 40px 0; }
+.trn-card {
+    background: #0d0d1a;
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    cursor: pointer;
+    transition: border-color .2s, transform .15s;
+}
+.trn-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.trn-card.trn-selected { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(240,228,66,.2); }
+.trn-card.trn-finished { opacity: .7; }
+.trn-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: .5rem; }
+.trn-status { font-size: 12px; font-weight: 600; }
+.trn-time { font-size: 12px; color: var(--text3); }
+.trn-name { font-size: 1.1rem; font-weight: 700; margin-bottom: .4rem; }
+.trn-meta { font-size: 13px; color: var(--text2); }
+
 /* RESPONSIVE */
 @media (max-width: 768px) {
     .hero-inner { grid-template-columns: 1fr; }

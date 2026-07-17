@@ -71,7 +71,71 @@
             } catch(e) { grid.innerHTML = ''; }
         }
 
-        document.addEventListener('DOMContentLoaded', ()=>{ loadLeaderboard('all'); loadFeedback(); });
+        const DIFF_ICON_T = {easy:'🟢',medium:'🟡',classic:'🎯',hard:'🔴'};
+        const STATUS_LABEL = {active:'🟢 Active',upcoming:'⏳ Upcoming',finished:'🏁 Finished'};
+
+        async function loadTournaments() {
+            const wrap = document.getElementById('trn-list');
+            if (!wrap) return;
+            try {
+                const data = await fetch('/api/tournament.php?action=list').then(r=>r.json());
+                if (!data.tournaments?.length) {
+                    wrap.innerHTML = '<p class="trn-empty">No tournaments right now. Check back soon!</p>';
+                    return;
+                }
+                wrap.innerHTML = data.tournaments.map(t => {
+                    const ends = new Date(t.ends_at * 1000);
+                    const now = new Date();
+                    const daysLeft = Math.ceil((ends - now) / 86400000);
+                    const timeStr = t.status === 'active'
+                        ? (daysLeft > 0 ? `${daysLeft}d left` : 'Ends today')
+                        : ends.toLocaleDateString();
+                    return `<div class="trn-card trn-${t.status}" onclick="loadTournamentLb(${t.id},this)">
+                        <div class="trn-header">
+                            <span class="trn-status">${STATUS_LABEL[t.status]||t.status}</span>
+                            <span class="trn-time">${timeStr}</span>
+                        </div>
+                        <h3 class="trn-name">${esc(t.name)}</h3>
+                        <div class="trn-meta">
+                            ${DIFF_ICON_T[t.difficulty]||''} ${esc(t.difficulty)}
+                            · ${t.game_mode === 'timed' ? '⏱ Timed' : '♟ Classic'}
+                            · ${t.player_count} player${t.player_count !== 1 ? 's' : ''}
+                        </div>
+                    </div>`;
+                }).join('');
+            } catch(e) {
+                wrap.innerHTML = '<p class="trn-empty">Could not load tournaments.</p>';
+            }
+        }
+
+        async function loadTournamentLb(id, card) {
+            document.querySelectorAll('.trn-card').forEach(c=>c.classList.remove('trn-selected'));
+            card?.classList.add('trn-selected');
+            const tbl = document.getElementById('trn-lb');
+            const tbody = document.getElementById('trn-lb-body');
+            if (!tbody) return;
+            tbl.style.display = 'block';
+            tbody.innerHTML = '<tr><td colspan="5" class="lb-loading">Loading…</td></tr>';
+            try {
+                const data = await fetch('/api/tournament.php?action=leaderboard&id='+id).then(r=>r.json());
+                document.getElementById('trn-lb-title').textContent = data.tournament?.name || '';
+                if (!data.entries?.length) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="lb-loading">No results yet.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = data.entries.map(e=>`<tr>
+                    <td class="lb-rank rank-${e.rank}">${e.rank<=3?['🥇','🥈','🥉'][e.rank-1]:e.rank}</td>
+                    <td class="lb-nick">${esc(e.nickname)}</td>
+                    <td>${e.guesses}</td>
+                    <td>${formatTime(e.seconds)}</td>
+                    <td class="lb-score">${e.score.toLocaleString()}</td>
+                </tr>`).join('');
+            } catch(e) {
+                tbody.innerHTML = '<tr><td colspan="5" class="lb-loading">Could not load results.</td></tr>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', ()=>{ loadLeaderboard('all'); loadFeedback(); loadTournaments(); });
     </script>
 </head>
 <body>
@@ -266,6 +330,28 @@
                     </tr></thead>
                     <tbody id="lb-body"><tr><td colspan="6" class="lb-loading">Loading…</td></tr></tbody>
                 </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- TOURNAMENTS -->
+    <section class="tournament-section" id="tournaments">
+        <div class="container">
+            <h2>🏅 Tournaments</h2>
+            <p class="section-sub">Same secret code for everyone — compete fairly.</p>
+            <div class="trn-list" id="trn-list">
+                <p class="trn-empty">Loading…</p>
+            </div>
+            <div id="trn-lb" style="display:none; margin-top:2rem;">
+                <h3 id="trn-lb-title" style="color:var(--accent);margin-bottom:1rem;"></h3>
+                <div class="lb-table-wrap">
+                    <table class="lb-table">
+                        <thead><tr>
+                            <th>#</th><th>Player</th><th>Guesses</th><th>Time</th><th>Score</th>
+                        </tr></thead>
+                        <tbody id="trn-lb-body"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </section>
