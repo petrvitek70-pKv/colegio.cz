@@ -120,7 +120,7 @@ let allData = [];
 async function doLogin() {
   apiKey = document.getElementById('keyInput').value.trim();
   try {
-    const r = await fetch(`${API}?key=${encodeURIComponent(apiKey)}&limit=500`);
+    const r = await fetch(`${API}?limit=500`, { headers: { 'X-Admin-Key': apiKey } });
     if (r.status === 401) { document.getElementById('error').textContent = 'Špatný klíč'; return; }
     const json = await r.json();
     allData = json.feedback || [];
@@ -176,9 +176,9 @@ function render() {
 }
 
 async function togglePublish(id, newVal, btn) {
-  await fetch(`${API}?key=${encodeURIComponent(apiKey)}`, {
+  await fetch(API, {
     method: 'POST',
-    headers: {'Content-Type':'application/json'},
+    headers: {'Content-Type':'application/json', 'X-Admin-Key': apiKey},
     body: JSON.stringify({id, published: newVal}),
   });
   const row = allData.find(r => r.id == id);
