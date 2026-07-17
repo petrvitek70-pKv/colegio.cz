@@ -3,19 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mastermind — Správa zpětné vazby</title>
+<title>Mastermind — Admin</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: system-ui, sans-serif; background: #06060F; color: #e0e0e0; min-height: 100vh; }
   header { background: #0d0d1f; padding: 16px 24px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid #222; }
-  header h1 { font-size: 18px; color: #F0E442; }
+  header h1 { font-size: 18px; color: #F0E442; flex: 1; }
+  .tab-bar { display: flex; gap: 4px; background: #0d0d1f; padding: 0 24px; border-bottom: 1px solid #222; }
+  .tab { padding: 12px 20px; cursor: pointer; color: #888; font-size: 14px; border-bottom: 2px solid transparent; }
+  .tab.active { color: #F0E442; border-bottom-color: #F0E442; }
   #login { max-width: 360px; margin: 80px auto; background: #0d0d1f; border-radius: 12px; padding: 32px; }
   #login h2 { color: #F0E442; margin-bottom: 20px; }
-  input[type=password], input[type=text] { width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid #333; background: #1a1a2e; color: #e0e0e0; font-size: 15px; margin-bottom: 12px; }
+  input[type=password], input[type=text], input[type=datetime-local], select.field {
+    width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid #333;
+    background: #1a1a2e; color: #e0e0e0; font-size: 15px; margin-bottom: 12px;
+  }
+  select.field option { background: #1a1a2e; }
   button { background: #F0E442; color: #06060F; border: none; border-radius: 8px; padding: 10px 20px; font-weight: 700; cursor: pointer; font-size: 15px; }
   button:hover { opacity: 0.85; }
   button.secondary { background: #333; color: #e0e0e0; }
-  #app { padding: 24px; max-width: 1100px; margin: 0 auto; }
+  button.danger { background: #3d1010; color: #ff6b6b; }
+  button.sm { font-size: 12px; padding: 4px 10px; border-radius: 6px; }
+  #app { display: none; }
+  .pane { padding: 24px; max-width: 1100px; margin: 0 auto; display: none; }
+  .pane.active { display: block; }
   .filters { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
   .filters select { padding: 8px 12px; border-radius: 8px; border: 1px solid #333; background: #1a1a2e; color: #e0e0e0; }
   .stats { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
@@ -32,104 +43,216 @@
   .cat-game   { background: #102030; color: #6bb5ff; }
   .cat-praise { background: #2d2510; color: #ffdb6b; }
   .cat-general{ background: #1a1a2e; color: #aaa; }
+  .badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; }
+  .badge-active   { background: #1a2d10; color: #6bff8e; }
+  .badge-upcoming { background: #102030; color: #6bb5ff; }
+  .badge-finished { background: #1a1a2e; color: #888; }
   .msg { max-width: 420px; line-height: 1.5; }
   .meta { font-size: 12px; color: #666; margin-top: 4px; }
   .pub-btn { font-size: 12px; padding: 4px 10px; border-radius: 6px; }
   .published { background: #1a2d10; color: #6bff8e; }
   #error { color: #ff6b6b; margin-top: 8px; font-size: 14px; }
   .empty { text-align: center; padding: 60px; color: #555; }
-  #app { display: none; }
-  .app-top { padding: 24px 24px 0; }
-  .app-main { padding: 0 24px 24px; }
   td.nowrap { white-space: nowrap; color: #666; }
   td.muted { color: #666; }
+  .card { background: #0d0d1f; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+  .card h3 { color: #F0E442; margin-bottom: 16px; font-size: 16px; }
+  .form-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .form-row > * { flex: 1; min-width: 160px; }
+  .form-label { font-size: 12px; color: #888; margin-bottom: 4px; }
+  .seed-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 12px; }
+  .seed-grid select.field { margin-bottom: 0; }
+  .msg-box { padding: 12px 16px; border-radius: 8px; margin-bottom: 12px; font-size: 14px; }
+  .msg-ok  { background: #1a2d10; color: #6bff8e; }
+  .msg-err { background: #3d1010; color: #ff6b6b; }
+  .entries-panel { background: #111120; border-radius: 8px; padding: 16px; margin-top: 12px; }
+  .entries-panel h4 { color: #888; font-size: 13px; margin-bottom: 12px; }
 </style>
 </head>
 <body>
 
 <div id="login">
   <h2>🎮 Mastermind Admin</h2>
-  <input type="password" id="keyInput" placeholder="API klíč" />
+  <input type="password" id="keyInput" placeholder="Admin klíč" />
   <button onclick="doLogin()">Přihlásit</button>
   <div id="error"></div>
 </div>
 
 <div id="app">
   <header>
-    <h1>🎮 Zpětná vazba hráčů</h1>
-    <span id="totalLabel" style="color:#888;font-size:14px"></span>
+    <h1>🎮 Mastermind Admin</h1>
   </header>
+  <div class="tab-bar">
+    <div class="tab active" onclick="switchTab('feedback')">💬 Zpětná vazba</div>
+    <div class="tab" onclick="switchTab('tournaments')">🏅 Turnaje</div>
+  </div>
 
-  <div class="app-top">
-    <div class="stats">
-      <div class="stat"><div class="val" id="s-total">—</div><div class="lbl">Celkem</div></div>
-      <div class="stat"><div class="val" id="s-bug">—</div><div class="lbl">🐛 Chyby</div></div>
-      <div class="stat"><div class="val" id="s-idea">—</div><div class="lbl">💡 Nápady</div></div>
-      <div class="stat"><div class="val" id="s-game">—</div><div class="lbl">🎮 Nové hry</div></div>
-      <div class="stat"><div class="val" id="s-praise">—</div><div class="lbl">👍 Pochvaly</div></div>
-      <div class="stat"><div class="val" id="s-pub">—</div><div class="lbl">📢 Zveřejněné</div></div>
-    </div>
-
-    <div class="filters">
-      <select id="catFilter" onchange="render()">
-        <option value="">Všechny kategorie</option>
-        <option value="bug">🐛 Chyba</option>
-        <option value="idea">💡 Nápad</option>
-        <option value="game">🎮 Nová hra</option>
-        <option value="praise">👍 Pochvala</option>
-        <option value="general">Obecné</option>
-      </select>
-      <select id="pubFilter" onchange="render()">
-        <option value="">Vše</option>
-        <option value="1">Jen zveřejněné</option>
-        <option value="0">Jen nezveřejněné</option>
-      </select>
-      <select id="platFilter" onchange="render()">
-        <option value="">Všechny platformy</option>
-        <option value="ios">iOS</option>
-        <option value="android">Android</option>
-      </select>
+  <!-- ═══ FEEDBACK PANE ═══ -->
+  <div id="pane-feedback" class="pane active">
+    <div style="padding-top:24px">
+      <div class="stats">
+        <div class="stat"><div class="val" id="s-total">—</div><div class="lbl">Celkem</div></div>
+        <div class="stat"><div class="val" id="s-bug">—</div><div class="lbl">🐛 Chyby</div></div>
+        <div class="stat"><div class="val" id="s-idea">—</div><div class="lbl">💡 Nápady</div></div>
+        <div class="stat"><div class="val" id="s-game">—</div><div class="lbl">🎮 Nové hry</div></div>
+        <div class="stat"><div class="val" id="s-praise">—</div><div class="lbl">👍 Pochvaly</div></div>
+        <div class="stat"><div class="val" id="s-pub">—</div><div class="lbl">📢 Zveřejněné</div></div>
+      </div>
+      <div class="filters">
+        <select id="catFilter" onchange="renderFeedback()">
+          <option value="">Všechny kategorie</option>
+          <option value="bug">🐛 Chyba</option>
+          <option value="idea">💡 Nápad</option>
+          <option value="game">🎮 Nová hra</option>
+          <option value="praise">👍 Pochvala</option>
+          <option value="general">Obecné</option>
+        </select>
+        <select id="pubFilter" onchange="renderFeedback()">
+          <option value="">Vše</option>
+          <option value="1">Jen zveřejněné</option>
+          <option value="0">Jen nezveřejněné</option>
+        </select>
+        <select id="platFilter" onchange="renderFeedback()">
+          <option value="">Všechny platformy</option>
+          <option value="ios">iOS</option>
+          <option value="android">Android</option>
+        </select>
+      </div>
+      <table>
+        <thead><tr>
+          <th>Datum</th><th>Kategorie</th><th>Zpráva</th><th>Autor</th><th>Platforma</th><th>Zveřejnit</th>
+        </tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div id="emptyMsg" class="empty" hidden>Žádné záznamy</div>
     </div>
   </div>
 
-  <div class="app-main">
-    <table>
-      <thead>
-        <tr>
-          <th>Datum</th>
-          <th>Kategorie</th>
-          <th>Zpráva</th>
-          <th>Autor</th>
-          <th>Platforma</th>
-          <th>Zveřejnit</th>
-        </tr>
-      </thead>
-      <tbody id="tbody"></tbody>
-    </table>
-    <div id="emptyMsg" class="empty" hidden>Žádné záznamy</div>
-  </div>
-</div>
+  <!-- ═══ TOURNAMENTS PANE ═══ -->
+  <div id="pane-tournaments" class="pane">
+
+    <!-- Create / Edit form -->
+    <div class="card" style="margin-top:24px">
+      <h3 id="trn-form-title">➕ Nový turnaj</h3>
+      <input type="hidden" id="trn-edit-id" value="" />
+      <div class="form-label">Název</div>
+      <input type="text" id="trn-name" placeholder="Weekly Classic #1" />
+      <div class="form-row">
+        <div>
+          <div class="form-label">Obtížnost</div>
+          <select class="field" id="trn-diff">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="classic" selected>Classic</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+        <div>
+          <div class="form-label">Mód</div>
+          <select class="field" id="trn-mode">
+            <option value="classic" selected>Classic</option>
+            <option value="timed">Timed</option>
+          </select>
+        </div>
+        <div>
+          <div class="form-label">Opakování barev</div>
+          <select class="field" id="trn-rep">
+            <option value="0" selected>Ne</option>
+            <option value="1">Ano</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div>
+          <div class="form-label">Začátek</div>
+          <input type="datetime-local" id="trn-start" />
+        </div>
+        <div>
+          <div class="form-label">Konec</div>
+          <input type="datetime-local" id="trn-end" />
+        </div>
+      </div>
+      <div class="form-label">Tajný kód (seed) — <span id="seed-count">4</span> barev pro zvolenou obtížnost</div>
+      <div class="seed-grid" id="seed-grid"></div>
+      <div id="trn-form-msg"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button onclick="submitTournament()">💾 Uložit turnaj</button>
+        <button class="secondary" onclick="resetForm()">Zrušit</button>
+      </div>
+    </div>
+
+    <!-- Tournament list -->
+    <div class="card">
+      <h3>📋 Všechny turnaje</h3>
+      <div id="trn-msg"></div>
+      <table>
+        <thead><tr>
+          <th>Stav</th><th>Název</th><th>Obtížnost</th><th>Mód</th><th>Začátek</th><th>Konec</th><th>Hráči</th><th>Akce</th>
+        </tr></thead>
+        <tbody id="trn-tbody"></tbody>
+      </table>
+      <div id="trn-empty" class="empty" hidden>Žádné turnaje</div>
+    </div>
+
+    <!-- Entries / disqualify panel -->
+    <div class="card" id="entries-card" style="display:none">
+      <h3 id="entries-title">👥 Přihlášení hráči</h3>
+      <div class="entries-panel">
+        <table>
+          <thead><tr><th>#</th><th>Přezdívka</th><th>Skóre</th><th>Pokusy</th><th>Sekund</th><th>Odesláno</th><th>Akce</th></tr></thead>
+          <tbody id="entries-tbody"></tbody>
+        </table>
+        <div id="entries-empty" class="empty" hidden>Žádní hráči</div>
+      </div>
+    </div>
+
+  </div><!-- /pane-tournaments -->
+</div><!-- /app -->
 
 <script>
-const API = '/api/feedback-list.php';
-const CATS = { bug:'cat-bug', idea:'cat-idea', game:'cat-game', praise:'cat-praise', general:'cat-general' };
-const LABELS = { bug:'🐛 Chyba', idea:'💡 Nápad', game:'🎮 Nová hra', praise:'👍 Pochvala', general:'Obecné' };
-let apiKey = '';
-let allData = [];
+const FB_API  = '/api/feedback-list.php';
+const TRN_API = '/api/tournament.php';
+const COLORS  = ['orange','skyBlue','green','yellow','blue','pink'];
+const COLOR_LABELS = { orange:'🟠 Orange', skyBlue:'🔵 Sky Blue', green:'🟢 Green', yellow:'🟡 Yellow', blue:'💙 Blue', pink:'🩷 Pink' };
+const DIFFS   = { easy:4, medium:4, classic:4, hard:5 };
 
+let apiKey  = '';
+let allData = [];
+let allTrns = [];
+let activeEntriesTrnId = null;
+
+// ─── Auth ──────────────────────────────────────────────────────────────────
 async function doLogin() {
   apiKey = document.getElementById('keyInput').value.trim();
   try {
-    const r = await fetch(`${API}?limit=500`, { headers: { 'X-Admin-Key': apiKey } });
+    const r = await fetch(`${FB_API}?limit=500`, { headers: { 'X-Admin-Key': apiKey } });
     if (r.status === 401) { document.getElementById('error').textContent = 'Špatný klíč'; return; }
     const json = await r.json();
     allData = json.feedback || [];
     document.getElementById('login').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     updateStats();
-    render();
+    renderFeedback();
+    loadTournaments();
+    buildSeedGrid();
+    setDefaultDates();
   } catch(e) { document.getElementById('error').textContent = 'Chyba připojení'; }
 }
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─── Tabs ──────────────────────────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ['feedback','tournaments'][i] === name));
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+  document.getElementById('pane-' + name).classList.add('active');
+}
+
+// ─── Feedback ─────────────────────────────────────────────────────────────
+const CATS   = { bug:'cat-bug', idea:'cat-idea', game:'cat-game', praise:'cat-praise', general:'cat-general' };
+const LABELS = { bug:'🐛 Chyba', idea:'💡 Nápad', game:'🎮 Nová hra', praise:'👍 Pochvala', general:'Obecné' };
 
 function updateStats() {
   const count = k => allData.filter(r => r.category === k).length;
@@ -141,23 +264,18 @@ function updateStats() {
   document.getElementById('s-pub').textContent    = allData.filter(r => r.published == 1).length;
 }
 
-function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function render() {
+function renderFeedback() {
   const cat  = document.getElementById('catFilter').value;
   const pub  = document.getElementById('pubFilter').value;
   const plat = document.getElementById('platFilter').value;
   let rows = allData;
-  if (cat)  rows = rows.filter(r => r.category === cat);
-  if (pub !== '')  rows = rows.filter(r => String(r.published) === pub);
-  if (plat) rows = rows.filter(r => (r.platform || '').toLowerCase() === plat);
+  if (cat)      rows = rows.filter(r => r.category === cat);
+  if (pub !== '') rows = rows.filter(r => String(r.published) === pub);
+  if (plat)     rows = rows.filter(r => (r.platform||'').toLowerCase() === plat);
 
   const tbody = document.getElementById('tbody');
   tbody.innerHTML = '';
   document.getElementById('emptyMsg').hidden = rows.length > 0;
-
   rows.forEach(r => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
@@ -166,21 +284,14 @@ function render() {
       <td class="msg">${esc(r.message)}</td>
       <td><div>${esc(r.name||'—')}</div><div class="meta">${esc(r.email||'')}</div></td>
       <td class="muted">${esc(r.platform||'—')}<div class="meta">${esc(r.app_lang||'')}</div></td>
-      <td>
-        <button class="pub-btn ${r.published==1?'published':''}" onclick="togglePublish(${r.id},${r.published==1?0:1},this)">
-          ${r.published==1?'✅ Zveřejněno':'Zveřejnit'}
-        </button>
-      </td>`;
+      <td><button class="pub-btn ${r.published==1?'published':''}" onclick="togglePublish(${r.id},${r.published==1?0:1},this)">
+        ${r.published==1?'✅ Zveřejněno':'Zveřejnit'}</button></td>`;
     tbody.appendChild(tr);
   });
 }
 
 async function togglePublish(id, newVal, btn) {
-  await fetch(API, {
-    method: 'POST',
-    headers: {'Content-Type':'application/json', 'X-Admin-Key': apiKey},
-    body: JSON.stringify({id, published: newVal}),
-  });
+  await fetch(FB_API, { method:'POST', headers:{'Content-Type':'application/json','X-Admin-Key':apiKey}, body:JSON.stringify({id, published:newVal}) });
   const row = allData.find(r => r.id == id);
   if (row) row.published = newVal;
   btn.textContent = newVal ? '✅ Zveřejněno' : 'Zveřejnit';
@@ -188,7 +299,234 @@ async function togglePublish(id, newVal, btn) {
   updateStats();
 }
 
-document.getElementById('keyInput').addEventListener('keydown', e => { if (e.key==='Enter') doLogin(); });
+// ─── Tournaments ──────────────────────────────────────────────────────────
+async function loadTournaments() {
+  try {
+    const r = await fetch(`${TRN_API}?action=list`);
+    const j = await r.json();
+    allTrns = j.tournaments || [];
+    renderTournaments();
+  } catch(e) { showTrnMsg('Chyba načítání turnajů', true); }
+}
+
+function fmtTs(ts) {
+  if (!ts) return '—';
+  return new Date(ts * 1000).toLocaleString('cs-CZ', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+
+function statusBadge(s) {
+  if (s === 'active')   return '<span class="badge badge-active">🟢 Aktivní</span>';
+  if (s === 'upcoming') return '<span class="badge badge-upcoming">⏳ Brzy</span>';
+  return '<span class="badge badge-finished">🏁 Skončil</span>';
+}
+
+function renderTournaments() {
+  const tbody = document.getElementById('trn-tbody');
+  tbody.innerHTML = '';
+  document.getElementById('trn-empty').hidden = allTrns.length > 0;
+  allTrns.forEach(t => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${statusBadge(t.status)}</td>
+      <td><b>${esc(t.name)}</b></td>
+      <td class="muted">${esc(t.difficulty)}</td>
+      <td class="muted">${esc(t.game_mode)}</td>
+      <td class="muted nowrap">${fmtTs(t.starts_at)}</td>
+      <td class="muted nowrap">${fmtTs(t.ends_at)}</td>
+      <td class="muted">${t.player_count}</td>
+      <td style="white-space:nowrap;display:flex;gap:6px;flex-wrap:wrap">
+        <button class="sm secondary" onclick="editTournament(${t.id})">✏️ Upravit</button>
+        <button class="sm" onclick="showEntries(${t.id})">👥 Hráči</button>
+        <button class="sm danger" onclick="deleteTournament(${t.id}, '${esc(t.name)}')">🗑 Smazat</button>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function showTrnMsg(text, isErr) {
+  const el = document.getElementById('trn-msg');
+  el.innerHTML = `<div class="msg-box ${isErr?'msg-err':'msg-ok'}">${esc(text)}</div>`;
+  setTimeout(() => el.innerHTML = '', 4000);
+}
+
+// ─── Seed grid ────────────────────────────────────────────────────────────
+function buildSeedGrid() {
+  const diff  = document.getElementById('trn-diff').value;
+  const count = DIFFS[diff] || 4;
+  document.getElementById('seed-count').textContent = count;
+  const grid  = document.getElementById('seed-grid');
+  grid.style.gridTemplateColumns = `repeat(${count}, 1fr)`;
+  // preserve existing values
+  const existing = Array.from(grid.querySelectorAll('select')).map(s => s.value);
+  grid.innerHTML = '';
+  for (let i = 0; i < count; i++) {
+    const sel = document.createElement('select');
+    sel.className = 'field';
+    COLORS.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c;
+      opt.textContent = COLOR_LABELS[c];
+      if (existing[i] === c) opt.selected = true;
+      sel.appendChild(opt);
+    });
+    grid.appendChild(sel);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('trn-diff').addEventListener('change', buildSeedGrid);
+  document.getElementById('keyInput').addEventListener('keydown', e => { if (e.key==='Enter') doLogin(); });
+});
+
+function getSeed() {
+  return Array.from(document.getElementById('seed-grid').querySelectorAll('select')).map(s => s.value);
+}
+
+function setDefaultDates() {
+  const now  = new Date();
+  const end  = new Date(now.getTime() + 7 * 24 * 3600 * 1000);
+  const fmt  = d => d.toISOString().slice(0,16);
+  document.getElementById('trn-start').value = fmt(now);
+  document.getElementById('trn-end').value   = fmt(end);
+}
+
+function toLocalIso(dtLocal) {
+  // datetime-local gives local time, we need UTC unix timestamp
+  return Math.floor(new Date(dtLocal).getTime() / 1000);
+}
+
+// ─── Create / Update form ─────────────────────────────────────────────────
+function resetForm() {
+  document.getElementById('trn-edit-id').value = '';
+  document.getElementById('trn-form-title').textContent = '➕ Nový turnaj';
+  document.getElementById('trn-name').value = '';
+  document.getElementById('trn-diff').value = 'classic';
+  document.getElementById('trn-mode').value = 'classic';
+  document.getElementById('trn-rep').value  = '0';
+  buildSeedGrid();
+  setDefaultDates();
+  document.getElementById('trn-form-msg').innerHTML = '';
+}
+
+function editTournament(id) {
+  const t = allTrns.find(x => x.id === id);
+  if (!t) return;
+  document.getElementById('trn-edit-id').value      = id;
+  document.getElementById('trn-form-title').textContent = '✏️ Upravit turnaj';
+  document.getElementById('trn-name').value          = t.name;
+  document.getElementById('trn-diff').value          = t.difficulty;
+  document.getElementById('trn-mode').value          = t.game_mode;
+  document.getElementById('trn-rep').value           = t.allow_repetition ? '1' : '0';
+  buildSeedGrid();
+  // set dates
+  const fmt = ts => new Date(ts * 1000).toISOString().slice(0,16);
+  document.getElementById('trn-start').value = fmt(t.starts_at);
+  document.getElementById('trn-end').value   = fmt(t.ends_at);
+  document.getElementById('pane-tournaments').scrollTo(0, 0);
+  window.scrollTo(0, 0);
+}
+
+async function submitTournament() {
+  const editId   = document.getElementById('trn-edit-id').value;
+  const name     = document.getElementById('trn-name').value.trim();
+  const diff     = document.getElementById('trn-diff').value;
+  const mode     = document.getElementById('trn-mode').value;
+  const rep      = parseInt(document.getElementById('trn-rep').value);
+  const starts   = toLocalIso(document.getElementById('trn-start').value);
+  const ends     = toLocalIso(document.getElementById('trn-end').value);
+  const seed     = getSeed();
+  const msgEl    = document.getElementById('trn-form-msg');
+
+  if (!name)           { msgEl.innerHTML = '<div class="msg-box msg-err">Zadej název</div>'; return; }
+  if (starts >= ends)  { msgEl.innerHTML = '<div class="msg-box msg-err">Konec musí být po začátku</div>'; return; }
+
+  const isEdit = editId !== '';
+  const action = isEdit ? 'update' : 'create';
+  const body   = isEdit
+    ? { admin_secret: apiKey, id: parseInt(editId), name, starts_at: starts, ends_at: ends, seed }
+    : { admin_secret: apiKey, name, difficulty: diff, game_mode: mode, allow_repetition: rep, seed, starts_at: starts, ends_at: ends };
+
+  try {
+    const r = await fetch(`${TRN_API}?action=${action}`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(body),
+    });
+    const j = await r.json();
+    if (!r.ok) { msgEl.innerHTML = `<div class="msg-box msg-err">${esc(j.error||'Chyba')}</div>`; return; }
+    msgEl.innerHTML = `<div class="msg-box msg-ok">${isEdit ? '✅ Turnaj upraven' : `✅ Turnaj vytvořen (ID ${j.id})`}</div>`;
+    setTimeout(() => msgEl.innerHTML = '', 3000);
+    if (!isEdit) resetForm();
+    loadTournaments();
+  } catch(e) { msgEl.innerHTML = '<div class="msg-box msg-err">Chyba připojení</div>'; }
+}
+
+async function deleteTournament(id, name) {
+  if (!confirm(`Opravdu smazat turnaj "${name}" a všechny jeho záznamy?`)) return;
+  try {
+    const r = await fetch(`${TRN_API}?action=delete`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ admin_secret: apiKey, id }),
+    });
+    const j = await r.json();
+    if (!r.ok) { showTrnMsg(j.error || 'Chyba', true); return; }
+    showTrnMsg('Turnaj smazán');
+    if (activeEntriesTrnId === id) document.getElementById('entries-card').style.display = 'none';
+    loadTournaments();
+  } catch(e) { showTrnMsg('Chyba připojení', true); }
+}
+
+// ─── Entries / disqualify ─────────────────────────────────────────────────
+async function showEntries(id) {
+  activeEntriesTrnId = id;
+  const t = allTrns.find(x => x.id === id);
+  document.getElementById('entries-title').textContent = `👥 Hráči — ${t ? t.name : id}`;
+  document.getElementById('entries-card').style.display = 'block';
+  document.getElementById('entries-empty').hidden = true;
+  document.getElementById('entries-tbody').innerHTML = '<tr><td colspan="7" style="color:#555;padding:20px">Načítání…</td></tr>';
+
+  try {
+    const r = await fetch(`${TRN_API}?action=entries&id=${id}`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ admin_secret: apiKey, id }),
+    });
+    const j = await r.json();
+    const entries = j.entries || [];
+    const tbody = document.getElementById('entries-tbody');
+    tbody.innerHTML = '';
+    document.getElementById('entries-empty').hidden = entries.length > 0;
+    entries.forEach((e, i) => {
+      const tr = document.createElement('tr');
+      const submitted = e.submitted_at ? fmtTs(e.submitted_at) : '<span style="color:#555">Neodesláno</span>';
+      tr.innerHTML = `
+        <td class="muted">${i+1}</td>
+        <td><b>${esc(e.nickname)}</b></td>
+        <td class="muted">${e.score}</td>
+        <td class="muted">${e.guesses || '—'}</td>
+        <td class="muted">${e.seconds || '—'}</td>
+        <td class="muted nowrap">${submitted}</td>
+        <td><button class="sm danger" onclick="disqualify(${id},'${esc(e.nickname)}')">🚫 Diskvalifikovat</button></td>`;
+      tbody.appendChild(tr);
+    });
+  } catch(e) { document.getElementById('entries-tbody').innerHTML = '<tr><td colspan="7" style="color:#f66">Chyba načítání</td></tr>'; }
+}
+
+async function disqualify(tournamentId, nickname) {
+  if (!confirm(`Diskvalifikovat hráče "${nickname}"? Bude odstraněn z turnaje a bude se moci znovu přihlásit.`)) return;
+  try {
+    const r = await fetch(`${TRN_API}?action=disqualify`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ admin_secret: apiKey, tournament_id: tournamentId, nickname }),
+    });
+    const j = await r.json();
+    if (!r.ok) { alert(j.error || 'Chyba'); return; }
+    showEntries(tournamentId);
+    loadTournaments();
+  } catch(e) { alert('Chyba připojení'); }
+}
 </script>
 </body>
 </html>

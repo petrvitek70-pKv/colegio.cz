@@ -260,4 +260,100 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'create') {
     jsonResponse(['ok' => true, 'id' => (int)$db->lastInsertId()]);
 }
 
+// ── UPDATE (admin only) — change name, dates, seed ───────────────────────────
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'update') {
+    $body = json_decode(file_get_contents('php://input'), true) ?? [];
+    if (($body['admin_secret'] ?? '') !== ADMIN_SECRET) jsonResponse(['error' => 'Unauthorized'], 401);
+
+    $id        = (int)($body['id'] ?? 0);
+    $name      = trim($body['name'] ?? '');
+    $starts_at = (int)($body['starts_at'] ?? 0);
+    $ends_at   = (int)($body['ends_at'] ?? 0);
+    $seed      = $body['seed'] ?? null;
+
+    if (!$id || !$name) jsonResponse(['error' => 'Missing id or name'], 400);
+    if ($starts_at && $ends_at && $starts_at >= $ends_at) jsonResponse(['error' => 'Invalid dates'], 400);
+
+    $stmt = $db->prepare("SELECT id FROM tournaments WHERE id = ?");
+    $stmt->execute([$id]);
+    if (!$stmt->fetch()) jsonResponse(['error' => 'Not found'], 404);
+
+    $fields = ['name = ?'];
+    $params = [$name];
+    if ($starts_at) { $fields[] = 'starts_at = ?'; $params[] = $starts_at; }
+    if ($ends_at)   { $fields[] = 'ends_at = ?';   $params[] = $ends_at;   }
+    if ($seed !== null && is_array($seed) && count($seed) >= 4) {
+        $fields[] = 'seed = ?';
+        $params[] = json_encode($seed);
+    }
+    $params[] = $id;
+
+    $db->prepare("UPDATE tournaments SET " . implode(', ', $fields) . " WHERE id = ?")
+       ->execute($params);
+
+    jsonResponse(['ok' => true]);
+}
+
+// ── DELETE (admin only) ───────────────────────────────────────────────────────
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'delete') {
+    $body = json_decode(file_get_contents('php://input'), true) ?? [];
+    if (($body['admin_secret'] ?? '') !== ADMIN_SECRET) jsonResponse(['error' => 'Unauthorized'], 401);
+
+    $id = (int)($body['id'] ?? 0);
+    if (!$id) jsonResponse(['error' => 'Missing id'], 400);
+
+    $db->prepare("DELETE FROM tournament_entries WHERE tournament_id = ?")->execute([$id]);
+    $db->prepare("DELETE FROM tournaments WHERE id = ?")->execute([$id]);
+
+    jsonResponse(['ok' => true]);
+}
+
+// ── DISQUALIFY (admin only) — remove one player's entry ──────────────────────
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'disqualify') {
+    $body = json_decode(file_get_contents('php://input'), true) ?? [];
+    if (($body['admin_secret'] ?? '') !== ADMIN_SECRET) jsonResponse(['error' => 'Unauthorized'], 401);
+
+    $tournament_id = (int)($body['tournament_id'] ?? 0);
+    $nickname      = trim($body['nickname'] ?? '');
+    if (!$tournament_id || !$nickname) jsonResponse(['error' => 'Missing params'], 400);
+
+    $stmt = $db->prepare("DELETE FROM tournament_entries WHERE tournament_id = ? AND nickname = ?");
+    $stmt->execute([$tournament_id, $nickname]);
+
+    jsonResponse(['ok' => true, 'deleted' => $stmt->rowCount()]);
+}
+
+// ── ENTRIES (admin only) — list all entries for a tournament ─────────────────
+if ($action === 'entries') {
+    $body = json_decode(file_get_contents('php://input'), true) ?? [];
+    // Support both GET (with query param) and POST (with JSON body)
+    $admin_secret  = $body['admin_secret'] ?? ($_GET['admin_secret'] ?? '');
+    if ($admin_secret !== ADMIN_SECRET) jsonResponse(['error' => 'Unauthorized'], 401);
+
+    $id = (int)($_GET['id'] ?? ($body['id'] ?? 0));
+    if (!$id) jsonResponse(['error' => 'Missing id'], 400);
+
+    $stmt = $db->prepare("
+        SELECT nickname, score, guesses, seconds, seed_issued_at, submitted_at
+        FROM tournament_entries
+        WHERE tournament_id = ?
+        ORDER BY score DESC, guesses ASC, seconds ASC
+    ");
+    $stmt->execute([$id]);
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $out = [];
+    foreach ($rows as $r) {
+        $out[] = [
+            'nickname'      => $r['nickname'],
+            'score'         => (int)$r['score'],
+            'guesses'       => (int)$r['guesses'],
+            'seconds'       => (int)$r['seconds'],
+            'seed_issued_at'=> $r['seed_issued_at'] ? (int)$r['seed_issued_at'] : null,
+            'submitted_at'  => $r['submitted_at']   ? (int)$r['submitted_at']   : null,
+        ];
+    }
+    jsonResponse(['entries' => $out]);
+}
+
 jsonResponse(['error' => 'Unknown action'], 400);
