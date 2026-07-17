@@ -41,6 +41,10 @@ Každý odeslaný výsledek server **přepočítá** stejným algoritmem jako hr
 ## GitHub
 `https://github.com/petrvitek70-pKv/colegio.cz` (private)
 
+## Při startu každé session
+1. Spustit `git pull` ve všech třech repozitářích (Mastermind, MastermindAndroid, web colegio)
+2. Přečíst `STATUS.md` v každém repozitáři — zjistit aktuální stav projektu
+
 ## Pracovní pravidla Claude
 
 ### Git
