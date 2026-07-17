@@ -39,3 +39,19 @@ Každý odeslaný výsledek server **přepočítá** stejným algoritmem jako hr
 
 ## GitHub
 `https://github.com/petrvitek70-pKv/colegio.cz` (private)
+
+## Pracovní pravidla Claude
+
+### Git
+- Po každé změně ihned commitovat a pushovat bez ptaní (push = automatický deploy na colegio.cz)
+- **NIKDY** nepřidávat `Co-Authored-By:` do commit messages
+
+### Synchronizace platforem
+- Každá změna textu nebo funkce → implementovat do všech tří míst: web + iOS (`Mastermind/`) + Android (`MastermindAndroid/`)
+- Nový string v i18n.js → přidat do všech jazyků
+- Změna algoritmu skóre → aktualizovat `score.php`, iOS i Android současně
+
+### Lokalizace
+- Překlady psát přes Python skript, ne bash heredoc (bash selhává na speciálních znacích)
+- Po přidání stringů ověřit úplnost: porovnat klíče EN se všemi jazyky v `assets/i18n.js`
+- Web parser i18n.js: používat regex na úrovni klíčů JS objektu, ne na hodnotách (falešné pozitivy z textu)
