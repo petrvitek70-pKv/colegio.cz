@@ -33,7 +33,8 @@ Každý odeslaný výsledek server **přepočítá** stejným algoritmem jako hr
 - Prepared statements všude — SQLi ochrana již implementována
 
 ## i18n
-- 22 jazyků v `assets/i18n.js` — při přidání textu přeložit do všech jazyků
+- **Vždy lokalizovat do všech jazyků** — pokud uživatel výslovně neřekne jinak
+- Jazyky v `assets/i18n.js` — při přidání textu přeložit do všech jazyků
 - `data-i18n="klíč"` atributy v HTML
 - RTL automaticky pro arabštinu
 
