@@ -1,7 +1,7 @@
 # Mastermind Web (colegio.cz) — Stav projektu
 
 > Tento soubor udržuj aktuální po každé větší změně. Slouží jako onboarding pro novou session nebo nového vývojáře.
-> Poslední aktualizace: 2026-07-18
+> Poslední aktualizace: 2026-07-18 (pentest v6 retest — vše OK)
 
 ---
 
