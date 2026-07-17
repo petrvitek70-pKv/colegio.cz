@@ -9,7 +9,7 @@ Landing page hry Mastermind + žebříček API. Vydává firma **Colegio Solutio
 ```
 index.html          — landing page, i18n (data-i18n atributy), žebříček
 assets/style.css    — dark theme (--bg: #06060F, --accent: #F0E442)
-assets/i18n.js      — TRANSLATIONS objekt, 22 jazyků, detectLang(), applyLang()
+assets/i18n.js      — TRANSLATIONS objekt, detectLang(), applyLang()
 privacy.html        — Privacy Policy (EN)
 terms.html          — Terms of Use (EN)
 api/
