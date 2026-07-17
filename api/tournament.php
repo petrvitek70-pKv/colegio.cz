@@ -82,6 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'seed') {
 
     if ($secret !== API_SECRET)   jsonResponse(['error' => 'Unauthorized'], 401);
     if (!$id || !$nickname)       jsonResponse(['error' => 'Missing params'], 400);
+    if (strlen($nickname) < 1 || strlen($nickname) > 20) jsonResponse(['error' => 'Invalid nickname'], 400);
 
     $stmt = $db->prepare("SELECT * FROM tournaments WHERE id = ?");
     $stmt->execute([$id]);
@@ -89,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'seed') {
     if (!$t) jsonResponse(['error' => 'Tournament not found'], 404);
     if (tournamentStatus($t) === 'upcoming') jsonResponse(['error' => 'Tournament not started yet'], 403);
 
-    $stmt = $db->prepare("SELECT id, submitted_at FROM tournament_entries WHERE tournament_id = ? AND nickname = ?");
+    $stmt = $db->prepare("SELECT id, submitted_at, seed_issued_at FROM tournament_entries WHERE tournament_id = ? AND nickname = ?");
     $stmt->execute([$id, $nickname]);
     $entry = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$entry)              jsonResponse(['error' => 'Not joined'], 403);
