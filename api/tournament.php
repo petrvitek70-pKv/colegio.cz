@@ -19,13 +19,14 @@ function getTournamentDb(): PDO {
             created_at       INTEGER NOT NULL DEFAULT (strftime('%s','now'))
         );
         CREATE TABLE IF NOT EXISTS tournament_entries (
-            id            INTEGER PRIMARY KEY AUTOINCREMENT,
-            tournament_id INTEGER NOT NULL,
-            nickname      TEXT    NOT NULL,
-            score         INTEGER NOT NULL DEFAULT 0,
-            guesses       INTEGER NOT NULL DEFAULT 0,
-            seconds       INTEGER NOT NULL DEFAULT 0,
-            submitted_at  INTEGER,
+            id             INTEGER PRIMARY KEY AUTOINCREMENT,
+            tournament_id  INTEGER NOT NULL,
+            nickname       TEXT    NOT NULL,
+            score          INTEGER NOT NULL DEFAULT 0,
+            guesses        INTEGER NOT NULL DEFAULT 0,
+            seconds        INTEGER NOT NULL DEFAULT 0,
+            seed_issued_at INTEGER,
+            submitted_at   INTEGER,
             UNIQUE(tournament_id, nickname),
             FOREIGN KEY(tournament_id) REFERENCES tournaments(id)
         );
@@ -93,6 +94,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'seed') {
     $entry = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$entry)              jsonResponse(['error' => 'Not joined'], 403);
     if ($entry['submitted_at']) jsonResponse(['error' => 'Already submitted'], 403);
+
+    // Record when seed was issued (for minimum play-time enforcement at submit)
+    if (!$entry['seed_issued_at']) {
+        $db->prepare("UPDATE tournament_entries SET seed_issued_at = strftime('%s','now') WHERE tournament_id = ? AND nickname = ?")
+           ->execute([$id, $nickname]);
+    }
 
     jsonResponse(['seed' => json_decode($t['seed'])]);
 }
@@ -184,8 +191,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'submit') {
     $stmt = $db->prepare("SELECT * FROM tournament_entries WHERE tournament_id = ? AND nickname = ?");
     $stmt->execute([$id, $nickname]);
     $entry = $stmt->fetch(PDO::FETCH_ASSOC);
-    if (!$entry)            jsonResponse(['error' => 'Not joined'], 403);
+    if (!$entry)              jsonResponse(['error' => 'Not joined'], 403);
     if ($entry['submitted_at']) jsonResponse(['error' => 'Already submitted'], 403);
+
+    // Enforce minimum elapsed time since seed was issued
+    $issuedAt = (int)($entry['seed_issued_at'] ?? 0);
+    if ($issuedAt > 0) {
+        $elapsed = time() - $issuedAt;
+        $minRequired = $guesses * 5;  // at least 5s per guess
+        if ($elapsed < $minRequired) jsonResponse(['error' => 'Submitted too fast'], 400);
+    }
 
     // Validate score server-side
     $seed = json_decode($t['seed'], true);
