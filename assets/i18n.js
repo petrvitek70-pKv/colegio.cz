@@ -50,6 +50,7 @@ const TRANSLATIONS = {
     about_story_p3: "Po čtyřiceti letech jsem se k tomu vrátil. Rozhodl jsem se udělat tuto hru znovu, tentokrát pro iOS a Android. Jsem jednatelem společnosti Colegio Solutions s.r.o., kde se spolu s mými společníky věnujeme vývoji software a projektům v oblasti informačních technologií. Mastermind je naše první aplikace pro mobilní zařízení — a snad ne poslední.",
     contact_h2: "Kontaktujte nás",
     contact_p: "Máte dotaz, našli jste chybu nebo chcete navrhnout funkci? Rádi od vás uslyšíme.",
+    knuth_fact: "🧠 Věděli jste? Donald Knuth v roce 1976 dokázal, že pomocí minimax algoritmu lze jakýkoliv kód vyřešit za 5 pokusů nebo méně — to je teoretické optimum pro klasickou verzi (6 barev, 4 pozice). Výjimečný výkon je tedy 3 pokusy.",
   },
   en: {
     nav_features: "Features", nav_about: "About", nav_contact: "Contact",
@@ -102,6 +103,7 @@ const TRANSLATIONS = {
     about_story_p3: "Forty years later, I came back to it. I decided to build the game again, this time for iOS and Android. I am the director of Colegio Solutions s.r.o., where together with my partners we develop software and work on IT projects. Mastermind is our first mobile app — and hopefully not our last.",
     contact_h2: "Get in touch",
     contact_p: "Have a question, found a bug, or want to suggest a feature? We'd love to hear from you.",
+    knuth_fact: "🧠 Did you know? Donald Knuth proved in 1976 that any code can be solved in 5 guesses or fewer using the minimax algorithm — the theoretical optimum for the classic version (6 colors, 4 positions). Solving in 3 guesses is exceptional.",
   },
   de: {
     nav_features: "Funktionen", nav_about: "Über uns", nav_contact: "Kontakt",
@@ -154,6 +156,7 @@ const TRANSLATIONS = {
     about_story_p3: "Vierzig Jahre später kehrte ich dazu zurück. Ich beschloss, das Spiel neu zu bauen — diesmal für iOS und Android. Ich bin Geschäftsführer von Colegio Solutions s.r.o., wo wir gemeinsam mit meinen Partnern Softwareprojekte entwickeln. Mastermind ist unsere erste mobile App — und hoffentlich nicht die letzte.",
     contact_h2: "Kontakt aufnehmen",
     contact_p: "Frage, Bug oder Funktionswunsch? Wir freuen uns von dir zu hören.",
+    knuth_fact: "🧠 Wussten Sie? Donald Knuth bewies 1976, dass jeder Code mit dem Minimax-Algorithmus in höchstens 5 Versuchen gelöst werden kann — das theoretische Optimum für die klassische Version (6 Farben, 4 Positionen). Eine Lösung in 3 Versuchen ist außergewöhnlich.",
   },
   fr: {
     nav_features: "Fonctionnalités", nav_about: "À propos", nav_contact: "Contact",
@@ -206,6 +209,7 @@ const TRANSLATIONS = {
     about_story_p3: "Quarante ans plus tard, j'y suis revenu. J'ai décidé de recréer ce jeu, cette fois pour iOS et Android. Je suis directeur de Colegio Solutions s.r.o., où nous développons des logiciels avec mes associés. Mastermind est notre première application mobile — et j'espère pas la dernière.",
     contact_h2: "Nous contacter",
     contact_p: "Une question, un bug ou une suggestion ? Nous serions ravis de vous entendre.",
+    knuth_fact: "🧠 Le saviez-vous ? Donald Knuth a prouvé en 1976 que tout code peut être résolu en 5 essais ou moins grâce à l'algorithme minimax — l'optimum théorique pour la version classique (6 couleurs, 4 positions). Résoudre en 3 essais est exceptionnel.",
   },
   es: {
     nav_features: "Características", nav_about: "Nosotros", nav_contact: "Contacto",
@@ -258,6 +262,7 @@ const TRANSLATIONS = {
     about_story_p3: "Cuarenta años después, volví a ello. Decidí recrear el juego, esta vez para iOS y Android. Soy director de Colegio Solutions s.r.o., donde junto a mis socios desarrollamos software y proyectos de TI. Mastermind es nuestra primera aplicación móvil — y espero que no sea la última.",
     contact_h2: "Contáctanos",
     contact_p: "¿Pregunta, bug o sugerencia? Nos encantaría saber de ti.",
+    knuth_fact: "🧠 ¿Sabías que? Donald Knuth demostró en 1976 que cualquier código se puede resolver en 5 intentos o menos usando el algoritmo minimax — el óptimo teórico para la versión clásica (6 colores, 4 posiciones). Resolver en 3 intentos es excepcional.",
   },
   it: {
     nav_features: "Funzionalità", nav_about: "Chi siamo", nav_contact: "Contatti",
@@ -310,6 +315,7 @@ const TRANSLATIONS = {
     about_story_p3: "Quarant'anni dopo, ci sono tornato. Ho deciso di ricreare il gioco, questa volta per iOS e Android. Sono direttore di Colegio Solutions s.r.o., dove insieme ai miei soci sviluppiamo software e progetti IT. Mastermind è la nostra prima app mobile — e spero non l'ultima.",
     contact_h2: "Contattaci",
     contact_p: "Hai una domanda, hai trovato un bug o vuoi suggerire una funzione? Ci farebbe piacere sentirti.",
+    knuth_fact: "🧠 Lo sapevi? Donald Knuth dimostrò nel 1976 che qualsiasi codice può essere risolto in 5 tentativi o meno usando l'algoritmo minimax — l'ottimo teorico per la versione classica (6 colori, 4 posizioni). Risolvere in 3 tentativi è eccezionale.",
   },
   pl: {
     nav_features: "Funkcje", nav_about: "O nas", nav_contact: "Kontakt",
@@ -362,6 +368,7 @@ const TRANSLATIONS = {
     about_story_p3: "Czterdzieści lat później wróciłem do tego. Postanowiłem stworzyć tę grę na nowo, tym razem na iOS i Android. Jestem dyrektorem Colegio Solutions s.r.o., gdzie razem z moimi wspólnikami zajmujemy się rozwojem oprogramowania i projektami IT. Mastermind to nasza pierwsza aplikacja mobilna — i mam nadzieję, że nie ostatnia.",
     contact_h2: "Skontaktuj się z nami",
     contact_p: "Pytanie, błąd lub sugestia? Chętnie usłyszymy od ciebie.",
+    knuth_fact: "🧠 Czy wiesz? Donald Knuth udowodnił w 1976 roku, że każdy kod można rozwiązać w maksymalnie 5 próbach za pomocą algorytmu minimax — to teoretyczne optimum dla klasycznej wersji (6 kolorów, 4 pozycje). Rozwiązanie w 3 próbach to wynik wyjątkowy.",
   },
   ru: {
     nav_features: "Функции", nav_about: "О нас", nav_contact: "Контакты",
@@ -414,6 +421,7 @@ const TRANSLATIONS = {
     about_story_p3: "Сорок лет спустя я вернулся к этому. Решил воссоздать игру — на этот раз для iOS и Android. Я являюсь директором Colegio Solutions s.r.o., где вместе с партнёрами занимаюсь разработкой ПО. Mastermind — наше первое мобильное приложение, и надеюсь, не последнее.",
     contact_h2: "Связаться с нами",
     contact_p: "Есть вопрос, нашли баг или хотите предложить функцию? Мы будем рады услышать вас.",
+    knuth_fact: "🧠 Знали ли вы? Дональд Кнут доказал в 1976 году, что с помощью алгоритма минимакс любой код можно разгадать за 5 попыток или меньше — это теоретический оптимум для классической версии (6 цветов, 4 позиции). Разгадать за 3 попытки — исключительный результат.",
   },
   ja: {
     nav_features: "機能", nav_about: "会社情報", nav_contact: "お問い合わせ",
@@ -466,6 +474,7 @@ const TRANSLATIONS = {
     about_story_p3: "40年後、私はそのゲームに戻ることにしました。今度はiOSとAndroid向けにMastermindを作り直すことを決意しました。私はColegio Solutions s.r.o.の取締役であり、仲間とともにソフトウェア開発とITプロジェクトに取り組んでいます。Mastermindは私たちの最初のモバイルアプリです。最後ではないことを願っています。",
     contact_h2: "お問い合わせ",
     contact_p: "ご質問・バグ報告・機能提案はお気軽にどうぞ。",
+    knuth_fact: "🧠 ご存知でしたか？ドナルド・クヌースは1976年、ミニマックスアルゴリズムを使えばどんなコードも5回以内に解けることを証明しました。これは古典版（6色、4ポジション）の理論的最適解です。3回で解くのは卓越した成果です。",
   },
   ko: {
     nav_features: "기능", nav_about: "회사 소개", nav_contact: "문의",
@@ -518,6 +527,7 @@ const TRANSLATIONS = {
     about_story_p3: "40년이 지난 후, 저는 그 게임으로 돌아왔습니다. 이번에는 iOS와 Android용으로 다시 만들기로 결심했습니다. 저는 Colegio Solutions s.r.o.의 대표이사로, 동료들과 함께 소프트웨어 개발 및 IT 프로젝트를 진행하고 있습니다. 마스터마인드는 저희의 첫 번째 모바일 앱이며, 마지막이 아니기를 바랍니다.",
     contact_h2: "문의하기",
     contact_p: "질문, 버그, 기능 제안이 있으신가요? 언제든 연락주세요.",
+    knuth_fact: "🧠 알고 계셨나요? 도널드 크누스는 1976년에 미니맥스 알고리즘을 사용하면 어떤 코드든 5번 이하의 시도로 풀 수 있다는 것을 증명했습니다. 이것은 클래식 버전(6색, 4자리)의 이론적 최적값입니다. 3번 만에 푸는 것은 탁월한 성과입니다.",
   },
   zh: {
     nav_features: "功能", nav_about: "关于我们", nav_contact: "联系我们",
@@ -570,6 +580,7 @@ const TRANSLATIONS = {
     about_story_p3: "四十年后，我重拾旧梦。这一次，我决定为iOS和Android重新打造这款游戏。我是Colegio Solutions s.r.o.的负责人，与合伙人共同从事软件开发和IT项目。Mastermind是我们的第一款移动应用，希望不是最后一款。",
     contact_h2: "联系我们",
     contact_p: "有问题、发现错误或想建议功能？我们很乐意听取您的意见。",
+    knuth_fact: "🧠 你知道吗？唐纳德·克努斯在1976年证明，使用极小化极大算法可以在5次或更少的猜测内解开任何密码——这是经典版本（6色，4位）的理论最优值。3次猜出是卓越的表现。",
   },
   ar: {
     nav_features: "الميزات", nav_about: "من نحن", nav_contact: "اتصل بنا",
@@ -622,6 +633,7 @@ const TRANSLATIONS = {
     about_story_p3: "بعد أربعين عاماً، عدت إليها. قررت إعادة بناء هذه اللعبة، هذه المرة لـiOS وAndroid. أنا مدير Colegio Solutions s.r.o.، حيث نعمل أنا وشركائي على تطوير البرمجيات. Mastermind هو أول تطبيق جوال لنا، وآمل ألا يكون الأخير.",
     contact_h2: "تواصل معنا",
     contact_p: "لديك سؤال أو وجدت خطأً أو تريد اقتراح ميزة؟ يسعدنا سماعك.",
+    knuth_fact: "🧠 هل تعلم؟ أثبت دونالد كنوث عام 1976 أن أي كود يمكن حله في 5 محاولات أو أقل باستخدام خوارزمية المينيماكس — وهو الحد الأمثل النظري للنسخة الكلاسيكية (6 ألوان، 4 مواضع). الحل في 3 محاولات أداء استثنائي.",
   },
   hi: {
     nav_features: "विशेषताएं", nav_about: "हमारे बारे में", nav_contact: "संपर्क",
@@ -674,6 +686,7 @@ const TRANSLATIONS = {
     about_story_p3: "चालीस साल बाद मैं उस गेम पर वापस आया। मैंने इसे दोबारा बनाने का फैसला किया, इस बार iOS और Android के लिए। मैं Colegio Solutions s.r.o. का निदेशक हूँ जहाँ हम अपने साथियों के साथ सॉफ्टवेयर विकास और IT परियोजनाओं पर काम करते हैं। Mastermind हमारा पहला मोबाइल एप है, और उम्मीद है कि आखिरी नहीं।",
     contact_h2: "संपर्क करें",
     contact_p: "कोई सवाल, बग मिला, या सुझाव देना चाहते हैं? हम आपसे सुनना पसंद करेंगे।",
+    knuth_fact: "🧠 क्या आप जानते हैं? डोनाल्ड क्नूथ ने 1976 में सिद्ध किया कि मिनीमैक्स एल्गोरिदम का उपयोग करके किसी भी कोड को 5 या उससे कम प्रयासों में हल किया जा सकता है — यह क्लासिक संस्करण (6 रंग, 4 स्थान) का सैद्धांतिक इष्टतम है। 3 प्रयासों में हल करना असाधारण है।",
   },
   tr: {
     nav_features: "Özellikler", nav_about: "Hakkımızda", nav_contact: "İletişim",
@@ -726,6 +739,7 @@ const TRANSLATIONS = {
     about_story_p3: "Kırk yıl sonra geri döndüm. Bu sefer iOS ve Android için oyunu yeniden yapmaya karar verdim. Colegio Solutions s.r.o.'nun genel müdürüyüm; ortaklarımla birlikte yazılım geliştirme ve BT projeleri üzerine çalışıyoruz. Mastermind ilk mobil uygulamamız, umarım son olmaz.",
     contact_h2: "İletişime geçin",
     contact_p: "Sorunuz mu var, hata mı buldunuz ya da özellik mi önermek istiyorsunuz? Sizi duymaktan memnuniyet duyarız.",
+    knuth_fact: "🧠 Biliyor muydunuz? Donald Knuth, 1976'da minimax algoritmasını kullanarak herhangi bir kodun 5 veya daha az tahminle çözülebileceğini kanıtladı — bu, klasik versiyon (6 renk, 4 konum) için teorik optimumdur. 3 tahminde çözmek istisnai bir performanstır.",
   },
   pt: {
     nav_features: "Recursos", nav_about: "Sobre", nav_contact: "Contato",
@@ -778,6 +792,7 @@ const TRANSLATIONS = {
     about_story_p3: "Quarenta anos depois, voltei a isso. Decidi recriar o jogo, desta vez para iOS e Android. Sou diretor da Colegio Solutions s.r.o., onde, junto com meus sócios, desenvolvemos software e projetos de TI. Mastermind é nosso primeiro aplicativo móvel, e espero que não seja o último.",
     contact_h2: "Entre em contato",
     contact_p: "Tem uma pergunta, encontrou um bug ou quer sugerir um recurso? Adoraríamos ouvir de você.",
+    knuth_fact: "🧠 Você sabia? Donald Knuth provou em 1976 que qualquer código pode ser resolvido em 5 tentativas ou menos usando o algoritmo minimax — o ótimo teórico para a versão clássica (6 cores, 4 posições). Resolver em 3 tentativas é excepcional.",
   },
   id: {
     nav_features: "Fitur", nav_about: "Tentang", nav_contact: "Kontak",
@@ -830,6 +845,7 @@ const TRANSLATIONS = {
     about_story_p3: "Empat puluh tahun kemudian, saya kembali ke sana. Saya memutuskan untuk membuat ulang game ini, kali ini untuk iOS dan Android. Saya adalah direktur Colegio Solutions s.r.o., di mana bersama rekan-rekan saya mengerjakan pengembangan perangkat lunak dan proyek TI. Mastermind adalah aplikasi mobile pertama kami, dan semoga bukan yang terakhir.",
     contact_h2: "Hubungi kita",
     contact_p: "Ada pertanyaan, nemu bug, atau mau kasih saran fitur? Kita seneng banget denger dari lo.",
+    knuth_fact: "🧠 Tahukah kamu? Donald Knuth membuktikan pada tahun 1976 bahwa kode apapun bisa dipecahkan dalam 5 tebakan atau kurang menggunakan algoritma minimax — ini adalah optimum teoritis untuk versi klasik (6 warna, 4 posisi). Memecahkan dalam 3 tebakan adalah prestasi luar biasa.",
   },
   nl: {
     nav_features: "Functies", nav_about: "Over ons", nav_contact: "Contact",
@@ -882,6 +898,7 @@ const TRANSLATIONS = {
     about_story_p3: "Veertig jaar later ben ik er weer op teruggekomen. Ik besloot het spel opnieuw te maken, ditmaal voor iOS en Android. Ik ben directeur van Colegio Solutions s.r.o., waar we samen met mijn partners softwareprojecten ontwikkelen. Mastermind is onze eerste mobiele app, en hopelijk niet de laatste.",
     contact_h2: "Neem contact op",
     contact_p: "Vraag, bug gevonden of functie voorstellen? We horen graag van je.",
+    knuth_fact: "🧠 Wist je dat? Donald Knuth bewees in 1976 dat elke code opgelost kan worden in 5 pogingen of minder met het minimax-algoritme — het theoretische optimum voor de klassieke versie (6 kleuren, 4 posities). Oplossen in 3 pogingen is uitzonderlijk.",
   },
   sv: {
     nav_features: "Funktioner", nav_about: "Om oss", nav_contact: "Kontakt",
@@ -934,6 +951,7 @@ const TRANSLATIONS = {
     about_story_p3: "Fyrtio år senare återvände jag till det. Jag bestämde mig för att göra om spelet, den här gången för iOS och Android. Jag är VD för Colegio Solutions s.r.o., där jag tillsammans med mina partners arbetar med mjukvaruutveckling och IT-projekt. Mastermind är vår första mobilapp, och förhoppningsvis inte den sista.",
     contact_h2: "Kontakta oss",
     contact_p: "Har du en fråga, hittat en bugg eller vill föreslå en funktion? Vi vill gärna höra från dig.",
+    knuth_fact: "🧠 Visste du? Donald Knuth bevisade 1976 att vilken kod som helst kan lösas på 5 gissningar eller färre med minimax-algoritmen — det teoretiska optimumet för den klassiska versionen (6 färger, 4 positioner). Att lösa på 3 gissningar är exceptionellt.",
   },
   th: {
     nav_features: "คุณสมบัติ", nav_about: "เกี่ยวกับ", nav_contact: "ติดต่อ",
@@ -986,6 +1004,7 @@ const TRANSLATIONS = {
     about_story_p3: "สี่สิบปีต่อมา ฉันหวนกลับมาสู่มัน ตัดสินใจสร้างเกมนี้ขึ้นใหม่ คราวนี้สำหรับ iOS และ Android ฉันเป็นผู้อำนวยการของ Colegio Solutions s.r.o. ที่ซึ่งฉันและหุ้นส่วนพัฒนาซอฟต์แวร์และโครงการด้านไอที Mastermind คือแอปมือถือแรกของเรา และหวังว่าจะไม่ใช่แอปสุดท้าย",
     contact_h2: "ติดต่อเรา",
     contact_p: "มีคำถาม พบข้อผิดพลาด หรืออยากแนะนำฟีเจอร์? เรายินดีรับฟังคุณ",
+    knuth_fact: "🧠 รู้หรือไม่? โดนัลด์ คนูธ พิสูจน์ในปี 1976 ว่าด้วยอัลกอริทึม minimax สามารถแก้รหัสใดก็ได้ใน 5 ครั้งหรือน้อยกว่า นี่คือค่าเหมาะสมที่สุดทางทฤษฎีสำหรับเวอร์ชันคลาสสิก (6 สี 4 ตำแหน่ง) การแก้ใน 3 ครั้งถือว่าเป็นเรื่องพิเศษมาก",
   },
   vi: {
     nav_features: "Tính năng", nav_about: "Về chúng tôi", nav_contact: "Liên hệ",
@@ -1038,6 +1057,7 @@ const TRANSLATIONS = {
     about_story_p3: "Bốn mươi năm sau, tôi quay lại với nó. Tôi quyết định làm lại trò chơi này, lần này cho iOS và Android. Tôi là giám đốc của Colegio Solutions s.r.o., nơi tôi cùng các cộng sự phát triển phần mềm và các dự án CNTT. Mastermind là ứng dụng di động đầu tiên của chúng tôi, và hy vọng không phải là cuối cùng.",
     contact_h2: "Liên hệ",
     contact_p: "Có câu hỏi, tìm thấy lỗi hoặc muốn đề xuất tính năng? Chúng tôi rất muốn nghe từ bạn.",
+    knuth_fact: "🧠 Bạn có biết? Donald Knuth đã chứng minh năm 1976 rằng bất kỳ mã nào cũng có thể giải trong 5 lần đoán hoặc ít hơn bằng thuật toán minimax — đây là tối ưu lý thuyết cho phiên bản cổ điển (6 màu, 4 vị trí). Giải trong 3 lần đoán là xuất sắc.",
   },
   sw: {
     nav_features: "Vipengele", nav_about: "Kuhusu", nav_contact: "Wasiliana",
@@ -1090,6 +1110,7 @@ const TRANSLATIONS = {
     about_story_p3: "Miaka arobaini baadaye, nilirejea kwake. Niliamua kujenga mchezo huu tena, wakati huu kwa iOS na Android. Mimi ni mkurugenzi wa Colegio Solutions s.r.o., ambapo mimi na washirika wangu tunatengeneza programu na miradi ya TEHAMA. Mastermind ni programu yetu ya kwanza ya simu, na natumai si ya mwisho.",
     contact_h2: "Wasiliana nasi",
     contact_p: "Una swali, umepata hitilafu au unataka kupendekeza kipengele? Tungependa kusikia kutoka kwako.",
+    knuth_fact: "🧠 Je, ulijua? Donald Knuth alithibitisha mwaka 1976 kwamba nambari yoyote ya siri inaweza kutatuliwa kwa majaribio 5 au chini kwa kutumia algoriti ya minimax — hii ndiyo bora ya nadharia kwa toleo la kawaida (rangi 6, nafasi 4). Kutatua kwa majaribio 3 ni jambo la kipekee.",
   },
   uk: {
     nav_features: "Можливості", nav_about: "Про нас", nav_contact: "Контакт",
@@ -1142,6 +1163,7 @@ const TRANSLATIONS = {
     about_story_p3: "Сорок років потому я повернувся до нього. Вирішив відтворити гру, цього разу для iOS та Android. Я є директором Colegio Solutions s.r.o., де разом з партнерами займаюсь розробкою ПЗ та IT-проєктами. Mastermind — наш перший мобільний застосунок, і сподіваюсь, не останній.",
     contact_h2: "Зв'яжіться з нами",
     contact_p: "Є запитання, знайшли баг або хочете запропонувати функцію? Ми раді почути від вас.",
+    knuth_fact: "🧠 Чи знали ви? Дональд Кнут довів у 1976 році, що за допомогою алгоритму мінімакс будь-який код можна розгадати за 5 спроб або менше — це теоретичний оптимум для класичної версії (6 кольорів, 4 позиції). Розгадати за 3 спроби — виключний результат.",
   },
   ku: {
     nav_features: "Taybetmendî", nav_about: "Derbarê me", nav_contact: "Têkilî",
@@ -1194,6 +1216,7 @@ const TRANSLATIONS = {
     about_story_p3: "Çil sal şûnda, min vegeriya ser wê. Min biryar da ku vê lîstikê ji nû ve ava bikim, vê carê ji bo iOS û Android. Ez rêvebera Colegio Solutions s.r.o. me, ku ez û hevkarên xwe li ser pêşveçûna nermalava û projeyên IT dixebitin. Mastermind yekem sepana mobîl a me ye, û hêvî dikim ya dawî nebe.",
     contact_h2: "Bi me re têkilî daynin",
     contact_p: "Pirsek heye, xeletiyek dît an dixwazî taybetmendiyek pêşniyar bikî? Em dixwazin ji te bibihên.",
+    knuth_fact: "🧠 Dizanibû? Donald Knuth di sala 1976'an de îsbat kir ku bi algorîtmaya minimax her kodek dikare di 5 hewlan an kêmtir de were çareser kirin — ev optimuma teorîk e ji bo guhertoya klasîk (6 reng, 4 pozîsyon). Di 3 hewlan de çareser kirin encamek awarte ye.",
   },
   az: {
     nav_features: "Xüsusiyyətlər", nav_about: "Haqqımızda", nav_contact: "Əlaqə",
@@ -1246,6 +1269,7 @@ const TRANSLATIONS = {
     about_story_p3: "Qırx il sonra ona qayıtdım. Bu oyunu yenidən qurmağa qərar verdim, bu dəfə iOS və Android üçün. Mən Colegio Solutions s.r.o.-nun direktörüyəm; ortaqlarımla birlikdə proqram təminatının inkişafı və İT layihələri üzərində işləyirik. Mastermind bizim ilk mobil tətbiqimizdir, və ümid edirəm ki, sonuncusu olmayacaq.",
     contact_h2: "Bizimlə əlaqə saxlayın",
     contact_p: "Sualınız var, səhv tapdınız və ya xüsusiyyət təklif etmək istəyirsiniz? Sizdən eşitmək istərdik.",
+    knuth_fact: "🧠 Bilirdinizmi? Donald Knuth 1976-cı ildə minimax alqoritmi ilə istənilən kodun 5 və ya daha az təxmində həll edilə biləcəyini sübut etdi — bu, klassik versiya (6 rəng, 4 mövqe) üçün nəzəri optimumdur. 3 təxmində həll etmək müstəsna nəticədir.",
   },
   fa: {
     nav_features: "ویژگی‌ها", nav_about: "درباره ما", nav_contact: "تماس",
@@ -1298,6 +1322,7 @@ const TRANSLATIONS = {
     about_story_p3: "چهل سال بعد، به آن بازگشتم. تصمیم گرفتم این بازی را دوباره بسازم، این بار برای iOS و Android. من مدیر Colegio Solutions s.r.o. هستم، جایی که با شرکایم روی توسعه نرم‌افزار و پروژه‌های فناوری اطلاعات کار می‌کنیم. Mastermind اولین اپلیکیشن موبایل ماست، و امیدوارم آخرین نباشد.",
     contact_h2: "با ما تماس بگیرید",
     contact_p: "سوالی دارید، باگی پیدا کردید یا می‌خواهید ویژگی‌ای پیشنهاد دهید؟ خوشحال می‌شویم از شما بشنویم.",
+    knuth_fact: "🧠 آیا می‌دانستید؟ دونالد کنوث در سال ۱۹۷۶ ثابت کرد که با استفاده از الگوریتم minimax می‌توان هر کدی را در ۵ حدس یا کمتر حل کرد — این بهینه نظری برای نسخه کلاسیک (۶ رنگ، ۴ موقعیت) است. حل در ۳ حدس یک دستاورد استثنایی است.",
   },
   fil: {
     nav_features: "Features", nav_about: "Tungkol", nav_contact: "Contact",
@@ -1350,6 +1375,7 @@ const TRANSLATIONS = {
     about_story_p3: "Apatnapung taon ang lumipas, bumalik ako sa kanya. Nagpasya akong muling buuin ang larong ito, sa pagkakataong ito para sa iOS at Android. Ako ang direktor ng Colegio Solutions s.r.o., kung saan kasama ang aking mga kasosyo ay nagtatrabaho kami sa pagbuo ng software at mga IT na proyekto. Ang Mastermind ay ang aming unang mobile app, at umaasa akong hindi ang huli.",
     contact_h2: "Makipag-ugnayan",
     contact_p: "May tanong, nakahanap ng bug, o may gusto kang i-suggest na feature? Gusto naming marinig ka.",
+    knuth_fact: "🧠 Alam mo ba? Pinatunayan ni Donald Knuth noong 1976 na ang anumang code ay maaaring malutas sa 5 hula o mas kaunti gamit ang minimax algorithm — ito ang theoretical optimum para sa classic version (6 kulay, 4 posisyon). Ang malutas sa 3 hula ay pambihirang gawa.",
   },
 };
 
