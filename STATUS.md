@@ -1,7 +1,7 @@
 # Mastermind Web (colegio.cz) — Stav projektu
 
 > Tento soubor udržuj aktuální po každé větší změně. Slouží jako onboarding pro novou session nebo nového vývojáře.
-> Poslední aktualizace: 2026-07-18 (pentest v6 retest — vše OK)
+> Poslední aktualizace: 2026-07-26 (Google Play odkaz aktivní, Knuth fun fact, canonical tagy)
 
 ---
 
@@ -11,8 +11,8 @@ Vydavatel: **Colegio Solutions s.r.o.**
 
 | Platforma | Repozitář | Stav |
 |-----------|-----------|------|
-| iOS | github.com/petrvitek70-pKv/Mastermind | ✅ v1.1 live na App Store |
-| Android | github.com/petrvitek70-pKv/MastermindAndroid | ⏳ v1.0 čeká na schválení Google Play |
+| iOS | github.com/petrvitek70-pKv/Mastermind | ✅ v1.2 live na App Store |
+| Android | github.com/petrvitek70-pKv/MastermindAndroid | ✅ v1.1 live na Google Play |
 | Web + API (tento repo) | github.com/petrvitek70-pKv/colegio.cz | ✅ live na colegio.cz |
 
 ---
@@ -21,11 +21,11 @@ Vydavatel: **Colegio Solutions s.r.o.**
 
 - ✅ **Live na colegio.cz** — HTTPS (Let's Encrypt), hosting Active24
 - ✅ **GitHub Actions deploy** — každý push na `main` se automaticky deployuje přes FTP
-- ✅ **App Store tlačítko** — živý odkaz (iOS 1.1 schválena)
-- ⏳ **Google Play tlačítko** — `href="#"`, čeká na schválení Android 1.0
-  - Po schválení: změnit na skutečný odkaz v `index.html`
-- ✅ **Turnajová sekce** — v `index.html` (sekce "🏅 Tournaments"), API na serveru
-  - Žádný turnaj ještě nevytvořen — čeká na vydání appek s turnajovým kódem
+- ✅ **App Store tlačítko** — živý odkaz (iOS schválena)
+- ✅ **Google Play tlačítko** — živý odkaz (Android schválen)
+- ✅ **Turnajová sekce** — v `index.html`, API na serveru; žádný turnaj zatím nevytvořen
+- ✅ **Knuth fun fact** — sekce mezi Features a Pro, lokalizováno do 26 jazyků
+- ✅ **Canonical tagy** — přidány do index.html, privacy.html, terms.html (oprava Google Search Console)
 
 ---
 
