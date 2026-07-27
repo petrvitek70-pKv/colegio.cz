@@ -1,6 +1,6 @@
 const TRANSLATIONS = {
   cs: {
-    nav_features: "Funkce", nav_about: "O nás", nav_contact: "Kontakt",
+    nav_features: "Funkce", nav_about: "O nás", nav_contact: "Kontakt", nav_leaderboard: "Žebříček", nav_tournaments: "Turnaje",
     badge: "Dostupné na App Store a Google Play",
     hero_h1: "Prolom kód.<br>Ovládni hru.",
     hero_sub: "Klasická hra na lámání kódů nově pro iPhone a Android. Odhal tajnou barevnou kombinaci dříve, než ti dojdou pokusy.",
@@ -64,7 +64,7 @@ const TRANSLATIONS = {
     knuth_fact: "🧠 Věděli jste? Donald Knuth v roce 1976 dokázal, že pomocí minimax algoritmu lze jakýkoliv kód vyřešit za 5 pokusů nebo méně — to je teoretické optimum pro klasickou verzi (6 barev, 4 pozice). Výjimečný výkon je tedy 3 pokusy.",
   },
   en: {
-    nav_features: "Features", nav_about: "About", nav_contact: "Contact",
+    nav_features: "Features", nav_about: "About", nav_contact: "Contact", nav_leaderboard: "Leaderboard", nav_tournaments: "Tournaments",
     badge: "Available on App Store & Google Play",
     hero_h1: "Break the Code.<br>Master the Mind.",
     hero_sub: "The classic code-breaking game reimagined for iPhone and Android. Deduce the secret color sequence before your guesses run out.",
@@ -128,7 +128,7 @@ const TRANSLATIONS = {
     knuth_fact: "🧠 Did you know? Donald Knuth proved in 1976 that any code can be solved in 5 guesses or fewer using the minimax algorithm — the theoretical optimum for the classic version (6 colors, 4 positions). Solving in 3 guesses is exceptional.",
   },
   de: {
-    nav_features: "Funktionen", nav_about: "Über uns", nav_contact: "Kontakt",
+    nav_features: "Funktionen", nav_about: "Über uns", nav_contact: "Kontakt", nav_leaderboard: "Rangliste", nav_tournaments: "Turniere",
     badge: "Verfügbar im App Store & Google Play",
     hero_h1: "Knack den Code.<br>Meistere den Verstand.",
     hero_sub: "Das klassische Code-Knack-Spiel neu gedacht für iPhone und Android. Entschlüssle die geheime Farbsequenz, bevor dir die Versuche ausgehen.",
@@ -192,7 +192,7 @@ const TRANSLATIONS = {
     knuth_fact: "🧠 Wussten Sie? Donald Knuth bewies 1976, dass jeder Code mit dem Minimax-Algorithmus in höchstens 5 Versuchen gelöst werden kann — das theoretische Optimum für die klassische Version (6 Farben, 4 Positionen). Eine Lösung in 3 Versuchen ist außergewöhnlich.",
   },
   fr: {
-    nav_features: "Fonctionnalités", nav_about: "À propos", nav_contact: "Contact",
+    nav_features: "Fonctionnalités", nav_about: "À propos", nav_contact: "Contact", nav_leaderboard: "Classement", nav_tournaments: "Tournois",
     badge: "Disponible sur l'App Store et Google Play",
     hero_h1: "Brisez le Code.<br>Maîtrisez l'Esprit.",
     hero_sub: "Le jeu classique de décodage réimaginé pour iPhone et Android. Déduisez la séquence secrète de couleurs avant d'épuiser vos tentatives.",
@@ -256,7 +256,7 @@ const TRANSLATIONS = {
     knuth_fact: "🧠 Le saviez-vous ? Donald Knuth a prouvé en 1976 que tout code peut être résolu en 5 essais ou moins grâce à l'algorithme minimax — l'optimum théorique pour la version classique (6 couleurs, 4 positions). Résoudre en 3 essais est exceptionnel.",
   },
   es: {
-    nav_features: "Características", nav_about: "Nosotros", nav_contact: "Contacto",
+    nav_features: "Características", nav_about: "Nosotros", nav_contact: "Contacto", nav_leaderboard: "Clasificación", nav_tournaments: "Torneos",
     badge: "Disponible en App Store y Google Play",
     hero_h1: "Rompe el Código.<br>Domina la Mente.",
     hero_sub: "El clásico juego de descifrar códigos reimaginado para iPhone y Android. Deduce la secuencia secreta de colores antes de que se agoten tus intentos.",
@@ -320,7 +320,7 @@ const TRANSLATIONS = {
     knuth_fact: "🧠 ¿Sabías que? Donald Knuth demostró en 1976 que cualquier código se puede resolver en 5 intentos o menos usando el algoritmo minimax — el óptimo teórico para la versión clásica (6 colores, 4 posiciones). Resolver en 3 intentos es excepcional.",
   },
   it: {
-    nav_features: "Funzionalità", nav_about: "Chi siamo", nav_contact: "Contatti",
+    nav_features: "Funzionalità", nav_about: "Chi siamo", nav_contact: "Contatti", nav_leaderboard: "Classifica", nav_tournaments: "Tornei",
     badge: "Disponibile su App Store e Google Play",
     hero_h1: "Rompi il Codice.<br>Domina la Mente.",
     hero_sub: "Il classico gioco di decodifica reinventato per iPhone e Android. Deduci la sequenza segreta di colori prima che i tentativi finiscano.",
@@ -384,7 +384,7 @@ const TRANSLATIONS = {
     knuth_fact: "🧠 Lo sapevi? Donald Knuth dimostrò nel 1976 che qualsiasi codice può essere risolto in 5 tentativi o meno usando l'algoritmo minimax — l'ottimo teorico per la versione classica (6 colori, 4 posizioni). Risolvere in 3 tentativi è eccezionale.",
   },
   pl: {
-    nav_features: "Funkcje", nav_about: "O nas", nav_contact: "Kontakt",
+    nav_features: "Funkcje", nav_about: "O nas", nav_contact: "Kontakt", nav_leaderboard: "Ranking", nav_tournaments: "Turnieje",
     badge: "Dostępne w App Store i Google Play",
     hero_h1: "Złam Kod.<br>Opanuj Umysł.",
     hero_sub: "Klasyczna gra łamania kodów na nowo dla iPhone'a i Androida. Odgadnij tajną sekwencję kolorów, zanim skończą ci się próby.",
@@ -448,7 +448,7 @@ const TRANSLATIONS = {
     knuth_fact: "🧠 Czy wiesz? Donald Knuth udowodnił w 1976 roku, że każdy kod można rozwiązać w maksymalnie 5 próbach za pomocą algorytmu minimax — to teoretyczne optimum dla klasycznej wersji (6 kolorów, 4 pozycje). Rozwiązanie w 3 próbach to wynik wyjątkowy.",
   },
   ru: {
-    nav_features: "Функции", nav_about: "О нас", nav_contact: "Контакты",
+    nav_features: "Функции", nav_about: "О нас", nav_contact: "Контакты", nav_leaderboard: "Рейтинг", nav_tournaments: "Турниры",
     badge: "Доступно в App Store и Google Play",
     hero_h1: "Взломай Код.<br>Покори Разум.",
     hero_sub: "Классическая игра по взлому кодов для iPhone и Android. Угадайте секретную последовательность цветов, пока не закончились попытки.",
@@ -512,7 +512,7 @@ const TRANSLATIONS = {
     knuth_fact: "🧠 Знали ли вы? Дональд Кнут доказал в 1976 году, что с помощью алгоритма минимакс любой код можно разгадать за 5 попыток или меньше — это теоретический оптимум для классической версии (6 цветов, 4 позиции). Разгадать за 3 попытки — исключительный результат.",
   },
   ja: {
-    nav_features: "機能", nav_about: "会社情報", nav_contact: "お問い合わせ",
+    nav_features: "機能", nav_about: "会社情報", nav_contact: "お問い合わせ", nav_leaderboard: "ランキング", nav_tournaments: "トーナメント",
     badge: "App StoreとGoogle Playで配信中",
     hero_h1: "コードを解け。<br>マインドを制せ。",
     hero_sub: "iPhoneとAndroid向けに生まれ変わった古典的なコード解読ゲーム。推測が尽きる前に秘密のカラー配列を解き明かせ。",
@@ -576,7 +576,7 @@ const TRANSLATIONS = {
     knuth_fact: "🧠 ご存知でしたか？ドナルド・クヌースは1976年、ミニマックスアルゴリズムを使えばどんなコードも5回以内に解けることを証明しました。これは古典版（6色、4ポジション）の理論的最適解です。3回で解くのは卓越した成果です。",
   },
   ko: {
-    nav_features: "기능", nav_about: "회사 소개", nav_contact: "문의",
+    nav_features: "기능", nav_about: "회사 소개", nav_contact: "문의", nav_leaderboard: "순위", nav_tournaments: "토너먼트",
     badge: "App Store 및 Google Play에서 이용 가능",
     hero_h1: "코드를 해독하라.<br>마인드를 지배하라.",
     hero_sub: "iPhone과 Android를 위해 새롭게 탄생한 고전 코드 해독 게임. 추측이 다 떨어지기 전에 비밀 색상 순서를 맞혀라.",
@@ -640,7 +640,7 @@ const TRANSLATIONS = {
     knuth_fact: "🧠 알고 계셨나요? 도널드 크누스는 1976년에 미니맥스 알고리즘을 사용하면 어떤 코드든 5번 이하의 시도로 풀 수 있다는 것을 증명했습니다. 이것은 클래식 버전(6색, 4자리)의 이론적 최적값입니다. 3번 만에 푸는 것은 탁월한 성과입니다.",
   },
   zh: {
-    nav_features: "功能", nav_about: "关于我们", nav_contact: "联系我们",
+    nav_features: "功能", nav_about: "关于我们", nav_contact: "联系我们", nav_leaderboard: "排行榜", nav_tournaments: "锦标赛",
     badge: "在 App Store 和 Google Play 上提供",
     hero_h1: "破解密码。<br>掌控思维。",
     hero_sub: "为 iPhone 和 Android 重新打造的经典密码破解游戏。在猜测次数用完之前找出秘密的颜色序列。",
@@ -704,7 +704,7 @@ const TRANSLATIONS = {
     knuth_fact: "🧠 你知道吗？唐纳德·克努斯在1976年证明，使用极小化极大算法可以在5次或更少的猜测内解开任何密码——这是经典版本（6色，4位）的理论最优值。3次猜出是卓越的表现。",
   },
   zht: {
-    nav_features: "功能", nav_about: "關於我們", nav_contact: "聯絡我們",
+    nav_features: "功能", nav_about: "關於我們", nav_contact: "聯絡我們", nav_leaderboard: "排行榜", nav_tournaments: "錦標賽",
     badge: "在 App Store 和 Google Play 上提供",
     hero_h1: "破解密碼。<br>掌控思維。",
     hero_sub: "為 iPhone 和 Android 重新打造的經典密碼破解遊戲。在猜測次數用完之前找出秘密的顏色序列。",
@@ -768,7 +768,7 @@ const TRANSLATIONS = {
     knuth_fact: "🧠 您知道嗎？唐納德·克努斯在1976年證明，使用極小化極大算法可以在5次或更少的猜測內解開任何密碼——這是經典版本（6色，4位）的理論最優值。3次猜出是卓越的表現。",
   },
   ar: {
-    nav_features: "الميزات", nav_about: "من نحن", nav_contact: "اتصل بنا",
+    nav_features: "الميزات", nav_about: "من نحن", nav_contact: "اتصل بنا", nav_leaderboard: "لوحة المتصدرين", nav_tournaments: "البطولات",
     badge: "متاح على App Store وGoogle Play",
     hero_h1: "اكسر الشيفرة.<br>أتقن العقل.",
     hero_sub: "لعبة كسر الأكواد الكلاسيكية المُعاد تصورها لـiPhone وAndroid. اكتشف تسلسل الألوان السري قبل نفاد محاولاتك.",
@@ -832,7 +832,7 @@ const TRANSLATIONS = {
     knuth_fact: "🧠 هل تعلم؟ أثبت دونالد كنوث عام 1976 أن أي كود يمكن حله في 5 محاولات أو أقل باستخدام خوارزمية المينيماكس — وهو الحد الأمثل النظري للنسخة الكلاسيكية (6 ألوان، 4 مواضع). الحل في 3 محاولات أداء استثنائي.",
   },
   hi: {
-    nav_features: "विशेषताएं", nav_about: "हमारे बारे में", nav_contact: "संपर्क",
+    nav_features: "विशेषताएं", nav_about: "हमारे बारे में", nav_contact: "संपर्क", nav_leaderboard: "लीडरबोर्ड", nav_tournaments: "टूर्नामेंट",
     badge: "App Store और Google Play पर उपलब्ध",
     hero_h1: "कोड तोड़ो।<br>दिमाग पर राज करो।",
     hero_sub: "iPhone और Android के लिए नए रूप में क्लासिक कोड-ब्रेकिंग गेम। अनुमान खत्म होने से पहले गुप्त रंग अनुक्रम का पता लगाएं।",
@@ -896,7 +896,7 @@ const TRANSLATIONS = {
     knuth_fact: "🧠 क्या आप जानते हैं? डोनाल्ड क्नूथ ने 1976 में सिद्ध किया कि मिनीमैक्स एल्गोरिदम का उपयोग करके किसी भी कोड को 5 या उससे कम प्रयासों में हल किया जा सकता है — यह क्लासिक संस्करण (6 रंग, 4 स्थान) का सैद्धांतिक इष्टतम है। 3 प्रयासों में हल करना असाधारण है।",
   },
   tr: {
-    nav_features: "Özellikler", nav_about: "Hakkımızda", nav_contact: "İletişim",
+    nav_features: "Özellikler", nav_about: "Hakkımızda", nav_contact: "İletişim", nav_leaderboard: "Sıralama", nav_tournaments: "Turnuvalar",
     badge: "App Store ve Google Play'de mevcut",
     hero_h1: "Kodu Kır.<br>Zihni Fethet.",
     hero_sub: "iPhone ve Android için yeniden tasarlanmış klasik kod kırma oyunu. Tahminleriniz bitmeden gizli renk dizisini çözün.",
@@ -960,7 +960,7 @@ const TRANSLATIONS = {
     knuth_fact: "🧠 Biliyor muydunuz? Donald Knuth, 1976'da minimax algoritmasını kullanarak herhangi bir kodun 5 veya daha az tahminle çözülebileceğini kanıtladı — bu, klasik versiyon (6 renk, 4 konum) için teorik optimumdur. 3 tahminde çözmek istisnai bir performanstır.",
   },
   pt: {
-    nav_features: "Recursos", nav_about: "Sobre", nav_contact: "Contato",
+    nav_features: "Recursos", nav_about: "Sobre", nav_contact: "Contato", nav_leaderboard: "Classificação", nav_tournaments: "Torneios",
     badge: "Disponível na App Store e Google Play",
     hero_h1: "Quebre o Código.<br>Domine a Mente.",
     hero_sub: "O clássico jogo de quebra de código reinventado para iPhone e Android. Deduza a sequência secreta de cores antes que suas tentativas acabem.",
@@ -1024,7 +1024,7 @@ const TRANSLATIONS = {
     knuth_fact: "🧠 Você sabia? Donald Knuth provou em 1976 que qualquer código pode ser resolvido em 5 tentativas ou menos usando o algoritmo minimax — o ótimo teórico para a versão clássica (6 cores, 4 posições). Resolver em 3 tentativas é excepcional.",
   },
   id: {
-    nav_features: "Fitur", nav_about: "Tentang", nav_contact: "Kontak",
+    nav_features: "Fitur", nav_about: "Tentang", nav_contact: "Kontak", nav_leaderboard: "Papan Peringkat", nav_tournaments: "Turnamen",
     badge: "Ada di App Store & Google Play",
     hero_h1: "Pecahin Kodenya.<br>Kuasai Gamenya.",
     hero_sub: "Game pecahin kode klasik yang udah diupgrade buat iPhone sama Android. Tebak kombinasi warna rahasia sebelum tebakan lo habis.",
@@ -1088,7 +1088,7 @@ const TRANSLATIONS = {
     knuth_fact: "🧠 Tahukah kamu? Donald Knuth membuktikan pada tahun 1976 bahwa kode apapun bisa dipecahkan dalam 5 tebakan atau kurang menggunakan algoritma minimax — ini adalah optimum teoritis untuk versi klasik (6 warna, 4 posisi). Memecahkan dalam 3 tebakan adalah prestasi luar biasa.",
   },
   nl: {
-    nav_features: "Functies", nav_about: "Over ons", nav_contact: "Contact",
+    nav_features: "Functies", nav_about: "Over ons", nav_contact: "Contact", nav_leaderboard: "Ranglijst", nav_tournaments: "Toernooien",
     badge: "Beschikbaar in de App Store en Google Play",
     hero_h1: "Kraak de Code.<br>Beheers de Geest.",
     hero_sub: "Het klassieke code-kraakspel opnieuw bedacht voor iPhone en Android. Ontrafel de geheime kleurreeks voordat je gissingen op zijn.",
@@ -1152,7 +1152,7 @@ const TRANSLATIONS = {
     knuth_fact: "🧠 Wist je dat? Donald Knuth bewees in 1976 dat elke code opgelost kan worden in 5 pogingen of minder met het minimax-algoritme — het theoretische optimum voor de klassieke versie (6 kleuren, 4 posities). Oplossen in 3 pogingen is uitzonderlijk.",
   },
   sv: {
-    nav_features: "Funktioner", nav_about: "Om oss", nav_contact: "Kontakt",
+    nav_features: "Funktioner", nav_about: "Om oss", nav_contact: "Kontakt", nav_leaderboard: "Topplista", nav_tournaments: "Turneringar",
     badge: "Tillgänglig på App Store och Google Play",
     hero_h1: "Knäck Koden.<br>Bemästra Sinnet.",
     hero_sub: "Det klassiska kodknäckningsspelet omtänkt för iPhone och Android. Lista ut den hemliga färgsekvensen innan dina gissningar tar slut.",
@@ -1216,7 +1216,7 @@ const TRANSLATIONS = {
     knuth_fact: "🧠 Visste du? Donald Knuth bevisade 1976 att vilken kod som helst kan lösas på 5 gissningar eller färre med minimax-algoritmen — det teoretiska optimumet för den klassiska versionen (6 färger, 4 positioner). Att lösa på 3 gissningar är exceptionellt.",
   },
   th: {
-    nav_features: "คุณสมบัติ", nav_about: "เกี่ยวกับ", nav_contact: "ติดต่อ",
+    nav_features: "คุณสมบัติ", nav_about: "เกี่ยวกับ", nav_contact: "ติดต่อ", nav_leaderboard: "อันดับ", nav_tournaments: "ทัวร์นาเมนต์",
     badge: "มีให้ใช้งานบน App Store และ Google Play",
     hero_h1: "ถอดรหัสให้แตก<br>ครองความคิด",
     hero_sub: "เกมถอดรหัสสีคลาสสิกในรูปแบบใหม่สำหรับ iPhone และ Android เดาลำดับสีลับก่อนที่การเดาจะหมด",
@@ -1280,7 +1280,7 @@ const TRANSLATIONS = {
     knuth_fact: "🧠 รู้หรือไม่? โดนัลด์ คนูธ พิสูจน์ในปี 1976 ว่าด้วยอัลกอริทึม minimax สามารถแก้รหัสใดก็ได้ใน 5 ครั้งหรือน้อยกว่า นี่คือค่าเหมาะสมที่สุดทางทฤษฎีสำหรับเวอร์ชันคลาสสิก (6 สี 4 ตำแหน่ง) การแก้ใน 3 ครั้งถือว่าเป็นเรื่องพิเศษมาก",
   },
   vi: {
-    nav_features: "Tính năng", nav_about: "Về chúng tôi", nav_contact: "Liên hệ",
+    nav_features: "Tính năng", nav_about: "Về chúng tôi", nav_contact: "Liên hệ", nav_leaderboard: "Bảng xếp hạng", nav_tournaments: "Giải đấu",
     badge: "Có trên App Store và Google Play",
     hero_h1: "Giải Mã Bí Ẩn.<br>Chinh Phục Trí Tuệ.",
     hero_sub: "Trò chơi giải mã màu sắc cổ điển được tái tạo cho iPhone và Android. Đoán đúng chuỗi màu bí mật trước khi hết lượt.",
@@ -1344,7 +1344,7 @@ const TRANSLATIONS = {
     knuth_fact: "🧠 Bạn có biết? Donald Knuth đã chứng minh năm 1976 rằng bất kỳ mã nào cũng có thể giải trong 5 lần đoán hoặc ít hơn bằng thuật toán minimax — đây là tối ưu lý thuyết cho phiên bản cổ điển (6 màu, 4 vị trí). Giải trong 3 lần đoán là xuất sắc.",
   },
   sw: {
-    nav_features: "Vipengele", nav_about: "Kuhusu", nav_contact: "Wasiliana",
+    nav_features: "Vipengele", nav_about: "Kuhusu", nav_contact: "Wasiliana", nav_leaderboard: "Orodha ya Wabora", nav_tournaments: "Mashindano",
     badge: "Inapatikana kwenye App Store na Google Play",
     hero_h1: "Vunja Msimbo.<br>Shinda Akili.",
     hero_sub: "Mchezo wa kuvunja msimbo wa rangi uliobuniwa upya kwa iPhone na Android. Gundua mlolongo wa siri wa rangi kabla ya majaribio yako kuisha.",
@@ -1408,7 +1408,7 @@ const TRANSLATIONS = {
     knuth_fact: "🧠 Je, ulijua? Donald Knuth alithibitisha mwaka 1976 kwamba nambari yoyote ya siri inaweza kutatuliwa kwa majaribio 5 au chini kwa kutumia algoriti ya minimax — hii ndiyo bora ya nadharia kwa toleo la kawaida (rangi 6, nafasi 4). Kutatua kwa majaribio 3 ni jambo la kipekee.",
   },
   uk: {
-    nav_features: "Можливості", nav_about: "Про нас", nav_contact: "Контакт",
+    nav_features: "Можливості", nav_about: "Про нас", nav_contact: "Контакт", nav_leaderboard: "Рейтинг", nav_tournaments: "Турніри",
     badge: "Доступно в App Store та Google Play",
     hero_h1: "Розгадай Код.<br>Переможи Розум.",
     hero_sub: "Класична гра на розгадування кольорового коду, створена для iPhone та Android. Відгадай таємну послідовність кольорів до того, як вичерпаються спроби.",
@@ -1472,7 +1472,7 @@ const TRANSLATIONS = {
     knuth_fact: "🧠 Чи знали ви? Дональд Кнут довів у 1976 році, що за допомогою алгоритму мінімакс будь-який код можна розгадати за 5 спроб або менше — це теоретичний оптимум для класичної версії (6 кольорів, 4 позиції). Розгадати за 3 спроби — виключний результат.",
   },
   ku: {
-    nav_features: "Taybetmendî", nav_about: "Derbarê me", nav_contact: "Têkilî",
+    nav_features: "Taybetmendî", nav_about: "Derbarê me", nav_contact: "Têkilî", nav_leaderboard: "Rêzebend", nav_tournaments: "Pêşbirk",
     badge: "Li App Store û Google Play heye",
     hero_h1: "Koda Veşartî Bişikîne.<br>Hişê Xwe Biceribîne.",
     hero_sub: "Lîstika klasîk a şikandina koda rengan ji bo iPhone û Android hate nûvekirin. Rêza rengan a veşartî texmîn bike berî ku texmînên te biqedin.",
@@ -1536,7 +1536,7 @@ const TRANSLATIONS = {
     knuth_fact: "🧠 Dizanibû? Donald Knuth di sala 1976'an de îsbat kir ku bi algorîtmaya minimax her kodek dikare di 5 hewlan an kêmtir de were çareser kirin — ev optimuma teorîk e ji bo guhertoya klasîk (6 reng, 4 pozîsyon). Di 3 hewlan de çareser kirin encamek awarte ye.",
   },
   az: {
-    nav_features: "Xüsusiyyətlər", nav_about: "Haqqımızda", nav_contact: "Əlaqə",
+    nav_features: "Xüsusiyyətlər", nav_about: "Haqqımızda", nav_contact: "Əlaqə", nav_leaderboard: "Liderlik Cədvəli", nav_tournaments: "Turnirirlər",
     badge: "App Store və Google Play-də mövcuddur",
     hero_h1: "Kodu Tap.<br>Zəkanı Sına.",
     hero_sub: "iPhone və Android üçün yenidən dizayn edilmiş klassik rəng kodu tapma oyunu. Cəhdlərin bitməzdən əvvəl gizli rəng ardıcıllığını tap.",
@@ -1600,7 +1600,7 @@ const TRANSLATIONS = {
     knuth_fact: "🧠 Bilirdinizmi? Donald Knuth 1976-cı ildə minimax alqoritmi ilə istənilən kodun 5 və ya daha az təxmində həll edilə biləcəyini sübut etdi — bu, klassik versiya (6 rəng, 4 mövqe) üçün nəzəri optimumdur. 3 təxmində həll etmək müstəsna nəticədir.",
   },
   fa: {
-    nav_features: "ویژگی‌ها", nav_about: "درباره ما", nav_contact: "تماس",
+    nav_features: "ویژگی‌ها", nav_about: "درباره ما", nav_contact: "تماس", nav_leaderboard: "جدول امتیازات", nav_tournaments: "مسابقات",
     badge: "موجود در App Store و Google Play",
     hero_h1: "کد را بشکن.<br>ذهنت را محک بزن.",
     hero_sub: "بازی کلاسیک شکستن کد رنگ، بازطراحی‌شده برای iPhone و Android. دنباله رنگ‌های مخفی را قبل از اتمام تلاش‌هایت حدس بزن.",
@@ -1664,7 +1664,7 @@ const TRANSLATIONS = {
     knuth_fact: "🧠 آیا می‌دانستید؟ دونالد کنوث در سال ۱۹۷۶ ثابت کرد که با استفاده از الگوریتم minimax می‌توان هر کدی را در ۵ حدس یا کمتر حل کرد — این بهینه نظری برای نسخه کلاسیک (۶ رنگ، ۴ موقعیت) است. حل در ۳ حدس یک دستاورد استثنایی است.",
   },
   fil: {
-    nav_features: "Mga Feature", nav_about: "Tungkol", nav_contact: "Makipag-ugnayan",
+    nav_features: "Mga Feature", nav_about: "Tungkol", nav_contact: "Makipag-ugnayan", nav_leaderboard: "Leaderboard", nav_tournaments: "Mga Torneo",
     badge: "Available sa App Store at Google Play",
     hero_h1: "I-crack ang Code.<br>Master ang Mind.",
     hero_sub: "Ang classic code-breaking game na binago para sa iPhone at Android. Hanapin ang secret na sequence ng kulay bago maubos ang iyong mga guess.",
