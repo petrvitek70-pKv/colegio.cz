@@ -70,6 +70,9 @@ $db = getTournamentDb();
 
 // ── LIST ──────────────────────────────────────────────────────────────────────
 if ($action === 'list') {
+    $body      = json_decode(file_get_contents('php://input'), true) ?? [];
+    $isAdmin   = (($body['admin_secret'] ?? ($_GET['admin_secret'] ?? '')) === ADMIN_SECRET);
+
     $rows = $db->query("
         SELECT t.*, COUNT(e.id) AS player_count
         FROM tournaments t
@@ -81,7 +84,7 @@ if ($action === 'list') {
 
     $out = [];
     foreach ($rows as $r) {
-        $out[] = [
+        $item = [
             'id'               => (int)$r['id'],
             'name'             => $r['name'],
             'difficulty'       => $r['difficulty'],
@@ -93,6 +96,8 @@ if ($action === 'list') {
             'player_count'     => (int)$r['player_count'],
             'creator_nickname' => $r['creator_nickname'],
         ];
+        if ($isAdmin) $item['seed'] = json_decode($r['seed']);
+        $out[] = $item;
     }
     jsonResponse(['tournaments' => $out]);
 }

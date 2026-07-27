@@ -302,7 +302,7 @@ async function togglePublish(id, newVal, btn) {
 // ─── Tournaments ──────────────────────────────────────────────────────────
 async function loadTournaments() {
   try {
-    const r = await fetch(`${TRN_API}?action=list`);
+    const r = await fetch(`${TRN_API}?action=list&admin_secret=${encodeURIComponent(apiKey)}`);
     const j = await r.json();
     allTrns = j.tournaments || [];
     renderTournaments();
@@ -418,6 +418,11 @@ function editTournament(id) {
   document.getElementById('trn-mode').value          = t.game_mode;
   document.getElementById('trn-rep').value           = t.allow_repetition ? '1' : '0';
   buildSeedGrid();
+  // set seed values
+  if (t.seed) {
+    const selects = document.getElementById('seed-grid').querySelectorAll('select');
+    t.seed.forEach((c, i) => { if (selects[i]) selects[i].value = c; });
+  }
   // set dates
   const fmt = ts => new Date(ts * 1000).toISOString().slice(0,16);
   document.getElementById('trn-start').value = fmt(t.starts_at);
