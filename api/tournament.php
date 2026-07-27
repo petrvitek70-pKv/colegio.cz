@@ -37,8 +37,9 @@ function getTournamentDb(): PDO {
         );
         CREATE INDEX IF NOT EXISTS idx_te_tournament ON tournament_entries(tournament_id, score DESC);
     ");
-    // Add creator_nickname column to existing DBs that were created before this migration
+    // Migrations for columns added after initial schema
     try { $db->exec("ALTER TABLE tournaments ADD COLUMN creator_nickname TEXT NOT NULL DEFAULT ''"); } catch (\Exception $e) {}
+    try { $db->exec("ALTER TABLE tournament_entries ADD COLUMN seed_issued_at INTEGER"); } catch (\Exception $e) {}
     return $db;
 }
 
@@ -391,14 +392,18 @@ if ($action === 'entries') {
     $id = (int)($_GET['id'] ?? ($body['id'] ?? 0));
     if (!$id) jsonResponse(['error' => 'Missing id'], 400);
 
-    $stmt = $db->prepare("
-        SELECT nickname, score, guesses, seconds, seed_issued_at, submitted_at
-        FROM tournament_entries
-        WHERE tournament_id = ?
-        ORDER BY score DESC, guesses ASC, seconds ASC
-    ");
-    $stmt->execute([$id]);
-    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    try {
+        $stmt = $db->prepare("
+            SELECT nickname, score, guesses, seconds, seed_issued_at, submitted_at
+            FROM tournament_entries
+            WHERE tournament_id = ?
+            ORDER BY score DESC, guesses ASC, seconds ASC
+        ");
+        $stmt->execute([$id]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (\Exception $e) {
+        jsonResponse(['error' => 'DB error: ' . $e->getMessage()], 500);
+    }
 
     $out = [];
     foreach ($rows as $r) {
