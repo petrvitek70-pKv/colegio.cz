@@ -73,7 +73,18 @@
         }
 
         const DIFF_ICON_T = {easy:'🟢',medium:'🟡',classic:'🎯',hard:'🔴'};
-        const STATUS_LABEL = {active:'🟢 Active',upcoming:'⏳ Upcoming',finished:'🏁 Finished'};
+        function trnStatusLabel(s) {
+            const t = window._t||{};
+            return {active: t.trn_status_active||'🟢 Active', upcoming: t.trn_status_upcoming||'⏳ Upcoming', finished: t.trn_status_finished||'🏁 Finished'}[s]||s;
+        }
+        function trnDiffLabel(d) {
+            const t = window._t||{};
+            return {easy: t.trn_diff_easy||'Easy', medium: t.trn_diff_medium||'Medium', classic: t.trn_diff_classic||'Classic', hard: t.trn_diff_hard||'Hard'}[d]||d;
+        }
+        function trnModeLabel(m) {
+            const t = window._t||{};
+            return m==='timed' ? (t.trn_mode_timed||'Timed') : (t.trn_mode_classic||'Classic');
+        }
 
         async function loadTournaments() {
             const wrap = document.getElementById('trn-list');
@@ -84,26 +95,39 @@
                     wrap.innerHTML = '<p class="trn-empty">No tournaments right now. Check back soon!</p>';
                     return;
                 }
-                wrap.innerHTML = data.tournaments.map(t => {
+                const tr = window._t||{};
+                const active = data.tournaments.filter(t => t.status !== 'finished');
+                const finished = data.tournaments.filter(t => t.status === 'finished');
+
+                function renderCard(t) {
                     const ends = new Date(t.ends_at * 1000);
                     const now = new Date();
+                    const hoursLeft = Math.ceil((ends - now) / 3600000);
                     const daysLeft = Math.ceil((ends - now) / 86400000);
                     const timeStr = t.status === 'active'
-                        ? (daysLeft > 0 ? `${daysLeft}d left` : 'Ends today')
+                        ? (daysLeft > 1 ? `${daysLeft}d left` : hoursLeft > 0 ? `${hoursLeft}h left` : 'Ends today')
                         : ends.toLocaleDateString();
+                    const players = t.player_count;
+                    const playersStr = String(players) + ' ' + (tr.trn_players_web || 'players');
                     return `<div class="trn-card trn-${t.status}" onclick="loadTournamentLb(${t.id},this)">
                         <div class="trn-header">
-                            <span class="trn-status">${STATUS_LABEL[t.status]||t.status}</span>
+                            <span class="trn-status">${trnStatusLabel(t.status)}</span>
                             <span class="trn-time">${timeStr}</span>
                         </div>
                         <h3 class="trn-name">${esc(t.name)}</h3>
                         <div class="trn-meta">
-                            ${DIFF_ICON_T[t.difficulty]||''} ${esc(t.difficulty)}
-                            · ${t.game_mode === 'timed' ? '⏱ Timed' : '♟ Classic'}
-                            · ${t.player_count} player${t.player_count !== 1 ? 's' : ''}
+                            ${DIFF_ICON_T[t.difficulty]||''} ${trnDiffLabel(t.difficulty)}
+                            · ${t.game_mode === 'timed' ? '⏱ ' : '♟ '}${trnModeLabel(t.game_mode)}
+                            · ${playersStr}
                         </div>
                     </div>`;
-                }).join('');
+                }
+
+                let html = active.map(renderCard).join('');
+                if (finished.length) {
+                    html += `<details class="trn-finished-toggle"><summary>${tr.trn_show_finished||'Show finished tournaments'} (${finished.length})</summary><div class="trn-finished-list">${finished.map(renderCard).join('')}</div></details>`;
+                }
+                wrap.innerHTML = html;
             } catch(e) {
                 wrap.innerHTML = '<p class="trn-empty">Could not load tournaments.</p>';
             }
@@ -355,7 +379,7 @@
                 <div class="lb-table-wrap">
                     <table class="lb-table">
                         <thead><tr>
-                            <th>#</th><th>Player</th><th>Guesses</th><th>Time</th><th>Score</th>
+                            <th>#</th><th data-i18n="lb_player">Player</th><th data-i18n="lb_guesses">Guesses</th><th data-i18n="lb_time">Time</th><th data-i18n="lb_score">Score</th>
                         </tr></thead>
                         <tbody id="trn-lb-body"></tbody>
                     </table>

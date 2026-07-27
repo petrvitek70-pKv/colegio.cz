@@ -674,6 +674,12 @@ footer {
 .trn-time { font-size: 12px; color: var(--text3); }
 .trn-name { font-size: 1.1rem; font-weight: 700; margin-bottom: .4rem; }
 .trn-meta { font-size: 13px; color: var(--text2); }
+.trn-finished-toggle { margin-top: 1.5rem; grid-column: 1/-1; }
+.trn-finished-toggle summary { cursor: pointer; color: var(--text2); font-size: 14px; padding: .5rem 0; list-style: none; }
+.trn-finished-toggle summary::-webkit-details-marker { display: none; }
+.trn-finished-toggle summary::before { content: '▶ '; font-size: 11px; }
+.trn-finished-toggle[open] summary::before { content: '▼ '; }
+.trn-finished-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-top: 1rem; }
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
