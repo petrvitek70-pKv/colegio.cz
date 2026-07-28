@@ -100,13 +100,23 @@ Vyloučeno z deploye: `.git*`, `data/`, `.DS_Store`
 
 ## Bezpečnost
 
+Poslední pentest: **v7 retest 2026-07-28** — všechna kritická rizika opravena.
+
 - ✅ Prepared statements (SQLi ochrana)
 - ✅ XSS — nickname escapován přes `esc()` před vložením do innerHTML
-- ✅ Admin klíč jako `X-Admin-Key` header (ne v URL)
-- ✅ CORS omezen na colegio.cz
-- ✅ Server-side validace skóre
+- ✅ Admin klíč jako `X-Admin-Key` header (ne v URL) — `adminFetch()` helper v admin panelu
+- ✅ `isAdminRequest()` v `tournament.php` — kontroluje header, nikdy GET parametr
+- ✅ CORS omezen na colegio.cz (pro `feedback-list.php`; ostatní API mají wildcard — akceptováno, bez cookie auth)
+- ✅ Server-side validace skóre (`score.php` i `tournament.php?action=submit`)
 - ✅ `seed` turnaje: POST + API secret, `seed_issued_at` timestamp (min. doba hry)
 - ✅ Admin secret mimo repozitář (`config.local.php`)
+- ✅ `action=update` — editace turnajů chráněna pouze admin klíčem
+- ✅ Creator delete — opravena regrese `$body` → `$reqBody` (2026-07-28)
+
+**Akceptovaná rizika (nízká):**
+- Hardcoded API secret `mm_colegio_2026_xK9pQ` v mobilních appkách — dopad snížen server-side validací
+- isPro v plaintext storage — dopad jen na rootnutá zařízení
+- Chybí certificate pinning
 
 ---
 
