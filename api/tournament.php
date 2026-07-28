@@ -82,14 +82,27 @@ function isAdminRequest(): bool {
 if ($action === 'list') {
     $isAdmin = isAdminRequest();
 
+    // Active/upcoming: all; finished: max 10 newest
     $rows = $db->query("
         SELECT t.*, COUNT(e.id) AS player_count
         FROM tournaments t
         LEFT JOIN tournament_entries e ON e.tournament_id = t.id
         GROUP BY t.id
-        ORDER BY t.starts_at DESC
-        LIMIT 20
+        ORDER BY t.ends_at DESC
     ")->fetchAll(PDO::FETCH_ASSOC);
+
+    // Split by status and limit finished to 10
+    $active   = [];
+    $finished = [];
+    foreach ($rows as $r) {
+        $status = tournamentStatus($r);
+        if ($status === 'finished') {
+            if (count($finished) < 10) $finished[] = $r;
+        } else {
+            $active[] = $r;
+        }
+    }
+    $rows = array_merge($active, $finished);
 
     $out = [];
     foreach ($rows as $r) {
