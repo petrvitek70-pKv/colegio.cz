@@ -100,7 +100,7 @@ Vyloučeno z deploye: `.git*`, `data/`, `.DS_Store`
 
 ## Bezpečnost
 
-Poslední pentest: **v7 retest 2026-07-28** — všechna kritická rizika opravena.
+Poslední pentest: **v8 2026-07-28** — žádné nové kritické nálezy.
 
 - ✅ Prepared statements (SQLi ochrana)
 - ✅ XSS — nickname escapován přes `esc()` před vložením do innerHTML
