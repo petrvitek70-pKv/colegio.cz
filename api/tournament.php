@@ -399,7 +399,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'delete') {
 
     if ($isAdmin) {
         // Admin can delete anything
-    } elseif (($body['secret'] ?? '') === API_SECRET && $nickname) {
+    } elseif (($reqBody['secret'] ?? '') === API_SECRET && $nickname) {
         // Creator can only delete while still upcoming
         if ($t['creator_nickname'] !== $nickname) jsonResponse(['error' => 'Not your tournament'], 403);
         if (tournamentStatus($t) !== 'upcoming')  jsonResponse(['error' => 'Tournament already started'], 403);
