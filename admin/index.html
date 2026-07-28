@@ -300,9 +300,16 @@ async function togglePublish(id, newVal, btn) {
 }
 
 // ─── Tournaments ──────────────────────────────────────────────────────────
+async function adminFetch(url, opts = {}) {
+  return fetch(url, {
+    ...opts,
+    headers: { 'Content-Type': 'application/json', 'X-Admin-Key': apiKey, ...(opts.headers || {}) },
+  });
+}
+
 async function loadTournaments() {
   try {
-    const r = await fetch(`${TRN_API}?action=list&admin_secret=${encodeURIComponent(apiKey)}`);
+    const r = await adminFetch(`${TRN_API}?action=list`, { method: 'POST', body: '{}' });
     const j = await r.json();
     allTrns = j.tournaments || [];
     renderTournaments();
@@ -448,13 +455,12 @@ async function submitTournament() {
   const isEdit = editId !== '';
   const action = isEdit ? 'update' : 'create';
   const body   = isEdit
-    ? { admin_secret: apiKey, id: parseInt(editId), name, starts_at: starts, ends_at: ends, seed }
-    : { admin_secret: apiKey, name, difficulty: diff, game_mode: mode, allow_repetition: rep, seed, starts_at: starts, ends_at: ends };
+    ? { id: parseInt(editId), name, starts_at: starts, ends_at: ends, seed }
+    : { name, difficulty: diff, game_mode: mode, allow_repetition: rep, seed, starts_at: starts, ends_at: ends };
 
   try {
-    const r = await fetch(`${TRN_API}?action=${action}`, {
+    const r = await adminFetch(`${TRN_API}?action=${action}`, {
       method: 'POST',
-      headers: {'Content-Type':'application/json'},
       body: JSON.stringify(body),
     });
     const j = await r.json();
@@ -469,10 +475,9 @@ async function submitTournament() {
 async function deleteTournament(id, name) {
   if (!confirm(`Opravdu smazat turnaj "${name}" a všechny jeho záznamy?`)) return;
   try {
-    const r = await fetch(`${TRN_API}?action=delete`, {
+    const r = await adminFetch(`${TRN_API}?action=delete`, {
       method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ admin_secret: apiKey, id }),
+      body: JSON.stringify({ id }),
     });
     const j = await r.json();
     if (!r.ok) { showTrnMsg(j.error || 'Chyba', true); return; }
@@ -492,10 +497,9 @@ async function showEntries(id) {
   document.getElementById('entries-tbody').innerHTML = '<tr><td colspan="7" style="color:#555;padding:20px">Načítání…</td></tr>';
 
   try {
-    const r = await fetch(`${TRN_API}?action=entries&id=${id}`, {
+    const r = await adminFetch(`${TRN_API}?action=entries&id=${id}`, {
       method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ admin_secret: apiKey, id }),
+      body: JSON.stringify({ id }),
     });
     const j = await r.json();
     const entries = j.entries || [];
@@ -521,10 +525,9 @@ async function showEntries(id) {
 async function disqualify(tournamentId, nickname) {
   if (!confirm(`Diskvalifikovat hráče "${nickname}"? Bude odstraněn z turnaje a bude se moci znovu přihlásit.`)) return;
   try {
-    const r = await fetch(`${TRN_API}?action=disqualify`, {
+    const r = await adminFetch(`${TRN_API}?action=disqualify`, {
       method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ admin_secret: apiKey, tournament_id: tournamentId, nickname }),
+      body: JSON.stringify({ tournament_id: tournamentId, nickname }),
     });
     const j = await r.json();
     if (!r.ok) { alert(j.error || 'Chyba'); return; }

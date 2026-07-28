@@ -65,13 +65,22 @@ function tournamentStatus(array $t): string {
     return 'active';
 }
 
-$action = $_GET['action'] ?? $_POST['action'] ?? '';
-$db = getTournamentDb();
+$action   = $_GET['action'] ?? $_POST['action'] ?? '';
+$db       = getTournamentDb();
+$rawBody  = file_get_contents('php://input');
+$reqBody  = json_decode($rawBody, true) ?? [];
+
+function isAdminRequest(): bool {
+    global $reqBody;
+    $headers   = getallheaders();
+    $headerKey = $headers['X-Admin-Key'] ?? $headers['x-admin-key'] ?? '';
+    if ($headerKey === ADMIN_SECRET) return true;
+    return ($reqBody['admin_secret'] ?? '') === ADMIN_SECRET;
+}
 
 // ── LIST ──────────────────────────────────────────────────────────────────────
 if ($action === 'list') {
-    $body      = json_decode(file_get_contents('php://input'), true) ?? [];
-    $isAdmin   = (($body['admin_secret'] ?? ($_GET['admin_secret'] ?? '')) === ADMIN_SECRET);
+    $isAdmin = isAdminRequest();
 
     $rows = $db->query("
         SELECT t.*, COUNT(e.id) AS player_count
@@ -104,7 +113,7 @@ if ($action === 'list') {
 
 // ── MY TOURNAMENTS — list tournaments created by a specific nickname ──────────
 if ($action === 'my_tournaments') {
-    $body     = json_decode(file_get_contents('php://input'), true) ?? [];
+    $body     = $reqBody;
     $nickname = trim($body['nickname'] ?? ($_GET['nickname'] ?? ''));
     $secret   = $body['secret'] ?? ($_GET['secret'] ?? '');
     if ($secret !== API_SECRET) jsonResponse(['error' => 'Unauthorized'], 401);
@@ -142,7 +151,7 @@ if ($action === 'my_tournaments') {
 
 // ── SEED (get secret code after joining) — POST only, requires API secret ───
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'seed') {
-    $body     = json_decode(file_get_contents('php://input'), true) ?? [];
+    $body     = $reqBody;
     $id       = (int)($body['tournament_id'] ?? 0);
     $nickname = trim($body['nickname'] ?? '');
     $secret   = $body['secret'] ?? '';
@@ -214,7 +223,7 @@ if ($action === 'leaderboard') {
 
 // ── JOIN ──────────────────────────────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'join') {
-    $body     = json_decode(file_get_contents('php://input'), true) ?? [];
+    $body     = $reqBody;
     $id       = (int)($body['tournament_id'] ?? 0);
     $nickname = trim($body['nickname'] ?? '');
     $secret   = $body['secret'] ?? '';
@@ -237,7 +246,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'join') {
 
 // ── SUBMIT ───────────────────────────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'submit') {
-    $body     = json_decode(file_get_contents('php://input'), true) ?? [];
+    $body     = $reqBody;
     $id       = (int)($body['tournament_id'] ?? 0);
     $nickname = trim($body['nickname'] ?? '');
     $score    = (int)($body['score'] ?? -1);
@@ -278,7 +287,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'submit') {
     $isTimed = $t['game_mode'] === 'timed';
 
     if ($guesses < 1 || $guesses > $maxGuesses) jsonResponse(['error' => 'Invalid guesses'], 400);
-    if ($seconds < $guesses * 3)                jsonResponse(['error' => 'Invalid time'], 400);
+    if ($seconds < $guesses * 5)                jsonResponse(['error' => 'Invalid time'], 400);
 
     $guessBonus = match(true) {
         $guesses === 1 => 5000,
@@ -300,11 +309,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'submit') {
     jsonResponse(['ok' => true, 'score' => $score]);
 }
 
-// ── CREATE (any player) ───────────────────────────────────────────────────────
+// ── CREATE (any player, or admin) ────────────────────────────────────────────
 // Seed is generated server-side — creator never sees it, ensuring fair play.
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'create') {
-    $body = json_decode(file_get_contents('php://input'), true) ?? [];
-    if (($body['secret'] ?? '') !== API_SECRET) jsonResponse(['error' => 'Unauthorized'], 401);
+    $body    = $reqBody;
+    $isAdmin = isAdminRequest();
+    if (!$isAdmin && ($body['secret'] ?? '') !== API_SECRET) jsonResponse(['error' => 'Unauthorized'], 401);
 
     $name       = trim($body['name'] ?? '');
     $nickname   = trim($body['nickname'] ?? '');
@@ -314,7 +324,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'create') {
     $duration_h = (int)($body['duration_hours'] ?? 24);  // 1, 24, 72, 168
 
     if (!$name || strlen($name) > 40)  jsonResponse(['error' => 'Invalid name'], 400);
-    if (!$nickname || strlen($nickname) < 1 || strlen($nickname) > 20) jsonResponse(['error' => 'Invalid nickname'], 400);
+    if (!$isAdmin && (!$nickname || strlen($nickname) < 1 || strlen($nickname) > 20)) jsonResponse(['error' => 'Invalid nickname'], 400);
     if (!in_array($difficulty, ['easy','medium','classic','hard']))     jsonResponse(['error' => 'Invalid difficulty'], 400);
     if (!in_array($game_mode, ['classic','timed']))                     jsonResponse(['error' => 'Invalid game_mode'], 400);
     if (!in_array($duration_h, [1, 24, 72, 168]))                      jsonResponse(['error' => 'Invalid duration'], 400);
@@ -342,12 +352,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'create') {
     jsonResponse(['ok' => true, 'id' => (int)$db->lastInsertId()]);
 }
 
+// ── UPDATE (admin only) ───────────────────────────────────────────────────────
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'update') {
+    $body = $reqBody;
+    if (!isAdminRequest()) jsonResponse(['error' => 'Unauthorized'], 401);
+
+    $id       = (int)($body['id'] ?? 0);
+    $name     = trim($body['name'] ?? '');
+    $starts   = (int)($body['starts_at'] ?? 0);
+    $ends     = (int)($body['ends_at'] ?? 0);
+    $seed     = $body['seed'] ?? null;
+
+    if (!$id)   jsonResponse(['error' => 'Missing id'], 400);
+    if (!$name || strlen($name) > 40) jsonResponse(['error' => 'Invalid name'], 400);
+    if ($starts && $ends && $starts >= $ends) jsonResponse(['error' => 'ends_at must be after starts_at'], 400);
+
+    $stmt = $db->prepare("SELECT id FROM tournaments WHERE id = ?");
+    $stmt->execute([$id]);
+    if (!$stmt->fetch()) jsonResponse(['error' => 'Not found'], 404);
+
+    $sets = ['name = ?'];
+    $params = [$name];
+    if ($starts) { $sets[] = 'starts_at = ?'; $params[] = $starts; }
+    if ($ends)   { $sets[] = 'ends_at = ?';   $params[] = $ends; }
+    if ($seed !== null) { $sets[] = 'seed = ?'; $params[] = json_encode($seed); }
+    $params[] = $id;
+
+    $db->prepare("UPDATE tournaments SET " . implode(', ', $sets) . " WHERE id = ?")
+       ->execute($params);
+
+    jsonResponse(['ok' => true]);
+}
+
 // ── DELETE (creator only, upcoming/active; admin can delete anything) ─────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'delete') {
-    $body     = json_decode(file_get_contents('php://input'), true) ?? [];
-    $id       = (int)($body['id'] ?? 0);
-    $nickname = trim($body['nickname'] ?? '');
-    $isAdmin  = ($body['admin_secret'] ?? '') === ADMIN_SECRET;
+    $id       = (int)($reqBody['id'] ?? 0);
+    $nickname = trim($reqBody['nickname'] ?? '');
+    $isAdmin  = isAdminRequest();
 
     if (!$id) jsonResponse(['error' => 'Missing id'], 400);
 
@@ -374,8 +415,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'delete') {
 
 // ── DISQUALIFY (admin only) — remove one player's entry ──────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'disqualify') {
-    $body = json_decode(file_get_contents('php://input'), true) ?? [];
-    if (($body['admin_secret'] ?? '') !== ADMIN_SECRET) jsonResponse(['error' => 'Unauthorized'], 401);
+    if (!isAdminRequest()) jsonResponse(['error' => 'Unauthorized'], 401);
 
     $tournament_id = (int)($body['tournament_id'] ?? 0);
     $nickname      = trim($body['nickname'] ?? '');
@@ -389,10 +429,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'disqualify') {
 
 // ── ENTRIES (admin only) — list all entries for a tournament ─────────────────
 if ($action === 'entries') {
-    $body = json_decode(file_get_contents('php://input'), true) ?? [];
-    // Support both GET (with query param) and POST (with JSON body)
-    $admin_secret  = $body['admin_secret'] ?? ($_GET['admin_secret'] ?? '');
-    if ($admin_secret !== ADMIN_SECRET) jsonResponse(['error' => 'Unauthorized'], 401);
+    if (!isAdminRequest()) jsonResponse(['error' => 'Unauthorized'], 401);
 
     $id = (int)($_GET['id'] ?? ($body['id'] ?? 0));
     if (!$id) jsonResponse(['error' => 'Missing id'], 400);
