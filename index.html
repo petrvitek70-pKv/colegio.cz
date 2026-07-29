@@ -119,6 +119,7 @@
                             ${DIFF_ICON_T[t.difficulty]||''} ${trnDiffLabel(t.difficulty)}
                             · ${t.game_mode === 'timed' ? '⏱ ' : '♟ '}${trnModeLabel(t.game_mode)}
                             · ${playersStr}
+                            ${t.creator_nickname ? `· 👤 ${esc(t.creator_nickname)}` : ''}
                         </div>
                     </div>`;
                 }
