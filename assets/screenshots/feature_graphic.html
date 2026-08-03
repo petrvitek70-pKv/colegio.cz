@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  width: 1024px; height: 500px;
+  background: #06060F;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Background glows */
+body::before {
+  content: '';
+  position: absolute;
+  top: -100px; left: 40%;
+  width: 500px; height: 500px;
+  background: radial-gradient(ellipse, rgba(240,228,66,0.12) 0%, transparent 65%);
+  pointer-events: none;
+}
+body::after {
+  content: '';
+  position: absolute;
+  bottom: -80px; left: 10%;
+  width: 300px; height: 300px;
+  background: radial-gradient(ellipse, rgba(86,180,233,0.08) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+/* Left: text block */
+.text-block {
+  padding: 0 64px;
+  flex-shrink: 0;
+  z-index: 2;
+}
+.eyebrow {
+  font-size: 18px; font-weight: 700;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: #E69F00; margin-bottom: 18px;
+}
+.title {
+  font-size: 80px; font-weight: 900;
+  line-height: 0.95; letter-spacing: -0.03em;
+  color: #F0E442;
+  margin-bottom: 18px;
+}
+.subtitle {
+  font-size: 22px; font-weight: 500;
+  color: rgba(240,240,248,0.5);
+  line-height: 1.4;
+  max-width: 340px;
+}
+
+/* Right: pegs */
+.pegs-block {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  z-index: 2;
+  padding-right: 20px;
+}
+
+.peg-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+}
+
+.peg {
+  border-radius: 50%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.4);
+}
+
+/* peg sizes: large center, smaller sides */
+.peg-xl { width: 130px; height: 130px; }
+.peg-lg { width: 100px; height: 100px; }
+.peg-md { width: 76px; height: 76px; }
+.peg-sm { width: 56px; height: 56px; }
+</style>
+</head>
+<body>
+
+<div class="text-block">
+  <div class="eyebrow">Colegio Solutions</div>
+  <div class="title">MASTER<br>MIND</div>
+  <div class="subtitle">The classic code-breaking game.<br>Logic. Strategy. Obsession.</div>
+</div>
+
+<div class="pegs-block">
+  <!-- Column 1: small pegs -->
+  <div class="peg-wrap">
+    <div class="peg peg-sm" style="background:radial-gradient(circle at 30% 28%, #93c5fd, #0072B2); margin-top: 60px;"></div>
+    <div class="peg peg-md" style="background:radial-gradient(circle at 30% 28%, #34d399, #009E73);"></div>
+  </div>
+
+  <!-- Column 2: tall -->
+  <div class="peg-wrap">
+    <div class="peg peg-lg" style="background:radial-gradient(circle at 30% 28%, #fef08a, #F0E442);"></div>
+    <div class="peg peg-xl" style="background:radial-gradient(circle at 30% 28%, #f0b429, #E69F00); box-shadow: 0 0 60px rgba(240,228,66,0.35), 0 8px 32px rgba(0,0,0,0.6);"></div>
+  </div>
+
+  <!-- Column 3: center hero -->
+  <div class="peg-wrap" style="margin-top: -30px;">
+    <div class="peg peg-xl" style="width:150px;height:150px; background:radial-gradient(circle at 30% 25%, #ff8fa3, #CC79A7); box-shadow: 0 0 70px rgba(204,121,167,0.4), 0 12px 40px rgba(0,0,0,0.7);"></div>
+    <div class="peg peg-md" style="background:radial-gradient(circle at 30% 28%, #7dd3fc, #56B4E9);"></div>
+  </div>
+
+  <!-- Column 4: tall -->
+  <div class="peg-wrap">
+    <div class="peg peg-xl" style="background:radial-gradient(circle at 30% 28%, #4ade80, #009E73); box-shadow: 0 0 60px rgba(0,158,115,0.3), 0 8px 32px rgba(0,0,0,0.6);"></div>
+    <div class="peg peg-sm" style="background:radial-gradient(circle at 30% 28%, #f9a8d4, #CC79A7);"></div>
+  </div>
+
+  <!-- Column 5: small pegs -->
+  <div class="peg-wrap">
+    <div class="peg peg-md" style="background:radial-gradient(circle at 30% 28%, #93c5fd, #0072B2); margin-top: 40px;"></div>
+    <div class="peg peg-sm" style="background:radial-gradient(circle at 30% 28%, #fef08a, #F0E442);"></div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  width: 1290px; height: 2796px;
+  background: #06060F;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+  display: flex; flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: absolute;
+  top: 400px; left: 50%; transform: translateX(-50%);
+  width: 1100px; height: 600px;
+  background: radial-gradient(ellipse, rgba(86,180,233,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.top-section {
+  width: 100%;
+  padding: 160px 100px 60px;
+  flex-shrink: 0;
+}
+
+.eyebrow {
+  font-size: 36px; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: #56B4E9; margin-bottom: 32px;
+}
+
+.headline {
+  font-size: 130px; font-weight: 900;
+  line-height: 1.0; color: #F0F0F8;
+  letter-spacing: -0.03em; margin-bottom: 40px;
+}
+.headline span { color: #F0E442; }
+
+.subline {
+  font-size: 48px; font-weight: 400;
+  color: rgba(240,240,248,0.5); line-height: 1.4;
+}
+
+.cards-section {
+  flex: 1;
+  width: 100%;
+  padding: 40px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.diff-card {
+  border-radius: 36px;
+  padding: 52px 60px;
+  display: flex;
+  align-items: center;
+  gap: 52px;
+}
+
+.diff-card.easy {
+  background: linear-gradient(135deg, rgba(0,158,115,0.18) 0%, rgba(0,158,115,0.06) 100%);
+  border: 2px solid rgba(0,158,115,0.3);
+}
+.diff-card.medium {
+  background: linear-gradient(135deg, rgba(230,159,0,0.18) 0%, rgba(230,159,0,0.06) 100%);
+  border: 2px solid rgba(230,159,0,0.3);
+}
+.diff-card.classic {
+  background: linear-gradient(135deg, rgba(86,180,233,0.18) 0%, rgba(86,180,233,0.06) 100%);
+  border: 2px solid rgba(86,180,233,0.3);
+}
+.diff-card.hard {
+  background: linear-gradient(135deg, rgba(204,121,167,0.18) 0%, rgba(204,121,167,0.06) 100%);
+  border: 2px solid rgba(204,121,167,0.3);
+}
+
+.card-pegs {
+  display: flex;
+  gap: 14px;
+  flex-shrink: 0;
+}
+.cp { width: 56px; height: 56px; border-radius: 50%; }
+.cp-empty { width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,0.08); border: 3px dashed rgba(255,255,255,0.2); }
+
+.card-info { flex: 1; }
+.card-name {
+  font-size: 58px; font-weight: 800;
+  color: #F0F0F8; margin-bottom: 10px;
+}
+.card-sub {
+  font-size: 34px; font-weight: 400;
+  color: rgba(240,240,248,0.45);
+}
+
+.card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.card-mult {
+  font-size: 48px; font-weight: 900;
+  letter-spacing: -0.02em;
+}
+.card-mult-label {
+  font-size: 26px; font-weight: 500;
+  color: rgba(240,240,248,0.4);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.pro-badge {
+  background: linear-gradient(135deg, #F0E442, #E69F00);
+  color: #06060F;
+  font-size: 24px; font-weight: 800;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 8px 20px; border-radius: 100px;
+}
+
+.bottom-label {
+  width: 100%; padding: 48px 100px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0;
+}
+.app-name { font-size: 38px; font-weight: 800; color: rgba(240,240,248,0.25); letter-spacing: 0.04em; }
+</style>
+</head>
+<body>
+
+<div class="top-section">
+  <div class="eyebrow">Mastermind</div>
+  <div class="headline">4 Levels.<br><span>Endless</span><br>Challenge.</div>
+  <div class="subline">From beginner to expert — pick your poison.</div>
+</div>
+
+<div class="cards-section">
+
+  <div class="diff-card easy">
+    <div class="card-pegs">
+      <div class="cp" style="background:radial-gradient(circle at 35% 30%,#34d399,#009E73)"></div>
+      <div class="cp" style="background:radial-gradient(circle at 35% 30%,#f0b429,#E69F00)"></div>
+      <div class="cp" style="background:radial-gradient(circle at 35% 30%,#7dd3fc,#56B4E9)"></div>
+      <div class="cp" style="background:radial-gradient(circle at 35% 30%,#f9a8d4,#CC79A7)"></div>
+    </div>
+    <div class="card-info">
+      <div class="card-name">Easy</div>
+      <div class="card-sub">4 colors · 12 attempts</div>
+    </div>
+    <div class="card-right">
+      <div class="card-mult" style="color:#009E73">×1</div>
+      <div class="card-mult-label">Score</div>
+    </div>
+  </div>
+
+  <div class="diff-card medium">
+    <div class="card-pegs">
+      <div class="cp" style="background:radial-gradient(circle at 35% 30%,#f0b429,#E69F00)"></div>
+      <div class="cp" style="background:radial-gradient(circle at 35% 30%,#93c5fd,#0072B2)"></div>
+      <div class="cp" style="background:radial-gradient(circle at 35% 30%,#34d399,#009E73)"></div>
+      <div class="cp" style="background:radial-gradient(circle at 35% 30%,#f9a8d4,#CC79A7)"></div>
+      <div class="cp" style="background:radial-gradient(circle at 35% 30%,#fef08a,#F0E442)"></div>
+    </div>
+    <div class="card-info">
+      <div class="card-name">Medium</div>
+      <div class="card-sub">5 colors · 10 attempts</div>
+    </div>
+    <div class="card-right">
+      <div class="card-mult" style="color:#E69F00">×3</div>
+      <div class="card-mult-label">Score</div>
+    </div>
+  </div>
+
+  <div class="diff-card classic">
+    <div class="card-pegs">
+      <div class="cp" style="background:radial-gradient(circle at 35% 30%,#7dd3fc,#56B4E9)"></div>
+      <div class="cp" style="background:radial-gradient(circle at 35% 30%,#f0b429,#E69F00)"></div>
+      <div class="cp" style="background:radial-gradient(circle at 35% 30%,#34d399,#009E73)"></div>
+      <div class="cp" style="background:radial-gradient(circle at 35% 30%,#f9a8d4,#CC79A7)"></div>
+      <div class="cp" style="background:radial-gradient(circle at 35% 30%,#fef08a,#F0E442)"></div>
+      <div class="cp" style="background:radial-gradient(circle at 35% 30%,#93c5fd,#0072B2)"></div>
+    </div>
+    <div class="card-info">
+      <div class="card-name">Classic</div>
+      <div class="card-sub">6 colors · 10 attempts</div>
+    </div>
+    <div class="card-right">
+      <div class="card-mult" style="color:#56B4E9">×4</div>
+      <div class="card-mult-label">Score</div>
+      <div class="pro-badge">Pro</div>
+    </div>
+  </div>
+
+  <div class="diff-card hard">
+    <div class="card-pegs">
+      <div class="cp" style="background:radial-gradient(circle at 35% 30%,#f9a8d4,#CC79A7)"></div>
+      <div class="cp" style="background:radial-gradient(circle at 35% 30%,#34d399,#009E73)"></div>
+      <div class="cp" style="background:radial-gradient(circle at 35% 30%,#fef08a,#F0E442)"></div>
+      <div class="cp" style="background:radial-gradient(circle at 35% 30%,#f0b429,#E69F00)"></div>
+      <div class="cp" style="background:radial-gradient(circle at 35% 30%,#7dd3fc,#56B4E9)"></div>
+      <div class="cp" style="background:radial-gradient(circle at 35% 30%,#93c5fd,#0072B2)"></div>
+    </div>
+    <div class="card-info">
+      <div class="card-name">Hard</div>
+      <div class="card-sub">6 colors · 5 positions · 8 tries</div>
+    </div>
+    <div class="card-right">
+      <div class="card-mult" style="color:#CC79A7">×6</div>
+      <div class="card-mult-label">Score</div>
+      <div class="pro-badge">Pro</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="bottom-label">
+  <div class="app-name">MASTERMIND: CODE BREAKER</div>
+</div>
+
+</body>
+</html>
