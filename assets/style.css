@@ -211,9 +211,10 @@ h1 {
 .game-preview { width: 100%; display: flex; flex-direction: column; gap: 8px; }
 
 .preview-row {
-    display: flex;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(4, 28px) 22px;
     gap: 6px;
+    align-items: center;
     background: rgba(255,255,255,0.04);
     border-radius: 10px;
     padding: 8px 10px;
@@ -243,11 +244,13 @@ h1 {
 
 .preview-peg.sm { width: 22px; height: 22px; }
 
-.preview-dots {
-    margin-left: auto;
+.preview-fb {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3px;
+    grid-template-columns: 9px 9px;
+    grid-template-rows: 9px 9px;
+    gap: 2px;
+    width: 20px;
+    height: 20px;
 }
 
 .dot {
@@ -702,8 +705,11 @@ footer {
     .hero-inner { grid-template-columns: 1fr; }
     .hero-visual { order: -1; }
     .phone-mockup { width: 240px; }
-    .preview-peg { width: 22px; height: 22px; }
-    .preview-row { gap: 4px; padding: 6px 8px; }
+    .preview-row {
+        grid-template-columns: repeat(4, 22px) 18px;
+        gap: 4px;
+        padding: 6px 8px;
+    }
     .features-grid { grid-template-columns: 1fr 1fr; }
     .pro-inner { grid-template-columns: 1fr; }
     .pro-text h2 { text-align: center; }
