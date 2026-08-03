@@ -135,16 +135,35 @@
         }
 
         async function loadTournamentLb(id, card) {
+            const wasSelected = card?.classList.contains('trn-selected');
             document.querySelectorAll('.trn-card').forEach(c=>c.classList.remove('trn-selected'));
+            document.querySelectorAll('.trn-inline-lb').forEach(el=>el.remove());
+            if (wasSelected) return;
+
             card?.classList.add('trn-selected');
-            const tbl = document.getElementById('trn-lb');
-            const tbody = document.getElementById('trn-lb-body');
-            if (!tbody) return;
-            tbl.style.display = 'block';
-            tbody.innerHTML = '<tr><td colspan="5" class="lb-loading">Loading…</td></tr>';
+            const tr = window._t||{};
+            const panel = document.createElement('div');
+            panel.className = 'trn-inline-lb';
+            panel.innerHTML = `
+                <h3 class="trn-inline-lb-title"></h3>
+                <div class="lb-table-wrap">
+                    <table class="lb-table">
+                        <thead><tr>
+                            <th>#</th>
+                            <th>${tr.lb_player||'Player'}</th>
+                            <th>${tr.lb_guesses||'Guesses'}</th>
+                            <th>${tr.lb_time||'Time'}</th>
+                            <th>${tr.lb_score||'Score'}</th>
+                        </tr></thead>
+                        <tbody class="trn-inline-lb-body"><tr><td colspan="5" class="lb-loading">Loading…</td></tr></tbody>
+                    </table>
+                </div>`;
+            card?.after(panel);
+
             try {
                 const data = await fetch('/api/tournament.php?action=leaderboard&id='+id).then(r=>r.json());
-                document.getElementById('trn-lb-title').textContent = data.tournament?.name || '';
+                panel.querySelector('.trn-inline-lb-title').textContent = data.tournament?.name || '';
+                const tbody = panel.querySelector('.trn-inline-lb-body');
                 if (!data.entries?.length) {
                     tbody.innerHTML = '<tr><td colspan="5" class="lb-loading">No results yet.</td></tr>';
                     return;
@@ -157,7 +176,7 @@
                     <td class="lb-score">${e.score.toLocaleString()}</td>
                 </tr>`).join('');
             } catch(e) {
-                tbody.innerHTML = '<tr><td colspan="5" class="lb-loading">Could not load results.</td></tr>';
+                panel.querySelector('.trn-inline-lb-body').innerHTML = '<tr><td colspan="5" class="lb-loading">Could not load results.</td></tr>';
             }
         }
 
@@ -291,9 +310,9 @@
                 <div class="feature-card"><div class="feature-icon">🎯</div><h3 data-i18n="f1_h">4 Difficulty Levels</h3><p data-i18n="f1_p">From Easy to Hard.</p></div>
                 <div class="feature-card"><div class="feature-icon">⏱️</div><h3 data-i18n="f2_h">Timed Mode</h3><p data-i18n="f2_p">Race against the clock.</p></div>
                 <div class="feature-card"><div class="feature-icon">♿</div><h3 data-i18n="f3_h">Accessible Colors</h3><p data-i18n="f3_p">Okabe-Ito palette.</p></div>
-                <div class="feature-card"><div class="feature-icon">📊</div><h3 data-i18n="f4_h">Statistics</h3><p data-i18n="f4_p">Track your progress.</p></div>
-                <div class="feature-card"><div class="feature-icon">🌍</div><h3 data-i18n="f5_h">22 Languages</h3><p data-i18n="f5_p">Fully localized.</p></div>
-                <div class="feature-card"><div class="feature-icon">💡</div><h3 data-i18n="f6_h">Smart Hints</h3><p data-i18n="f6_p">Black and white pegs.</p></div>
+                <div class="feature-card"><div class="feature-icon">🏆</div><h3 data-i18n="f4_h">Global Leaderboard</h3><p data-i18n="f4_p">Compete worldwide.</p></div>
+                <div class="feature-card"><div class="feature-icon">🌍</div><h3 data-i18n="f5_h">43 Languages</h3><p data-i18n="f5_p">Fully localized.</p></div>
+                <div class="feature-card"><div class="feature-icon">⚫⚪</div><h3 data-i18n="f6_h">Feedback Pegs</h3><p data-i18n="f6_p">Black and white pegs.</p></div>
             </div>
         </div>
     </section>
@@ -376,17 +395,6 @@
             <p class="section-sub" data-i18n="trn_sub">Everyone solves the same secret code — one attempt per player, a fair fight. Join a tournament in the app, get your code, play any time during the tournament window, and your result is submitted automatically. The winner is whoever cracked the code in the fewest guesses.</p>
             <div class="trn-list" id="trn-list">
                 <p class="trn-empty">Loading…</p>
-            </div>
-            <div id="trn-lb" style="display:none; margin-top:2rem;">
-                <h3 id="trn-lb-title" style="color:var(--accent);margin-bottom:1rem;"></h3>
-                <div class="lb-table-wrap">
-                    <table class="lb-table">
-                        <thead><tr>
-                            <th>#</th><th data-i18n="lb_player">Player</th><th data-i18n="lb_guesses">Guesses</th><th data-i18n="lb_time">Time</th><th data-i18n="lb_score">Score</th>
-                        </tr></thead>
-                        <tbody id="trn-lb-body"></tbody>
-                    </table>
-                </div>
             </div>
         </div>
     </section>
