@@ -36,9 +36,9 @@ function computeScore(int $guesses, int $maxGuesses, int $seconds, bool $isTimed
     return max(0, ($guessBonus - $timePenalty) * $scoreMultiplier * $modeMultiplier);
 }
 
-// Minimální reálný čas: každý pokus trvá aspoň 3 sekundy
+// Minimální reálný čas: každý pokus trvá aspoň 5 sekund
 function minRealisticSeconds(int $guesses): int {
-    return $guesses * 3;
+    return $guesses * 5;
 }
 
 // Validace vstupů
@@ -62,8 +62,8 @@ $limits      = $DIFFICULTY_LIMITS[$difficulty];
 $isTimed     = ($body['timed']      ?? 0) == 1;
 $repetition  = ($body['repetition'] ?? 0) == 1;
 
-if ($guesses < 1 || $guesses > $limits['maxGuesses']) {
-    jsonResponse(['error' => 'Invalid guesses for difficulty'], 422);
+if ($guesses < 2 || $guesses > $limits['maxGuesses']) {
+    jsonResponse(['error' => 'First-guess wins are not eligible for leaderboard'], 422);
 }
 if ($seconds < 0 || $seconds > 86400) {
     jsonResponse(['error' => 'Invalid seconds'], 422);
