@@ -182,6 +182,7 @@ h1 {
 
 /* PHONE MOCKUP */
 .hero-visual { display: flex; justify-content: center; }
+.hero-mockup-img { width: 260px; height: auto; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.7)); }
 
 .phone-mockup {
     width: 260px;

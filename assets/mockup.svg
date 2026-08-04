@@ -1,0 +1,88 @@
+<svg viewBox="0 0 260 490" xmlns="http://www.w3.org/2000/svg" width="260" height="490">
+  <defs>
+    <!-- Peg 3D gradients -->
+    <radialGradient id="pg-orange" cx="35%" cy="28%" r="65%"><stop offset="0%" stop-color="#F5C040"/><stop offset="100%" stop-color="#C87F00"/></radialGradient>
+    <radialGradient id="pg-sky" cx="35%" cy="28%" r="65%"><stop offset="0%" stop-color="#90D5F5"/><stop offset="100%" stop-color="#3090C0"/></radialGradient>
+    <radialGradient id="pg-green" cx="35%" cy="28%" r="65%"><stop offset="0%" stop-color="#40C898"/><stop offset="100%" stop-color="#007050"/></radialGradient>
+    <radialGradient id="pg-yellow" cx="35%" cy="28%" r="65%"><stop offset="0%" stop-color="#F8EE80"/><stop offset="100%" stop-color="#C8BA00"/></radialGradient>
+    <radialGradient id="pg-blue" cx="35%" cy="28%" r="65%"><stop offset="0%" stop-color="#50A8E8"/><stop offset="100%" stop-color="#004E88"/></radialGradient>
+    <radialGradient id="pg-pink" cx="35%" cy="28%" r="65%"><stop offset="0%" stop-color="#E8A8CC"/><stop offset="100%" stop-color="#A04878"/></radialGradient>
+    <!-- Phone body gradient -->
+    <linearGradient id="phone-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22224a"/>
+      <stop offset="100%" stop-color="#10102a"/>
+    </linearGradient>
+    <!-- Phone sheen -->
+    <linearGradient id="phone-sheen" x1="0%" y1="0%" x2="60%" y2="100%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.07)"/>
+      <stop offset="50%" stop-color="rgba(255,255,255,0)"/>
+    </linearGradient>
+    <!-- Drop shadow filter -->
+    <filter id="peg-shadow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#000" flood-opacity="0.55"/>
+    </filter>
+    <filter id="phone-shadow" x="-20%" y="-10%" width="140%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="18" flood-color="#000" flood-opacity="0.7"/>
+    </filter>
+  </defs>
+
+  <!-- Phone body -->
+  <rect x="2" y="2" width="256" height="486" rx="36" fill="url(#phone-bg)" filter="url(#phone-shadow)" stroke="rgba(255,255,255,0.14)" stroke-width="1.5"/>
+  <!-- Phone sheen overlay -->
+  <rect x="2" y="2" width="256" height="486" rx="36" fill="url(#phone-sheen)"/>
+
+  <!-- Screen -->
+  <rect x="14" y="14" width="232" height="462" rx="26" fill="#07070f"/>
+
+  <!-- ── ROW 1: orange skyBlue green yellow | ●● ○ · ── -->
+  <rect x="18" y="24" width="224" height="48" rx="10" fill="rgba(255,255,255,0.05)"/>
+  <circle cx="51"  cy="48" r="14" fill="url(#pg-orange)" filter="url(#peg-shadow)"/>
+  <circle cx="88"  cy="48" r="14" fill="url(#pg-sky)"    filter="url(#peg-shadow)"/>
+  <circle cx="125" cy="48" r="14" fill="url(#pg-green)"  filter="url(#peg-shadow)"/>
+  <circle cx="162" cy="48" r="14" fill="url(#pg-yellow)" filter="url(#peg-shadow)"/>
+  <!-- feedback 2×2 -->
+  <circle cx="191" cy="41" r="5" fill="#111" filter="none"/><circle cx="191" cy="41" r="5" fill="none" stroke="rgba(255,255,255,0.82)" stroke-width="1.4"/>
+  <circle cx="205" cy="41" r="5" fill="#111" filter="none"/><circle cx="205" cy="41" r="5" fill="none" stroke="rgba(255,255,255,0.82)" stroke-width="1.4"/>
+  <circle cx="191" cy="55" r="5" fill="rgba(255,255,255,0.9)"/>
+  <circle cx="205" cy="55" r="5" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+
+  <!-- ── ROW 2: blue green pink orange | ● ○ · · ── -->
+  <rect x="18" y="80" width="224" height="48" rx="10" fill="rgba(255,255,255,0.05)"/>
+  <circle cx="51"  cy="104" r="14" fill="url(#pg-blue)"   filter="url(#peg-shadow)"/>
+  <circle cx="88"  cy="104" r="14" fill="url(#pg-green)"  filter="url(#peg-shadow)"/>
+  <circle cx="125" cy="104" r="14" fill="url(#pg-pink)"   filter="url(#peg-shadow)"/>
+  <circle cx="162" cy="104" r="14" fill="url(#pg-orange)" filter="url(#peg-shadow)"/>
+  <circle cx="191" cy="97"  r="5" fill="#111"/><circle cx="191" cy="97"  r="5" fill="none" stroke="rgba(255,255,255,0.82)" stroke-width="1.4"/>
+  <circle cx="205" cy="97"  r="5" fill="rgba(255,255,255,0.9)"/>
+  <circle cx="191" cy="111" r="5" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+  <circle cx="205" cy="111" r="5" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+
+  <!-- ── ROW 3 (active): green orange _ _ ── -->
+  <rect x="18" y="136" width="224" height="48" rx="10" fill="rgba(240,228,66,0.08)" stroke="rgba(240,228,66,0.22)" stroke-width="1"/>
+  <circle cx="51"  cy="160" r="14" fill="url(#pg-green)"  filter="url(#peg-shadow)"/>
+  <circle cx="88"  cy="160" r="14" fill="url(#pg-orange)" filter="url(#peg-shadow)"/>
+  <circle cx="125" cy="160" r="14" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <circle cx="162" cy="160" r="14" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" stroke-dasharray="3 3"/>
+
+  <!-- ── ROW 4 (empty) ── -->
+  <rect x="18" y="192" width="224" height="48" rx="10" fill="rgba(255,255,255,0.025)"/>
+  <circle cx="51"  cy="216" r="14" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <circle cx="88"  cy="216" r="14" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <circle cx="125" cy="216" r="14" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <circle cx="162" cy="216" r="14" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" stroke-dasharray="3 3"/>
+
+  <!-- ── Divider ── -->
+  <line x1="18" y1="256" x2="242" y2="256" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+
+  <!-- ── Color picker ── -->
+  <rect x="18" y="268" width="224" height="44" rx="10" fill="rgba(255,255,255,0.04)"/>
+  <circle cx="43"  cy="290" r="13" fill="url(#pg-orange)" filter="url(#peg-shadow)"/>
+  <circle cx="79"  cy="290" r="13" fill="url(#pg-sky)"    filter="url(#peg-shadow)"/>
+  <circle cx="115" cy="290" r="13" fill="url(#pg-green)"  filter="url(#peg-shadow)"/>
+  <circle cx="151" cy="290" r="13" fill="url(#pg-yellow)" filter="url(#peg-shadow)"/>
+  <circle cx="187" cy="290" r="13" fill="url(#pg-blue)"   filter="url(#peg-shadow)"/>
+  <circle cx="223" cy="290" r="13" fill="url(#pg-pink)"   filter="url(#peg-shadow)"/>
+
+  <!-- ── Bottom home bar ── -->
+  <rect x="95" y="460" width="70" height="4" rx="2" fill="rgba(255,255,255,0.18)"/>
+</svg>
