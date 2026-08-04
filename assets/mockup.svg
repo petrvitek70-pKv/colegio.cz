@@ -1,88 +1,97 @@
-<svg viewBox="0 0 260 490" xmlns="http://www.w3.org/2000/svg" width="260" height="490">
-  <defs>
-    <!-- Peg 3D gradients -->
-    <radialGradient id="pg-orange" cx="35%" cy="28%" r="65%"><stop offset="0%" stop-color="#F5C040"/><stop offset="100%" stop-color="#C87F00"/></radialGradient>
-    <radialGradient id="pg-sky" cx="35%" cy="28%" r="65%"><stop offset="0%" stop-color="#90D5F5"/><stop offset="100%" stop-color="#3090C0"/></radialGradient>
-    <radialGradient id="pg-green" cx="35%" cy="28%" r="65%"><stop offset="0%" stop-color="#40C898"/><stop offset="100%" stop-color="#007050"/></radialGradient>
-    <radialGradient id="pg-yellow" cx="35%" cy="28%" r="65%"><stop offset="0%" stop-color="#F8EE80"/><stop offset="100%" stop-color="#C8BA00"/></radialGradient>
-    <radialGradient id="pg-blue" cx="35%" cy="28%" r="65%"><stop offset="0%" stop-color="#50A8E8"/><stop offset="100%" stop-color="#004E88"/></radialGradient>
-    <radialGradient id="pg-pink" cx="35%" cy="28%" r="65%"><stop offset="0%" stop-color="#E8A8CC"/><stop offset="100%" stop-color="#A04878"/></radialGradient>
-    <!-- Phone body gradient -->
-    <linearGradient id="phone-bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#22224a"/>
-      <stop offset="100%" stop-color="#10102a"/>
-    </linearGradient>
-    <!-- Phone sheen -->
-    <linearGradient id="phone-sheen" x1="0%" y1="0%" x2="60%" y2="100%">
-      <stop offset="0%" stop-color="rgba(255,255,255,0.07)"/>
-      <stop offset="50%" stop-color="rgba(255,255,255,0)"/>
-    </linearGradient>
-    <!-- Drop shadow filter -->
-    <filter id="peg-shadow" x="-40%" y="-40%" width="180%" height="180%">
-      <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#000" flood-opacity="0.55"/>
-    </filter>
-    <filter id="phone-shadow" x="-20%" y="-10%" width="140%" height="130%">
-      <feDropShadow dx="0" dy="8" stdDeviation="18" flood-color="#000" flood-opacity="0.7"/>
-    </filter>
-  </defs>
+<svg viewBox="0 0 320 470" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, sans-serif">
 
-  <!-- Phone body -->
-  <rect x="2" y="2" width="256" height="486" rx="36" fill="url(#phone-bg)" filter="url(#phone-shadow)" stroke="rgba(255,255,255,0.14)" stroke-width="1.5"/>
-  <!-- Phone sheen overlay -->
-  <rect x="2" y="2" width="256" height="486" rx="36" fill="url(#phone-sheen)"/>
+  <rect width="320" height="470" rx="32" fill="#0E0E1C"/>
 
-  <!-- Screen -->
-  <rect x="14" y="14" width="232" height="462" rx="26" fill="#07070f"/>
+  <text x="160" y="28" text-anchor="middle" font-size="10" fill="#6666AA" letter-spacing="2">SECRET CODE</text>
+  <rect x="15" y="35" width="290" height="44" rx="10" fill="#0A0A16" stroke="#22224A" stroke-width="1"/>
+  <circle cx="65" cy="57" r="15" fill="#161628" stroke="#33335A" stroke-width="1.5" stroke-dasharray="3 2"/>
+  <circle cx="112" cy="57" r="15" fill="#161628" stroke="#33335A" stroke-width="1.5" stroke-dasharray="3 2"/>
+  <circle cx="159" cy="57" r="15" fill="#161628" stroke="#33335A" stroke-width="1.5" stroke-dasharray="3 2"/>
+  <circle cx="206" cy="57" r="15" fill="#161628" stroke="#33335A" stroke-width="1.5" stroke-dasharray="3 2"/>
+  <text x="65" y="62" text-anchor="middle" font-size="14" fill="#40408A">?</text>
+  <text x="112" y="62" text-anchor="middle" font-size="14" fill="#40408A">?</text>
+  <text x="159" y="62" text-anchor="middle" font-size="14" fill="#40408A">?</text>
+  <text x="206" y="62" text-anchor="middle" font-size="14" fill="#40408A">?</text>
 
-  <!-- ── ROW 1: orange skyBlue green yellow | ●● ○ · ── -->
-  <rect x="18" y="24" width="224" height="48" rx="10" fill="rgba(255,255,255,0.05)"/>
-  <circle cx="51"  cy="48" r="14" fill="url(#pg-orange)" filter="url(#peg-shadow)"/>
-  <circle cx="88"  cy="48" r="14" fill="url(#pg-sky)"    filter="url(#peg-shadow)"/>
-  <circle cx="125" cy="48" r="14" fill="url(#pg-green)"  filter="url(#peg-shadow)"/>
-  <circle cx="162" cy="48" r="14" fill="url(#pg-yellow)" filter="url(#peg-shadow)"/>
-  <!-- feedback 2×2 -->
-  <circle cx="191" cy="41" r="5" fill="#111" filter="none"/><circle cx="191" cy="41" r="5" fill="none" stroke="rgba(255,255,255,0.82)" stroke-width="1.4"/>
-  <circle cx="205" cy="41" r="5" fill="#111" filter="none"/><circle cx="205" cy="41" r="5" fill="none" stroke="rgba(255,255,255,0.82)" stroke-width="1.4"/>
-  <circle cx="191" cy="55" r="5" fill="rgba(255,255,255,0.9)"/>
-  <circle cx="205" cy="55" r="5" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+  <circle cx="253" cy="50" r="8" fill="#1A1A2E" stroke="#DDDDDD" stroke-width="2"/>
+  <text x="266" y="53" font-size="8" fill="#7777AA">pos</text>
+  <circle cx="253" cy="66" r="8" fill="#EEEEEE"/>
+  <text x="266" y="69" font-size="8" fill="#7777AA">col</text>
 
-  <!-- ── ROW 2: blue green pink orange | ● ○ · · ── -->
-  <rect x="18" y="80" width="224" height="48" rx="10" fill="rgba(255,255,255,0.05)"/>
-  <circle cx="51"  cy="104" r="14" fill="url(#pg-blue)"   filter="url(#peg-shadow)"/>
-  <circle cx="88"  cy="104" r="14" fill="url(#pg-green)"  filter="url(#peg-shadow)"/>
-  <circle cx="125" cy="104" r="14" fill="url(#pg-pink)"   filter="url(#peg-shadow)"/>
-  <circle cx="162" cy="104" r="14" fill="url(#pg-orange)" filter="url(#peg-shadow)"/>
-  <circle cx="191" cy="97"  r="5" fill="#111"/><circle cx="191" cy="97"  r="5" fill="none" stroke="rgba(255,255,255,0.82)" stroke-width="1.4"/>
-  <circle cx="205" cy="97"  r="5" fill="rgba(255,255,255,0.9)"/>
-  <circle cx="191" cy="111" r="5" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
-  <circle cx="205" cy="111" r="5" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+  <text x="160" y="98" text-anchor="middle" font-size="10" fill="#55558A" letter-spacing="1.5">GUESS 3 / 10</text>
 
-  <!-- ── ROW 3 (active): green orange _ _ ── -->
-  <rect x="18" y="136" width="224" height="48" rx="10" fill="rgba(240,228,66,0.08)" stroke="rgba(240,228,66,0.22)" stroke-width="1"/>
-  <circle cx="51"  cy="160" r="14" fill="url(#pg-green)"  filter="url(#peg-shadow)"/>
-  <circle cx="88"  cy="160" r="14" fill="url(#pg-orange)" filter="url(#peg-shadow)"/>
-  <circle cx="125" cy="160" r="14" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" stroke-dasharray="3 3"/>
-  <circle cx="162" cy="160" r="14" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <!-- ROW 1 -->
+  <rect x="15" y="106" width="225" height="52" rx="10" fill="#18182C"/>
+  <circle cx="55" cy="132" r="18" fill="#F5A020"/>
+  <circle cx="55" cy="124" r="7" fill="white" opacity="0.2"/>
+  <circle cx="100" cy="132" r="18" fill="#5B9FE8"/>
+  <circle cx="100" cy="124" r="7" fill="white" opacity="0.2"/>
+  <circle cx="145" cy="132" r="18" fill="#E87FB0"/>
+  <circle cx="145" cy="124" r="7" fill="white" opacity="0.2"/>
+  <circle cx="190" cy="132" r="18" fill="#3DB87A"/>
+  <circle cx="190" cy="124" r="7" fill="white" opacity="0.2"/>
+  <rect x="245" y="106" width="60" height="52" rx="10" fill="#141428"/>
+  <circle cx="262" cy="121" r="9" fill="#1A1A2E" stroke="#D8D8D8" stroke-width="2.5"/>
+  <circle cx="288" cy="121" r="9" fill="#EEEEEE"/>
+  <circle cx="262" cy="143" r="9" fill="none" stroke="#2A2A48" stroke-width="1.5"/>
+  <circle cx="288" cy="143" r="9" fill="none" stroke="#2A2A48" stroke-width="1.5"/>
 
-  <!-- ── ROW 4 (empty) ── -->
-  <rect x="18" y="192" width="224" height="48" rx="10" fill="rgba(255,255,255,0.025)"/>
-  <circle cx="51"  cy="216" r="14" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" stroke-dasharray="3 3"/>
-  <circle cx="88"  cy="216" r="14" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" stroke-dasharray="3 3"/>
-  <circle cx="125" cy="216" r="14" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" stroke-dasharray="3 3"/>
-  <circle cx="162" cy="216" r="14" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <!-- ROW 2 -->
+  <rect x="15" y="166" width="225" height="52" rx="10" fill="#18182C"/>
+  <circle cx="55" cy="192" r="18" fill="#5B9FE8"/>
+  <circle cx="55" cy="184" r="7" fill="white" opacity="0.2"/>
+  <circle cx="100" cy="192" r="18" fill="#3DB87A"/>
+  <circle cx="100" cy="184" r="7" fill="white" opacity="0.2"/>
+  <circle cx="145" cy="192" r="18" fill="#F5A020"/>
+  <circle cx="145" cy="184" r="7" fill="white" opacity="0.2"/>
+  <circle cx="190" cy="192" r="18" fill="#F0D040"/>
+  <circle cx="190" cy="184" r="7" fill="white" opacity="0.2"/>
+  <rect x="245" y="166" width="60" height="52" rx="10" fill="#141428"/>
+  <circle cx="262" cy="181" r="9" fill="#1A1A2E" stroke="#D8D8D8" stroke-width="2.5"/>
+  <circle cx="288" cy="181" r="9" fill="#1A1A2E" stroke="#D8D8D8" stroke-width="2.5"/>
+  <circle cx="262" cy="203" r="9" fill="#EEEEEE"/>
+  <circle cx="288" cy="203" r="9" fill="none" stroke="#2A2A48" stroke-width="1.5"/>
 
-  <!-- ── Divider ── -->
-  <line x1="18" y1="256" x2="242" y2="256" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+  <!-- ROW 3 ACTIVE -->
+  <rect x="15" y="226" width="225" height="52" rx="10" fill="#1C1C38" stroke="#F0D040" stroke-width="2" stroke-opacity="0.7"/>
+  <circle cx="55" cy="252" r="18" fill="#3DB87A"/>
+  <circle cx="55" cy="244" r="7" fill="white" opacity="0.2"/>
+  <circle cx="100" cy="252" r="18" fill="#F5A020"/>
+  <circle cx="100" cy="244" r="7" fill="white" opacity="0.2"/>
+  <circle cx="145" cy="252" r="18" fill="#5B9FE8"/>
+  <circle cx="145" cy="244" r="7" fill="white" opacity="0.2"/>
+  <circle cx="190" cy="252" r="18" fill="#F0D040"/>
+  <circle cx="190" cy="244" r="7" fill="white" opacity="0.2"/>
+  <rect x="245" y="226" width="60" height="52" rx="10" fill="#141428" stroke="#F0D040" stroke-width="1.5" stroke-opacity="0.4"/>
+  <circle cx="262" cy="241" r="9" fill="none" stroke="#3A3A60" stroke-width="1.5"/>
+  <circle cx="288" cy="241" r="9" fill="none" stroke="#3A3A60" stroke-width="1.5"/>
+  <circle cx="262" cy="263" r="9" fill="none" stroke="#3A3A60" stroke-width="1.5"/>
+  <circle cx="288" cy="263" r="9" fill="none" stroke="#3A3A60" stroke-width="1.5"/>
 
-  <!-- ── Color picker ── -->
-  <rect x="18" y="268" width="224" height="44" rx="10" fill="rgba(255,255,255,0.04)"/>
-  <circle cx="43"  cy="290" r="13" fill="url(#pg-orange)" filter="url(#peg-shadow)"/>
-  <circle cx="79"  cy="290" r="13" fill="url(#pg-sky)"    filter="url(#peg-shadow)"/>
-  <circle cx="115" cy="290" r="13" fill="url(#pg-green)"  filter="url(#peg-shadow)"/>
-  <circle cx="151" cy="290" r="13" fill="url(#pg-yellow)" filter="url(#peg-shadow)"/>
-  <circle cx="187" cy="290" r="13" fill="url(#pg-blue)"   filter="url(#peg-shadow)"/>
-  <circle cx="223" cy="290" r="13" fill="url(#pg-pink)"   filter="url(#peg-shadow)"/>
+  <!-- ROW 4 empty -->
+  <rect x="15" y="286" width="225" height="52" rx="10" fill="#141422"/>
+  <circle cx="55" cy="312" r="18" fill="none" stroke="#20203A" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <circle cx="100" cy="312" r="18" fill="none" stroke="#20203A" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <circle cx="145" cy="312" r="18" fill="none" stroke="#20203A" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <circle cx="190" cy="312" r="18" fill="none" stroke="#20203A" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <rect x="245" y="286" width="60" height="52" rx="10" fill="#111120"/>
 
-  <!-- ── Bottom home bar ── -->
-  <rect x="95" y="460" width="70" height="4" rx="2" fill="rgba(255,255,255,0.18)"/>
+  <!-- ROW 5 empty -->
+  <rect x="15" y="346" width="225" height="52" rx="10" fill="#111120"/>
+  <circle cx="55" cy="372" r="18" fill="none" stroke="#1A1A30" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <circle cx="100" cy="372" r="18" fill="none" stroke="#1A1A30" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <circle cx="145" cy="372" r="18" fill="none" stroke="#1A1A30" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <circle cx="190" cy="372" r="18" fill="none" stroke="#1A1A30" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <rect x="245" y="346" width="60" height="52" rx="10" fill="#0E0E1C"/>
+
+  <!-- Color picker -->
+  <rect x="15" y="410" width="290" height="48" rx="12" fill="#141424"/>
+  <circle cx="48" cy="434" r="15" fill="#F5A020"/>
+  <circle cx="85" cy="434" r="15" fill="#5B9FE8"/>
+  <circle cx="122" cy="434" r="15" fill="#3DB87A"/>
+  <circle cx="159" cy="434" r="15" fill="#F0D040"/>
+  <circle cx="196" cy="434" r="15" fill="#E87FB0"/>
+  <circle cx="233" cy="434" r="15" fill="#9B6EE0"/>
+  <circle cx="122" cy="434" r="20" fill="none" stroke="#F0D040" stroke-width="2.5"/>
+
 </svg>
