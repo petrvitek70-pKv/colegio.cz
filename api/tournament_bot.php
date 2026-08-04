@@ -25,18 +25,18 @@ const BOT_NICKNAME = 'ColegioCup';
 // Tournament templates: [name, difficulty, game_mode, allow_repetition]
 // Rotated based on the week number so there's variety
 $templates = [
-    ['Monday Classic Cup',       'classic', 'classic', 0],
     ['Easy Open Challenge',      'easy',    'classic', 0],
     ['Medium Speed Run',         'medium',  'timed',   0],
-    ['Hard Mode Masters',        'hard',    'classic', 0],
-    ['Classic Weekend Open',     'classic', 'classic', 0],
     ['Easy Blitz',               'easy',    'timed',   0],
     ['Medium Precision Cup',     'medium',  'classic', 0],
-    ['Classic Repeat Challenge', 'classic', 'classic', 1],
-    ['Wednesday Easy Cup',       'easy',    'classic', 0],
-    ['Hard Brain Workout',       'hard',    'classic', 0],
+    ['Monday Classic Cup',       'classic', 'classic', 0],
+    ['Easy Weekend Cup',         'easy',    'classic', 0],
     ['Sprint Medium',            'medium',  'timed',   0],
-    ['Friday Classic Duel',      'classic', 'classic', 0],
+    ['Classic Weekend Open',     'classic', 'classic', 0],
+    ['Wednesday Easy Cup',       'easy',    'classic', 0],
+    ['Medium Masters Cup',       'medium',  'classic', 0],
+    ['Classic Precision Duel',   'classic', 'classic', 0],
+    ['Hard Brain Workout',       'hard',    'classic', 0],
 ];
 
 // ── Check active + upcoming count ─────────────────────────────────────────────
