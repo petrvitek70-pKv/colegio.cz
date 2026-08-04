@@ -2,7 +2,7 @@
 // One-time script to rename tournaments — DELETE AFTER USE
 require_once __DIR__ . '/db.php';
 
-$db = new PDO('sqlite:' . __DIR__ . '/../data/tournaments.db');
+$db = getDb();
 $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $renames = [
