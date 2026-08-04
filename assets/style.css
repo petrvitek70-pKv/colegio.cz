@@ -258,8 +258,8 @@ h1 {
     height: 8px;
     border-radius: 50%;
 }
-.dot.black { background: #fff; }
-.dot.white { background: rgba(255,255,255,0.45); }
+.dot.black { background: #111; border: 1.5px solid rgba(255,255,255,0.85); }
+.dot.white { background: rgba(255,255,255,0.92); }
 .dot.empty { background: rgba(255,255,255,0.1); }
 
 .color-picker-preview {
