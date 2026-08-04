@@ -7,7 +7,7 @@ $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $renames = [
     'Get Classic game with me.'   => 'Classic Open — August',
-    'Today Medium come and play'  => 'Medium Speed Challenge',
+    'Today Medium  come and play'  => 'Medium Speed Challenge',
     'For Retarmind'               => 'Medium Masters Cup',
     'Hey come and play'           => 'Easy Starter — Join Now',
     'Andrey. Play now.'           => 'Easy Blitz Round',
