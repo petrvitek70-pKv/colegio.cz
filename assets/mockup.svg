@@ -36,6 +36,7 @@
   <circle cx="262" cy="143" r="9" fill="none" stroke="#2A2A48" stroke-width="1.5"/>
   <circle cx="288" cy="143" r="9" fill="none" stroke="#2A2A48" stroke-width="1.5"/>
 
+
   <!-- ROW 2 -->
   <rect x="15" y="166" width="225" height="52" rx="10" fill="#18182C"/>
   <circle cx="55" cy="192" r="18" fill="#5B9FE8"/>
@@ -48,8 +49,8 @@
   <circle cx="190" cy="184" r="7" fill="white" opacity="0.2"/>
   <rect x="245" y="166" width="60" height="52" rx="10" fill="#141428"/>
   <circle cx="262" cy="181" r="9" fill="#1A1A2E" stroke="#D8D8D8" stroke-width="2.5"/>
-  <circle cx="288" cy="181" r="9" fill="#1A1A2E" stroke="#D8D8D8" stroke-width="2.5"/>
-  <circle cx="262" cy="203" r="9" fill="#EEEEEE"/>
+  <circle cx="288" cy="181" r="9" fill="#EEEEEE"/>
+  <circle cx="262" cy="203" r="9" fill="none" stroke="#2A2A48" stroke-width="1.5"/>
   <circle cx="288" cy="203" r="9" fill="none" stroke="#2A2A48" stroke-width="1.5"/>
 
   <!-- ROW 3 ACTIVE -->
