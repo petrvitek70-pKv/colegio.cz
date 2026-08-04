@@ -1,7 +1,7 @@
 # Mastermind Web (colegio.cz) — Stav projektu
 
 > Tento soubor udržuj aktuální po každé větší změně. Slouží jako onboarding pro novou session nebo nového vývojáře.
-> Poslední aktualizace: 2026-07-26 (Google Play odkaz aktivní, Knuth fun fact, canonical tagy)
+> Poslední aktualizace: 2026-08-04 (SVG ikonky ve Features, Knuth přesunut za Pro, Tournament Bot)
 
 ---
 
@@ -23,8 +23,9 @@ Vydavatel: **Colegio Solutions s.r.o.**
 - ✅ **GitHub Actions deploy** — každý push na `main` se automaticky deployuje přes FTP
 - ✅ **App Store tlačítko** — živý odkaz (iOS schválena)
 - ✅ **Google Play tlačítko** — živý odkaz (Android schválen)
-- ✅ **Turnajová sekce** — v `index.html`, API na serveru; žádný turnaj zatím nevytvořen
-- ✅ **Knuth fun fact** — sekce mezi Features a Pro, lokalizováno do 26 jazyků
+- ✅ **Turnajová sekce** — aktivní; 5 turnajů v databázi (přejmenováno 2026-08-04)
+- ✅ **Tournament Bot** — GitHub Actions, každých 6 h doplňuje turnaje na minimum 3; secret `TOURNAMENT_BOT_KEY` v GitHub secrets; 4× easy, 4× medium, 3× classic, 1× hard
+- ✅ **Knuth fun fact** — přesunuta za Pro sekci, lokalizováno do 26 jazyků
 - ✅ **Canonical tagy** — přidány do index.html, privacy.html, terms.html (oprava Google Search Console)
 
 ---
@@ -43,6 +44,7 @@ api/
   score.php             — příjem a validace skóre (přepočítává server-side)
   leaderboard.php       — žebříček
   tournament.php        — turnaje (list, create, join, seed, submit, leaderboard, delete, disqualify)
+  tournament_bot.php    — bot pro automatické doplňování turnajů (volán přes GitHub Actions)
   feedback.php          — zpětná vazba
 ```
 
@@ -82,7 +84,7 @@ Admin klíč je **pouze na serveru** v `config.local.php`, není v repozitáři.
 
 Push na `main` → GitHub Actions → FTP na Active24 → live za ~30 sekund.
 
-Secrets v GitHub repozitáři: `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`, `FTP_SERVER_DIR`
+Secrets v GitHub repozitáři: `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`, `FTP_SERVER_DIR`, `TOURNAMENT_BOT_KEY`
 
 Vyloučeno z deploye: `.git*`, `data/`, `.DS_Store`
 
