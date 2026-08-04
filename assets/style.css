@@ -315,6 +315,7 @@ h1 {
 }
 
 .feature-icon { font-size: 2rem; margin-bottom: 14px; }
+.feature-icon svg { width: 36px; height: 36px; display: block; }
 
 .feature-card h3 {
     font-size: 1rem;
