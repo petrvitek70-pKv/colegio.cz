@@ -48,20 +48,20 @@
   <circle cx="190" cy="192" r="18" fill="#F0D040"/>
   <circle cx="190" cy="184" r="7" fill="white" opacity="0.2"/>
   <rect x="245" y="166" width="60" height="52" rx="10" fill="#141428"/>
-  <circle cx="262" cy="181" r="9" fill="#1A1A2E" stroke="#D8D8D8" stroke-width="2.5"/>
+  <circle cx="262" cy="181" r="9" fill="#EEEEEE"/>
   <circle cx="288" cy="181" r="9" fill="#EEEEEE"/>
   <circle cx="262" cy="203" r="9" fill="none" stroke="#2A2A48" stroke-width="1.5"/>
   <circle cx="288" cy="203" r="9" fill="none" stroke="#2A2A48" stroke-width="1.5"/>
 
   <!-- ROW 3 ACTIVE -->
   <rect x="15" y="226" width="225" height="52" rx="10" fill="#1C1C38" stroke="#F0D040" stroke-width="2" stroke-opacity="0.7"/>
-  <circle cx="55" cy="252" r="18" fill="#3DB87A"/>
+  <circle cx="55" cy="252" r="18" fill="#F5A020"/>
   <circle cx="55" cy="244" r="7" fill="white" opacity="0.2"/>
-  <circle cx="100" cy="252" r="18" fill="#F5A020"/>
+  <circle cx="100" cy="252" r="18" fill="#F0D040"/>
   <circle cx="100" cy="244" r="7" fill="white" opacity="0.2"/>
   <circle cx="145" cy="252" r="18" fill="#5B9FE8"/>
   <circle cx="145" cy="244" r="7" fill="white" opacity="0.2"/>
-  <circle cx="190" cy="252" r="18" fill="#F0D040"/>
+  <circle cx="190" cy="252" r="18" fill="#3DB87A"/>
   <circle cx="190" cy="244" r="7" fill="white" opacity="0.2"/>
   <rect x="245" y="226" width="60" height="52" rx="10" fill="#141428" stroke="#F0D040" stroke-width="1.5" stroke-opacity="0.4"/>
   <circle cx="262" cy="241" r="9" fill="none" stroke="#3A3A60" stroke-width="1.5"/>
