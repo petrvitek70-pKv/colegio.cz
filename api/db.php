@@ -22,11 +22,17 @@ function getDb(): PDO {
             difficulty TEXT NOT NULL,
             guesses INTEGER NOT NULL,
             seconds INTEGER NOT NULL,
+            timed INTEGER NOT NULL DEFAULT 0,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
         CREATE INDEX IF NOT EXISTS idx_score ON scores(score DESC);
         CREATE INDEX IF NOT EXISTS idx_difficulty ON scores(difficulty);
     ");
+    // Migrace: přidat sloupec timed pokud chybí (existující DB)
+    $cols = array_column($db->query('PRAGMA table_info(scores)')->fetchAll(PDO::FETCH_ASSOC), 'name');
+    if (!in_array('timed', $cols)) {
+        $db->exec('ALTER TABLE scores ADD COLUMN timed INTEGER NOT NULL DEFAULT 0');
+    }
     return $db;
 }
 

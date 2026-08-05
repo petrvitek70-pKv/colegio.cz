@@ -15,7 +15,6 @@ if (($body['admin_secret'] ?? '') !== ADMIN_SECRET) {
     jsonResponse(['error' => 'Unauthorized'], 401);
 }
 
-// Přepočet skóre (stejný algoritmus jako score.php a hra)
 function computeExpectedScore(int $guesses, int $maxGuesses, int $seconds, bool $isTimed, int $scoreMultiplier): int {
     $guessBonus = match(true) {
         $guesses === 1 => 5000,
@@ -68,6 +67,7 @@ if ($action === 'audit') {
         $guesses = (int)$row['guesses'];
         $seconds = (int)$row['seconds'];
         $score   = (int)$row['score'];
+        $isTimed = (int)($row['timed'] ?? 0) === 1;
         $maxG    = $limits['maxGuesses'];
         $mult    = $limits['scoreMultiplier'];
 
@@ -80,28 +80,28 @@ if ($action === 'audit') {
 
         // Pravidlo 2: příliš rychlý čas
         if ($seconds < $guesses * 5) {
-            $reasons[] = "seconds($seconds) < guesses*5(" . ($guesses*5) . ")";
+            $reasons[] = "seconds($seconds) < guesses*5(" . ($guesses * 5) . ")";
         }
 
-        // Pravidlo 3: timed-fraud — skóre odpovídá timed modu, ale classic nemůže mít modeMultiplier=2
-        // Detekujeme: score == classic_timed_score a zároveň score != classic_score
+        // Pravidlo 3: skóre neodpovídá uloženému módu
         if (empty($reasons)) {
-            $classicScore = computeExpectedScore($guesses, $maxG, $seconds, false, $mult);
-            $timedScore   = computeExpectedScore($guesses, $maxG, $seconds, true,  $mult);
-            if ($score !== $classicScore && $score === $timedScore) {
-                $reasons[] = "timed-fraud (score=$score matches timed=$timedScore, not classic=$classicScore)";
-            }
-            // Pravidlo 4: skóre neodpovídá ani classic ani timed → manipulace
-            if ($score !== $classicScore && $score !== $timedScore) {
-                $reasons[] = "score mismatch (got=$score, classic=$classicScore, timed=$timedScore)";
+            $expected = computeExpectedScore($guesses, $maxG, $seconds, $isTimed, $mult);
+            if ($score !== $expected) {
+                $reasons[] = "score mismatch (got=$score, expected=$expected, timed=" . ($isTimed?'true':'false') . ")";
             }
         }
 
         if (!empty($reasons)) {
-            $flagged[] = ['id' => $row['id'], 'nickname' => $row['nickname'],
-                          'score' => $score, 'difficulty' => $row['difficulty'],
-                          'guesses' => $guesses, 'seconds' => $seconds,
-                          'reasons' => $reasons];
+            $flagged[] = [
+                'id'         => $row['id'],
+                'nickname'   => $row['nickname'],
+                'score'      => $score,
+                'difficulty' => $row['difficulty'],
+                'guesses'    => $guesses,
+                'seconds'    => $seconds,
+                'timed'      => $isTimed,
+                'reasons'    => $reasons,
+            ];
         }
     }
 
@@ -109,7 +109,6 @@ if ($action === 'audit') {
         jsonResponse(['success' => true, 'deleted' => 0, 'message' => 'No invalid entries found']);
     }
 
-    // Smazání
     $ids = array_column($flagged, 'id');
     $placeholders = implode(',', array_fill(0, count($ids), '?'));
     $stmt = $db->prepare("DELETE FROM scores WHERE id IN ($placeholders)");
