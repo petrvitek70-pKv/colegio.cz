@@ -82,8 +82,8 @@ if ($score !== $expected) {
 // Uložení skóre
 $db = getDb();
 $stmt = $db->prepare(
-    'INSERT INTO scores (nickname, score, difficulty, guesses, seconds, timed) VALUES (?, ?, ?, ?, ?, ?)'
+    'INSERT INTO scores (nickname, score, difficulty, guesses, seconds, timed, repetition) VALUES (?, ?, ?, ?, ?, ?, ?)'
 );
-$stmt->execute([$nickname, $score, $difficulty, $guesses, $seconds, $isTimed ? 1 : 0]);
+$stmt->execute([$nickname, $score, $difficulty, $guesses, $seconds, $isTimed ? 1 : 0, $repetition ? 1 : 0]);
 
 jsonResponse(['success' => true, 'id' => $db->lastInsertId()], 201);

@@ -67,9 +67,10 @@ if ($action === 'audit') {
         $guesses = (int)$row['guesses'];
         $seconds = (int)$row['seconds'];
         $score   = (int)$row['score'];
-        $isTimed = (int)($row['timed'] ?? 0) === 1;
+        $isTimed    = (int)($row['timed']      ?? 0) === 1;
+        $repetition = (int)($row['repetition'] ?? 0) === 1;
         $maxG    = $limits['maxGuesses'];
-        $mult    = $limits['scoreMultiplier'];
+        $mult    = $limits['scoreMultiplier'] * ($repetition ? 2 : 1);
 
         $reasons = [];
 
@@ -100,6 +101,7 @@ if ($action === 'audit') {
                 'guesses'    => $guesses,
                 'seconds'    => $seconds,
                 'timed'      => $isTimed,
+                'repetition' => $repetition,
                 'reasons'    => $reasons,
             ];
         }

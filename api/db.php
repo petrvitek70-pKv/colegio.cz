@@ -23,6 +23,7 @@ function getDb(): PDO {
             guesses INTEGER NOT NULL,
             seconds INTEGER NOT NULL,
             timed INTEGER NOT NULL DEFAULT 0,
+            repetition INTEGER NOT NULL DEFAULT 0,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
         CREATE INDEX IF NOT EXISTS idx_score ON scores(score DESC);
@@ -32,6 +33,9 @@ function getDb(): PDO {
     $cols = array_column($db->query('PRAGMA table_info(scores)')->fetchAll(PDO::FETCH_ASSOC), 'name');
     if (!in_array('timed', $cols)) {
         $db->exec('ALTER TABLE scores ADD COLUMN timed INTEGER NOT NULL DEFAULT 0');
+    }
+    if (!in_array('repetition', $cols)) {
+        $db->exec('ALTER TABLE scores ADD COLUMN repetition INTEGER NOT NULL DEFAULT 0');
     }
     return $db;
 }
