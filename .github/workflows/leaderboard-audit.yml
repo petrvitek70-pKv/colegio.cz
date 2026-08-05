@@ -2,30 +2,25 @@ name: Leaderboard Audit
 
 on:
   schedule:
-    # Každý den ve 3:00 UTC
     - cron: '0 3 * * *'
   workflow_dispatch:
-    # Možnost spustit ručně z GitHub Actions UI
 
 jobs:
   audit:
     runs-on: ubuntu-latest
+    env:
+      ADMIN_SECRET: ${{ secrets.ADMIN_SECRET }}
     steps:
       - name: Run leaderboard audit
         run: |
           RESPONSE=$(curl -s -X POST https://colegio.cz/api/admin.php \
             -H "Content-Type: application/json" \
-            -d "{\"admin_secret\":\"${{ secrets.ADMIN_SECRET }}\",\"action\":\"audit\"}")
+            -d "{\"admin_secret\":\"${ADMIN_SECRET}\",\"action\":\"audit\"}")
           echo "$RESPONSE"
           DELETED=$(echo "$RESPONSE" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('deleted',0))")
           if [ "$DELETED" -gt 0 ]; then
-            echo "::warning::Audit smazal $DELETED podezřelých záznamů!"
-            echo "$RESPONSE" | python3 -c "
-import json, sys
-d = json.load(sys.stdin)
-for e in d.get('entries', []):
-    print(f\"  - {e['nickname']} | {e['difficulty']} | g={e['guesses']} s={e['seconds']} score={e['score']} | {e['reasons']}\")
-"
+            echo "::warning::Audit smazal $DELETED podezrelych zaznamu!"
+            echo "$RESPONSE" | python3 -c "import json,sys; [print(f'  - {e[\"nickname\"]} | {e[\"difficulty\"]} | g={e[\"guesses\"]} s={e[\"seconds\"]} score={e[\"score\"]} | {e[\"reasons\"]}') for e in json.load(sys.stdin).get('entries',[])]"
           else
-            echo "Žebříček je čistý."
+            echo "Zebricek je cisty."
           fi
