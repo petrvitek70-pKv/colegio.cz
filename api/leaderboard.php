@@ -7,37 +7,43 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 }
 
 $difficulty = $_GET['difficulty'] ?? 'all';
-$limit = min((int)($_GET['limit'] ?? 100), 100);
+$limit  = min((int)($_GET['limit']  ?? 20), 100);
+$offset = max((int)($_GET['offset'] ?? 0), 0);
 
 $db = getDb();
 
+// Celkový počet záznamů pro danou obtížnost
 if ($difficulty === 'all') {
+    $total = (int)$db->query('SELECT COUNT(*) FROM scores')->fetchColumn();
     $stmt = $db->prepare(
         'SELECT nickname, score, difficulty, guesses, seconds, repetition, created_at
          FROM scores
          ORDER BY score DESC
-         LIMIT ?'
+         LIMIT ? OFFSET ?'
     );
-    $stmt->execute([$limit]);
+    $stmt->execute([$limit, $offset]);
 } else {
     if (!in_array($difficulty, ['easy', 'medium', 'classic', 'hard'])) {
         jsonResponse(['error' => 'Invalid difficulty'], 422);
     }
+    $cntStmt = $db->prepare('SELECT COUNT(*) FROM scores WHERE difficulty = ?');
+    $cntStmt->execute([$difficulty]);
+    $total = (int)$cntStmt->fetchColumn();
     $stmt = $db->prepare(
         'SELECT nickname, score, difficulty, guesses, seconds, repetition, created_at
          FROM scores
          WHERE difficulty = ?
          ORDER BY score DESC
-         LIMIT ?'
+         LIMIT ? OFFSET ?'
     );
-    $stmt->execute([$difficulty, $limit]);
+    $stmt->execute([$difficulty, $limit, $offset]);
 }
 
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$entries = array_map(function($row, $index) {
+$entries = array_map(function($row, $index) use ($offset) {
     return [
-        'rank'       => $index + 1,
+        'rank'       => $offset + $index + 1,
         'nickname'   => $row['nickname'],
         'score'      => (int)$row['score'],
         'difficulty' => $row['difficulty'],
@@ -48,4 +54,4 @@ $entries = array_map(function($row, $index) {
     ];
 }, $rows, array_keys($rows));
 
-jsonResponse(['leaderboard' => $entries, 'count' => count($entries)]);
+jsonResponse(['leaderboard' => $entries, 'count' => count($entries), 'total' => (int)$total, 'offset' => $offset]);

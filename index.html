@@ -24,31 +24,61 @@
         function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
         window._lbDiff = 'all';
+        window._lbOffset = 0;
+        window._lbTotal = 0;
+        const LB_LIMIT = 20;
+
+        function lbRow(e){
+            return `<tr>
+                <td class="lb-rank rank-${e.rank}">${e.rank<=3?['🥇','🥈','🥉'][e.rank-1]:e.rank}</td>
+                <td class="lb-nick">${esc(e.nickname)}</td>
+                <td>${DIFF_ICON[e.difficulty]||''} ${esc(e.difficulty)}</td>
+                <td>${e.guesses}</td>
+                <td>${formatTime(e.seconds)}${e.repetition?' 🔁':''}</td>
+                <td class="lb-score">${e.score.toLocaleString()}</td>
+            </tr>`;
+        }
+
+        function updateLoadMoreBtn(){
+            const btn = document.getElementById('lb-load-more');
+            if(!btn) return;
+            btn.style.display = window._lbOffset < window._lbTotal ? 'block' : 'none';
+        }
+
         async function loadLeaderboard(diff, btn){
             window._lbDiff = diff || 'all';
+            window._lbOffset = 0;
             document.querySelectorAll('.lb-btn').forEach(b=>b.classList.remove('active'));
             (btn || document.querySelector('.lb-btn'))?.classList.add('active');
             const tbody = document.getElementById('lb-body');
             const t = TRANSLATIONS[document.documentElement.lang] || TRANSLATIONS['en'];
             tbody.innerHTML = `<tr><td colspan="6" class="lb-loading">${t.lb_loading||'Loading…'}</td></tr>`;
             try {
-                const data = await fetch('/api/leaderboard.php?difficulty='+window._lbDiff+'&limit=20').then(r=>r.json());
+                const data = await fetch(`/api/leaderboard.php?difficulty=${window._lbDiff}&limit=${LB_LIMIT}&offset=0`).then(r=>r.json());
                 if(!data.leaderboard.length){
                     tbody.innerHTML=`<tr><td colspan="6" class="lb-loading">${t.lb_empty||'No scores yet.'}</td></tr>`;
+                    updateLoadMoreBtn();
                     return;
                 }
-                tbody.innerHTML = data.leaderboard.map(e=>`
-                    <tr>
-                        <td class="lb-rank rank-${e.rank}">${e.rank<=3?['🥇','🥈','🥉'][e.rank-1]:e.rank}</td>
-                        <td class="lb-nick">${esc(e.nickname)}</td>
-                        <td>${DIFF_ICON[e.difficulty]||''} ${esc(e.difficulty)}</td>
-                        <td>${e.guesses}</td>
-                        <td>${formatTime(e.seconds)}${e.repetition?' 🔁':''}</td>
-                        <td class="lb-score">${e.score.toLocaleString()}</td>
-                    </tr>`).join('');
+                window._lbOffset = data.leaderboard.length;
+                window._lbTotal = data.total || 0;
+                tbody.innerHTML = data.leaderboard.map(lbRow).join('');
+                updateLoadMoreBtn();
             } catch(e){
                 tbody.innerHTML=`<tr><td colspan="6" class="lb-loading">${t.lb_error||'Could not load leaderboard.'}</td></tr>`;
             }
+        }
+
+        async function loadMoreLeaderboard(){
+            const tbody = document.getElementById('lb-body');
+            try {
+                const data = await fetch(`/api/leaderboard.php?difficulty=${window._lbDiff}&limit=${LB_LIMIT}&offset=${window._lbOffset}`).then(r=>r.json());
+                if(!data.leaderboard.length) return;
+                window._lbOffset += data.leaderboard.length;
+                window._lbTotal = data.total || window._lbTotal;
+                tbody.innerHTML += data.leaderboard.map(lbRow).join('');
+                updateLoadMoreBtn();
+            } catch(e){}
         }
 
         async function loadFeedback() {
@@ -345,6 +375,9 @@
                     </tr></thead>
                     <tbody id="lb-body"><tr><td colspan="6" class="lb-loading">Loading…</td></tr></tbody>
                 </table>
+            </div>
+            <div style="text-align:center;margin-top:16px">
+                <button id="lb-load-more" onclick="loadMoreLeaderboard()" style="display:none;background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:10px 28px;font-size:14px;cursor:pointer" data-i18n="lb_load_more">Load more</button>
             </div>
         </div>
     </section>
