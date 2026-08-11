@@ -1,7 +1,7 @@
 # Mastermind Web (colegio.cz) — Stav projektu
 
 > Tento soubor udržuj aktuální po každé větší změně. Slouží jako onboarding pro novou session nebo nového vývojáře.
-> Poslední aktualizace: 2026-08-04 (SVG ikonky ve Features, Knuth přesunut za Pro, Tournament Bot)
+> Poslední aktualizace: 2026-08-11 (žebříček v1.2.3 — ms timing, my_entry, timed indikátor, analytické sloupce DB)
 
 ---
 
@@ -11,7 +11,7 @@ Vydavatel: **Colegio Solutions s.r.o.**
 
 | Platforma | Repozitář | Stav |
 |-----------|-----------|------|
-| iOS | github.com/petrvitek70-pKv/Mastermind | ✅ v1.2 live na App Store |
+| iOS | github.com/petrvitek70-pKv/Mastermind | ✅ v1.2.2 Ready for Distribution od 2026-08-11 |
 | Android | github.com/petrvitek70-pKv/MastermindAndroid | 🔄 v1.2 release build hotov, čeká na upload |
 | Web + API (tento repo) | github.com/petrvitek70-pKv/colegio.cz | ✅ live na colegio.cz |
 
@@ -60,8 +60,20 @@ api/
 ### Validace skóre (`score.php`)
 Server **přepočítá** skóre stejným algoritmem jako appka a odmítne odchylku:
 - Max pokusy: easy=12, medium/classic=10, hard=8
-- Min čas: guesses × 3 sekund
+- Min čas: guesses × 5 sekund (od v1.2.3 — dříve 3s)
 - scoreMultiplier: easy=1, medium=3, classic=4, hard=6 (×2 pokud allowRepetition)
+- Nové (v1.2.3): přijímá `ms` (nové appky) nebo `seconds` (staré appky): `if isset($body['ms']) && ms>0 → use ms, else seconds*1000`
+- timePenalty = `floor(ms * 0.005)` (ekvivalentní `seconds * 5`)
+
+### Žebříček (leaderboard.php) — nové funkce v1.2.3
+- **ms timing**: záznamy mají `ms` (milisekundy), zobrazení jako `M:SS.cc` (centisekundy)
+- **my_entry**: pokud hráč není v top 100, vrátí jeho nejlepší výsledek s reálným pořadím (`?nickname=X`)
+- **timed indikátor**: pole `timed: bool` v odpovědi
+- **Analytické sloupce**: `platform`, `app_version`, `app_lang`, `country` — plní appky od v1.2.3
+
+### Migrace DB (db.php)
+- `ALTER TABLE scores ADD COLUMN ms INTEGER NOT NULL DEFAULT 0`
+- `UPDATE scores SET ms = seconds * 1000 WHERE ms = 0` — staré záznamy zobrazí `M:SS.00`
 
 ### Limity max skóre (1 pokus, timed, s opakováním)
 easy×2=20k | medium×6=60k | classic×8=80k | hard×12=120k
