@@ -13,7 +13,7 @@ $db = getDb();
 
 if ($difficulty === 'all') {
     $stmt = $db->prepare(
-        'SELECT nickname, score, difficulty, guesses, seconds, created_at
+        'SELECT nickname, score, difficulty, guesses, seconds, repetition, created_at
          FROM scores
          ORDER BY score DESC
          LIMIT ?'
@@ -24,7 +24,7 @@ if ($difficulty === 'all') {
         jsonResponse(['error' => 'Invalid difficulty'], 422);
     }
     $stmt = $db->prepare(
-        'SELECT nickname, score, difficulty, guesses, seconds, created_at
+        'SELECT nickname, score, difficulty, guesses, seconds, repetition, created_at
          FROM scores
          WHERE difficulty = ?
          ORDER BY score DESC
@@ -43,6 +43,7 @@ $entries = array_map(function($row, $index) {
         'difficulty' => $row['difficulty'],
         'guesses'    => (int)$row['guesses'],
         'seconds'    => (int)$row['seconds'],
+        'repetition' => (int)($row['repetition'] ?? 0) === 1,
         'date'       => substr($row['created_at'], 0, 10),
     ];
 }, $rows, array_keys($rows));
