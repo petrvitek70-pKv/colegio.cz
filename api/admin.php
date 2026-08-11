@@ -15,13 +15,13 @@ if (($body['admin_secret'] ?? '') !== ADMIN_SECRET) {
     jsonResponse(['error' => 'Unauthorized'], 401);
 }
 
-function computeExpectedScore(int $guesses, int $maxGuesses, int $seconds, bool $isTimed, int $scoreMultiplier): int {
+function computeExpectedScore(int $guesses, int $maxGuesses, int $ms, bool $isTimed, int $scoreMultiplier): int {
     $guessBonus = match(true) {
         $guesses === 1 => 5000,
         $guesses === 2 => 3000,
         default        => ($maxGuesses - $guesses) * 500,
     };
-    $timePenalty    = $isTimed ? 0 : $seconds * 5;
+    $timePenalty    = $isTimed ? 0 : (int)floor($ms * 0.005);
     $modeMultiplier = $isTimed ? 2 : 1;
     return max(0, ($guessBonus - $timePenalty) * $scoreMultiplier * $modeMultiplier);
 }
@@ -65,7 +65,8 @@ if ($action === 'audit') {
         if (!$limits) continue;
 
         $guesses = (int)$row['guesses'];
-        $seconds = (int)$row['seconds'];
+        $ms      = (int)($row['ms'] ?? 0) ?: (int)$row['seconds'] * 1000;
+        $seconds = (int)round($ms / 1000);
         $score   = (int)$row['score'];
         $isTimed    = (int)($row['timed']      ?? 0) === 1;
         $repetition = (int)($row['repetition'] ?? 0) === 1;
@@ -80,13 +81,13 @@ if ($action === 'audit') {
         }
 
         // Pravidlo 2: příliš rychlý čas
-        if ($seconds < $guesses * 5) {
-            $reasons[] = "seconds($seconds) < guesses*5(" . ($guesses * 5) . ")";
+        if ($ms < $guesses * 5000) {
+            $reasons[] = "ms($ms) < guesses*5000(" . ($guesses * 5000) . ")";
         }
 
         // Pravidlo 3: skóre neodpovídá uloženému módu
         if (empty($reasons)) {
-            $expected = computeExpectedScore($guesses, $maxG, $seconds, $isTimed, $mult);
+            $expected = computeExpectedScore($guesses, $maxG, $ms, $isTimed, $mult);
             if ($score !== $expected) {
                 $reasons[] = "score mismatch (got=$score, expected=$expected, timed=" . ($isTimed?'true':'false') . ")";
             }

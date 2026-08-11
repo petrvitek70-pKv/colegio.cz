@@ -53,6 +53,11 @@ function getDb(): PDO {
     if (!in_array('country', $cols)) {
         $db->exec("ALTER TABLE scores ADD COLUMN country TEXT NOT NULL DEFAULT ''");
     }
+    if (!in_array('ms', $cols)) {
+        $db->exec('ALTER TABLE scores ADD COLUMN ms INTEGER NOT NULL DEFAULT 0');
+        // Migrovat existující záznamy: seconds → ms
+        $db->exec('UPDATE scores SET ms = seconds * 1000 WHERE ms = 0');
+    }
     return $db;
 }
 

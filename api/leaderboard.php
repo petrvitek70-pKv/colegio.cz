@@ -17,7 +17,7 @@ $db = getDb();
 if ($difficulty === 'all') {
     $total = (int)$db->query('SELECT COUNT(*) FROM scores')->fetchColumn();
     $stmt = $db->prepare(
-        'SELECT nickname, score, difficulty, guesses, seconds, timed, repetition, created_at
+        'SELECT nickname, score, difficulty, guesses, seconds, ms, timed, repetition, created_at
          FROM scores
          ORDER BY score DESC
          LIMIT ? OFFSET ?'
@@ -31,7 +31,7 @@ if ($difficulty === 'all') {
     $cntStmt->execute([$difficulty]);
     $total = (int)$cntStmt->fetchColumn();
     $stmt = $db->prepare(
-        'SELECT nickname, score, difficulty, guesses, seconds, timed, repetition, created_at
+        'SELECT nickname, score, difficulty, guesses, seconds, ms, timed, repetition, created_at
          FROM scores
          WHERE difficulty = ?
          ORDER BY score DESC
@@ -43,13 +43,15 @@ if ($difficulty === 'all') {
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 function buildEntry(array $row, int $rank): array {
+    $ms = (int)($row['ms'] ?? 0) ?: (int)$row['seconds'] * 1000;
     return [
         'rank'       => $rank,
         'nickname'   => $row['nickname'],
         'score'      => (int)$row['score'],
         'difficulty' => $row['difficulty'],
         'guesses'    => (int)$row['guesses'],
-        'seconds'    => (int)$row['seconds'],
+        'ms'         => $ms,
+        'seconds'    => (int)round($ms / 1000),
         'timed'      => (int)($row['timed']      ?? 0) === 1,
         'repetition' => (int)($row['repetition'] ?? 0) === 1,
         'date'       => substr($row['created_at'], 0, 10),
@@ -67,7 +69,7 @@ if ($myNick !== '') {
     if (!in_array($myNick, $nicksInList)) {
         if ($difficulty === 'all') {
             $myStmt = $db->prepare(
-                'SELECT nickname, score, difficulty, guesses, seconds, timed, repetition, created_at
+                'SELECT nickname, score, difficulty, guesses, seconds, ms, timed, repetition, created_at
                  FROM scores WHERE nickname = ?
                  ORDER BY score DESC LIMIT 1'
             );
@@ -81,7 +83,7 @@ if ($myNick !== '') {
             }
         } else {
             $myStmt = $db->prepare(
-                'SELECT nickname, score, difficulty, guesses, seconds, timed, repetition, created_at
+                'SELECT nickname, score, difficulty, guesses, seconds, ms, timed, repetition, created_at
                  FROM scores WHERE nickname = ? AND difficulty = ?
                  ORDER BY score DESC LIMIT 1'
             );

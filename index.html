@@ -21,7 +21,10 @@
             general: { cs:'💬 Obecné',   en:'💬 General'  },
         };
 
-        function formatTime(s){return Math.floor(s/60)+':'+(s%60).toString().padStart(2,'0');}
+        function formatTime(s,ms){
+            if(ms!=null){const t=Math.floor(ms/100);const d=t%10;const ss=Math.floor(ms/1000);return Math.floor(ss/60)+':'+(ss%60).toString().padStart(2,'0')+'.'+d;}
+            return Math.floor(s/60)+':'+(s%60).toString().padStart(2,'0');
+        }
         function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
         window._lbDiff = 'all';
@@ -35,7 +38,7 @@
                 <td class="lb-nick">${esc(e.nickname)}</td>
                 <td>${DIFF_ICON[e.difficulty]||''} ${esc(e.difficulty)}</td>
                 <td>${e.guesses}</td>
-                <td>${formatTime(e.seconds)}${e.timed?` <span style="color:${DIFF_COLOR[e.difficulty]||'#aaa'}">⏱</span>`:''}${e.repetition?' 🔁':''}</td>
+                <td>${formatTime(e.seconds,e.ms)}${e.timed?` <span style="color:${DIFF_COLOR[e.difficulty]||'#aaa'}">⏱</span>`:''}${e.repetition?' 🔁':''}</td>
                 <td class="lb-score">${e.score.toLocaleString()}</td>
             </tr>`;
         }
