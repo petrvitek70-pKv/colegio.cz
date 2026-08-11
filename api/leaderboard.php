@@ -16,7 +16,7 @@ $db = getDb();
 if ($difficulty === 'all') {
     $total = (int)$db->query('SELECT COUNT(*) FROM scores')->fetchColumn();
     $stmt = $db->prepare(
-        'SELECT nickname, score, difficulty, guesses, seconds, repetition, created_at
+        'SELECT nickname, score, difficulty, guesses, seconds, timed, repetition, created_at
          FROM scores
          ORDER BY score DESC
          LIMIT ? OFFSET ?'
@@ -30,7 +30,7 @@ if ($difficulty === 'all') {
     $cntStmt->execute([$difficulty]);
     $total = (int)$cntStmt->fetchColumn();
     $stmt = $db->prepare(
-        'SELECT nickname, score, difficulty, guesses, seconds, repetition, created_at
+        'SELECT nickname, score, difficulty, guesses, seconds, timed, repetition, created_at
          FROM scores
          WHERE difficulty = ?
          ORDER BY score DESC
@@ -49,6 +49,7 @@ $entries = array_map(function($row, $index) use ($offset) {
         'difficulty' => $row['difficulty'],
         'guesses'    => (int)$row['guesses'],
         'seconds'    => (int)$row['seconds'],
+        'timed'      => (int)($row['timed']      ?? 0) === 1,
         'repetition' => (int)($row['repetition'] ?? 0) === 1,
         'date'       => substr($row['created_at'], 0, 10),
     ];

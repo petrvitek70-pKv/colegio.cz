@@ -11,7 +11,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="assets/i18n.js" defer></script>
     <script>
-        const DIFF_ICON = {all:'⚪',easy:'🟢',medium:'🟡',classic:'🎯',hard:'🔴'};
+        const DIFF_ICON  = {all:'⚪',easy:'🟢',medium:'🟡',classic:'🎯',hard:'🔴'};
+        const DIFF_COLOR = {easy:'#4ade80',medium:'#facc15',classic:'#60a5fa',hard:'#f87171'};
         const FB_CATS = {
             bug:     { cs:'🐛 Chyba',    en:'🐛 Bug'      },
             idea:    { cs:'💡 Nápad',    en:'💡 Idea'     },
@@ -34,7 +35,7 @@
                 <td class="lb-nick">${esc(e.nickname)}</td>
                 <td>${DIFF_ICON[e.difficulty]||''} ${esc(e.difficulty)}</td>
                 <td>${e.guesses}</td>
-                <td>${formatTime(e.seconds)}${e.repetition?' 🔁':''}</td>
+                <td>${formatTime(e.seconds)}${e.timed?` <span style="color:${DIFF_COLOR[e.difficulty]||'#aaa'}">⏱</span>`:''}${e.repetition?' 🔁':''}</td>
                 <td class="lb-score">${e.score.toLocaleString()}</td>
             </tr>`;
         }
