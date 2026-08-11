@@ -43,7 +43,7 @@
                         <td class="lb-nick">${esc(e.nickname)}</td>
                         <td>${DIFF_ICON[e.difficulty]||''} ${esc(e.difficulty)}</td>
                         <td>${e.guesses}</td>
-                        <td>${formatTime(e.seconds)}</td>
+                        <td>${formatTime(e.seconds)}${e.repetition?' 🔁':''}</td>
                         <td class="lb-score">${e.score.toLocaleString()}</td>
                     </tr>`).join('');
             } catch(e){
