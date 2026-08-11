@@ -24,6 +24,10 @@ function getDb(): PDO {
             seconds INTEGER NOT NULL,
             timed INTEGER NOT NULL DEFAULT 0,
             repetition INTEGER NOT NULL DEFAULT 0,
+            platform TEXT NOT NULL DEFAULT '',
+            app_version TEXT NOT NULL DEFAULT '',
+            app_lang TEXT NOT NULL DEFAULT '',
+            country TEXT NOT NULL DEFAULT '',
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
         CREATE INDEX IF NOT EXISTS idx_score ON scores(score DESC);
@@ -36,6 +40,18 @@ function getDb(): PDO {
     }
     if (!in_array('repetition', $cols)) {
         $db->exec('ALTER TABLE scores ADD COLUMN repetition INTEGER NOT NULL DEFAULT 0');
+    }
+    if (!in_array('platform', $cols)) {
+        $db->exec("ALTER TABLE scores ADD COLUMN platform TEXT NOT NULL DEFAULT ''");
+    }
+    if (!in_array('app_version', $cols)) {
+        $db->exec("ALTER TABLE scores ADD COLUMN app_version TEXT NOT NULL DEFAULT ''");
+    }
+    if (!in_array('app_lang', $cols)) {
+        $db->exec("ALTER TABLE scores ADD COLUMN app_lang TEXT NOT NULL DEFAULT ''");
+    }
+    if (!in_array('country', $cols)) {
+        $db->exec("ALTER TABLE scores ADD COLUMN country TEXT NOT NULL DEFAULT ''");
     }
     return $db;
 }

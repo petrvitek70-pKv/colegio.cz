@@ -61,6 +61,24 @@ if (!array_key_exists($difficulty, $DIFFICULTY_LIMITS)) {
 $limits      = $DIFFICULTY_LIMITS[$difficulty];
 $isTimed     = ($body['timed']      ?? 0) == 1;
 $repetition  = ($body['repetition'] ?? 0) == 1;
+$platform    = in_array($body['platform'] ?? '', ['ios', 'android']) ? $body['platform'] : '';
+$appVersion  = substr(preg_replace('/[^0-9a-zA-Z.\-]/', '', $body['app_version'] ?? ''), 0, 20);
+$appLang     = substr(preg_replace('/[^a-zA-Z\-]/', '', $body['app_lang'] ?? ''), 0, 10);
+
+// Země ze IP adresy (server-side, bez závislosti na klientovi)
+function getCountryFromIp(string $ip): string {
+    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false) {
+        return '';
+    }
+    $response = @file_get_contents("http://ip-api.com/json/{$ip}?fields=countryCode", false,
+        stream_context_create(['http' => ['timeout' => 2]]));
+    if (!$response) return '';
+    $data = json_decode($response, true);
+    return $data['countryCode'] ?? '';
+}
+$ip      = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? '';
+$ip      = trim(explode(',', $ip)[0]);
+$country = getCountryFromIp($ip);
 
 if ($guesses < 2 || $guesses > $limits['maxGuesses']) {
     jsonResponse(['error' => 'First-guess wins are not eligible for leaderboard'], 422);
@@ -82,8 +100,11 @@ if ($score !== $expected) {
 // Uložení skóre
 $db = getDb();
 $stmt = $db->prepare(
-    'INSERT INTO scores (nickname, score, difficulty, guesses, seconds, timed, repetition) VALUES (?, ?, ?, ?, ?, ?, ?)'
+    'INSERT INTO scores (nickname, score, difficulty, guesses, seconds, timed, repetition, platform, app_version, app_lang, country)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
 );
-$stmt->execute([$nickname, $score, $difficulty, $guesses, $seconds, $isTimed ? 1 : 0, $repetition ? 1 : 0]);
+$stmt->execute([$nickname, $score, $difficulty, $guesses, $seconds,
+                $isTimed ? 1 : 0, $repetition ? 1 : 0,
+                $platform, $appVersion, $appLang, $country]);
 
 jsonResponse(['success' => true, 'id' => $db->lastInsertId()], 201);
