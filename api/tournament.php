@@ -59,6 +59,7 @@ function getTournamentDb(): PDO {
     // Migrations for columns added after initial schema
     try { $db->exec("ALTER TABLE tournaments ADD COLUMN creator_nickname TEXT NOT NULL DEFAULT ''"); } catch (\Exception $e) {}
     try { $db->exec("ALTER TABLE tournament_entries ADD COLUMN seed_issued_at INTEGER"); } catch (\Exception $e) {}
+    try { $db->exec("ALTER TABLE tournament_entries ADD COLUMN ms INTEGER NOT NULL DEFAULT 0"); } catch (\Exception $e) {}
     return $db;
 }
 
@@ -224,7 +225,7 @@ if ($action === 'leaderboard') {
     if (!$t) jsonResponse(['error' => 'Not found'], 404);
 
     $stmt = $db->prepare("
-        SELECT nickname, score, guesses, seconds, submitted_at
+        SELECT nickname, score, guesses, seconds, ms, submitted_at
         FROM tournament_entries
         WHERE tournament_id = ? AND submitted_at IS NOT NULL
         ORDER BY score DESC, guesses ASC, seconds ASC
@@ -241,6 +242,7 @@ if ($action === 'leaderboard') {
             'score'    => (int)$e['score'],
             'guesses'  => (int)$e['guesses'],
             'seconds'  => (int)$e['seconds'],
+            'ms'       => (int)$e['ms'],
         ];
     }
     jsonResponse([
@@ -339,10 +341,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'submit') {
 
     $stmt = $db->prepare("
         UPDATE tournament_entries
-        SET score = ?, guesses = ?, seconds = ?, submitted_at = strftime('%s','now')
+        SET score = ?, guesses = ?, seconds = ?, ms = ?, submitted_at = strftime('%s','now')
         WHERE tournament_id = ? AND nickname = ?
     ");
-    $stmt->execute([$score, $guesses, $seconds, $id, $nickname]);
+    $stmt->execute([$score, $guesses, $seconds, $ms, $id, $nickname]);
 
     jsonResponse(['ok' => true, 'score' => $score]);
 }

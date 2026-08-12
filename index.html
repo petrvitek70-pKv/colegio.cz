@@ -223,7 +223,7 @@
                         <td class="lb-rank rank-${e.rank}">${e.rank<=3?['🥇','🥈','🥉'][e.rank-1]:e.rank}</td>
                         <td class="lb-nick">${esc(e.nickname)}${rxHtml ? '<span class="trn-rx-row">'+rxHtml+'</span>' : ''}</td>
                         <td>${e.guesses}</td>
-                        <td>${formatTime(e.seconds)}</td>
+                        <td>${formatTime(e.seconds, e.ms||null)}</td>
                         <td class="lb-score">${e.score.toLocaleString()}</td>
                     </tr>`;
                 }).join('');
