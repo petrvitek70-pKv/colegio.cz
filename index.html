@@ -197,15 +197,15 @@
 
             try {
                 const TAUNT_TEXTS = {
-                    going_down:  "You're going down!",
-                    well_played: "Well played!",
-                    lucky:       "Lucky guess!",
-                    good_game:   "Good game!",
-                    watch_back:  "Watch your back!",
+                    going_down:  tr.trn_taunt_going_down  || "You're going down!",
+                    well_played: tr.trn_taunt_well_played || "Well played!",
+                    lucky:       tr.trn_taunt_lucky       || "Lucky guess!",
+                    good_game:   tr.trn_taunt_good_game   || "Good game!",
+                    watch_back:  tr.trn_taunt_watch_back  || "Watch your back!",
                     // legacy keys
-                    clap:        "Well played!",
-                    fire:        "You're on fire!",
-                    handshake:   "Good game!",
+                    clap:        tr.trn_taunt_well_played || "Well played!",
+                    fire:        tr.trn_taunt_going_down  || "You're going down!",
+                    handshake:   tr.trn_taunt_good_game   || "Good game!",
                 };
                 const [data, prData, rxData] = await Promise.all([
                     fetch('/api/tournament.php?action=leaderboard&id='+id).then(r=>r.json()),
@@ -215,7 +215,7 @@
                 panel.querySelector('.trn-inline-lb-title').textContent = data.tournament?.name || '';
                 const tbody = panel.querySelector('.trn-inline-lb-body');
                 if (!data.entries?.length) {
-                    tbody.innerHTML = '<tr><td colspan="5" class="lb-loading">No results yet.</td></tr>';
+                    tbody.innerHTML = `<tr><td colspan="5" class="lb-loading">${tr.trn_no_results_yet||'No results yet.'}</td></tr>`;
                     const counts0 = rxData.counts || {};
                     const REACTION_LABELS0 = {fire:'🔥 Fire', nice:'👍 Nice', gg:'🏆 GG', love:'❤️ Love', wow:'⚡ Wow'};
                     const rxHtml0 = Object.entries(REACTION_LABELS0)
