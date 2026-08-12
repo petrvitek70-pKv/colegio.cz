@@ -201,6 +201,10 @@
                     lucky:       "Lucky guess!",
                     good_game:   "Good game!",
                     watch_back:  "Watch your back!",
+                    // legacy keys
+                    clap:        "Well played!",
+                    fire:        "You're on fire!",
+                    handshake:   "Good game!",
                 };
                 const [data, prData] = await Promise.all([
                     fetch('/api/tournament.php?action=leaderboard&id='+id).then(r=>r.json()),
