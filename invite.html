@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Play Mastermind</title>
+    <meta name="description" content="Logic puzzle game with global leaderboard &amp; tournaments. Crack the code!">
+    <meta property="og:title" content="Play Mastermind: Crack the Code">
+    <meta property="og:description" content="Logic puzzle game with global leaderboard &amp; tournaments.">
+    <meta property="og:image" content="https://colegio.cz/assets/og-image.png">
+    <meta property="og:url" content="https://colegio.cz/invite">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #06060F;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 24px;
+        }
+        .card {
+            max-width: 380px;
+            width: 100%;
+        }
+        .logo { font-size: 64px; margin-bottom: 8px; }
+        h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: #F0E442;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .tagline {
+            color: rgba(255,255,255,0.6);
+            font-size: 15px;
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+        .pegs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+        .peg {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            padding: 16px 24px;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 700;
+            text-decoration: none;
+            margin-bottom: 12px;
+            transition: opacity 0.15s;
+        }
+        .btn:active { opacity: 0.8; }
+        .btn-ios {
+            background: #F0E442;
+            color: #06060F;
+        }
+        .btn-android {
+            background: rgba(240,228,66,0.12);
+            color: #F0E442;
+            border: 1.5px solid rgba(240,228,66,0.35);
+        }
+        .btn-all {
+            background: transparent;
+            color: rgba(255,255,255,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            font-size: 14px;
+            font-weight: 500;
+            padding: 12px 24px;
+        }
+        .btn svg { flex-shrink: 0; }
+        .footer {
+            margin-top: 32px;
+            color: rgba(255,255,255,0.25);
+            font-size: 12px;
+        }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="logo">🏆</div>
+        <h1>MASTERMIND</h1>
+        <p class="tagline">Crack the code. Climb the leaderboard.<br>Compete in tournaments.</p>
+
+        <div class="pegs">
+            <div class="peg" style="background:#E69F00"></div>
+            <div class="peg" style="background:#56B4E9"></div>
+            <div class="peg" style="background:#009E73"></div>
+            <div class="peg" style="background:#F0E442"></div>
+            <div class="peg" style="background:#0072B2"></div>
+            <div class="peg" style="background:#CC79A7"></div>
+        </div>
+
+        <a id="btn-ios" class="btn btn-ios" href="https://apps.apple.com/app/mastermind-code-breaker/id6784908913">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+            Download on App Store
+        </a>
+
+        <a id="btn-android" class="btn btn-android" href="https://play.google.com/store/apps/details?id=cz.colegio.mastermind">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M3.18 23.76c.3.17.64.19.96.08l12.45-7.19-2.79-2.79-10.62 9.9zm-1.97-20.7A1.99 1.99 0 0 0 1 4.07v15.86c0 .5.18.96.48 1.32l.07.07 8.88-8.88v-.21L1.28 3.13l-.07.07-.07-.07.07.06zM20.49 10.7l-2.79-1.61-3.12 3.12 3.12 3.12 2.82-1.63c.8-.46.8-1.54-.03-2zM4.14.26l12.45 7.19-2.79 2.79L3.18.26C3.5.15 3.84.17 4.14.26z"/></svg>
+            Get it on Google Play
+        </a>
+
+        <a id="btn-all" class="btn btn-all hidden" href="https://colegio.cz">
+            View all platforms
+        </a>
+
+        <p class="footer">© 2026 Colegio Solutions s.r.o.</p>
+    </div>
+
+    <script>
+        var ua = navigator.userAgent || '';
+        var isIOS = /iPhone|iPad|iPod/.test(ua);
+        var isAndroid = /Android/.test(ua);
+
+        if (isIOS) {
+            // Hide Android button, go straight to App Store
+            document.getElementById('btn-android').classList.add('hidden');
+            document.getElementById('btn-all').classList.remove('hidden');
+        } else if (isAndroid) {
+            // Hide iOS button, go straight to Play Store
+            document.getElementById('btn-ios').classList.add('hidden');
+            document.getElementById('btn-all').classList.remove('hidden');
+        }
+        // Desktop: show both buttons
+    </script>
+</body>
+</html>
