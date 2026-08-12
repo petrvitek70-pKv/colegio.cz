@@ -555,7 +555,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'react') {
 }
 
 // ── PLAYER REACTIONS ─────────────────────────────────────────────────────────
-$ALLOWED_EMOJIS = ['clap', 'fire', 'handshake'];
+$ALLOWED_EMOJIS = ['clap', 'fire', 'handshake', 'going_down', 'well_played', 'lucky', 'good_game', 'watch_back'];
 
 if ($action === 'player_reactions') {
     $id = (int)($_GET['id'] ?? 0);
