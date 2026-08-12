@@ -195,20 +195,38 @@
             card?.after(panel);
 
             try {
-                const data = await fetch('/api/tournament.php?action=leaderboard&id='+id).then(r=>r.json());
+                const PLAYER_EMOJIS = {clap:'👏', fire:'🔥', handshake:'🤝'};
+                const EMOJI_ORDER = ['clap','fire','handshake'];
+                const [data, prData] = await Promise.all([
+                    fetch('/api/tournament.php?action=leaderboard&id='+id).then(r=>r.json()),
+                    fetch('/api/tournament.php?action=player_reactions&tournament_id='+id).then(r=>r.json()).catch(()=>({reactions:[]}))
+                ]);
                 panel.querySelector('.trn-inline-lb-title').textContent = data.tournament?.name || '';
                 const tbody = panel.querySelector('.trn-inline-lb-body');
                 if (!data.entries?.length) {
                     tbody.innerHTML = '<tr><td colspan="5" class="lb-loading">No results yet.</td></tr>';
                     return;
                 }
-                tbody.innerHTML = data.entries.map(e=>`<tr>
-                    <td class="lb-rank rank-${e.rank}">${e.rank<=3?['🥇','🥈','🥉'][e.rank-1]:e.rank}</td>
-                    <td class="lb-nick">${esc(e.nickname)}</td>
-                    <td>${e.guesses}</td>
-                    <td>${formatTime(e.seconds)}</td>
-                    <td class="lb-score">${e.score.toLocaleString()}</td>
-                </tr>`).join('');
+                // Group player reactions by recipient
+                const rxByNick = {};
+                for (const r of (prData.reactions||[])) {
+                    if (!rxByNick[r.to_nickname]) rxByNick[r.to_nickname] = {};
+                    rxByNick[r.to_nickname][r.emoji] = (rxByNick[r.to_nickname][r.emoji]||0) + 1;
+                }
+                tbody.innerHTML = data.entries.map(e => {
+                    const rx = rxByNick[e.nickname] || {};
+                    const rxHtml = EMOJI_ORDER
+                        .filter(k => rx[k])
+                        .map(k => `<span class="trn-rx">${PLAYER_EMOJIS[k]}${rx[k]}</span>`)
+                        .join('');
+                    return `<tr>
+                        <td class="lb-rank rank-${e.rank}">${e.rank<=3?['🥇','🥈','🥉'][e.rank-1]:e.rank}</td>
+                        <td class="lb-nick">${esc(e.nickname)}${rxHtml ? '<span class="trn-rx-row">'+rxHtml+'</span>' : ''}</td>
+                        <td>${e.guesses}</td>
+                        <td>${formatTime(e.seconds)}</td>
+                        <td class="lb-score">${e.score.toLocaleString()}</td>
+                    </tr>`;
+                }).join('');
             } catch(e) {
                 panel.querySelector('.trn-inline-lb-body').innerHTML = '<tr><td colspan="5" class="lb-loading">Could not load results.</td></tr>';
             }

@@ -700,6 +700,8 @@ footer {
     animation: fadeIn 0.2s ease;
 }
 .trn-inline-lb-title { color: var(--accent); margin-bottom: 1rem; font-size: 1.1rem; font-weight: 700; }
+.trn-rx-row { display: inline-flex; gap: 4px; margin-left: 8px; vertical-align: middle; }
+.trn-rx { font-size: 0.75rem; opacity: 0.75; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
 
 /* RESPONSIVE */
