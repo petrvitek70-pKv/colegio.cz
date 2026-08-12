@@ -1,7 +1,7 @@
 # Mastermind Web (colegio.cz) — Stav projektu
 
 > Tento soubor udržuj aktuální po každé větší změně. Slouží jako onboarding pro novou session nebo nového vývojáře.
-> Poslední aktualizace: 2026-08-11 (žebříček v1.2.3 — ms timing, my_entry, timed indikátor, analytické sloupce DB)
+> Poslední aktualizace: 2026-08-12 (pentest v9 — opraveny disqualify bug + reakce validace)
 
 ---
 
@@ -114,7 +114,7 @@ Vyloučeno z deploye: `.git*`, `data/`, `.DS_Store`
 
 ## Bezpečnost
 
-Poslední pentest: **v8 2026-07-28** — žádné nové kritické nálezy.
+Poslední pentest: **v9 2026-08-12** — opraveny 2 nálezy.
 
 - ✅ Prepared statements (SQLi ochrana)
 - ✅ XSS — nickname escapován přes `esc()` před vložením do innerHTML
@@ -126,6 +126,8 @@ Poslední pentest: **v8 2026-07-28** — žádné nové kritické nálezy.
 - ✅ Admin secret mimo repozitář (`config.local.php`)
 - ✅ `action=update` — editace turnajů chráněna pouze admin klíčem
 - ✅ Creator delete — opravena regrese `$body` → `$reqBody` (2026-07-28)
+- ✅ `action=disqualify` — opravena regrese `$body` → `$reqBody` (2026-08-12)
+- ✅ `react` + `player_react` — přidána délková validace nickname (max 20 znaků, 2026-08-12)
 
 **Akceptovaná rizika (nízká):**
 - Hardcoded API secret `mm_colegio_2026_xK9pQ` v mobilních appkách — dopad snížen server-side validací
