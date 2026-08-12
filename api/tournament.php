@@ -327,10 +327,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'submit') {
         $guesses === 2 => 3000,
         default        => ($maxGuesses - $guesses) * 500,
     };
-    $timePenalty    = $isTimed ? 0 : (int)floor($ms * 0.005);
-    $modeMultiplier = $isTimed ? 2 : 1;
-    $expected = max(0, ($guessBonus - $timePenalty) * $scoreMultiplier * $modeMultiplier);
-    if ($score !== $expected) jsonResponse(['error' => 'Score mismatch: expected '.$expected.' got '.$score.' (ms='.$ms.' pen='.$timePenalty.')'], 400);
+    $modeMultiplier  = $isTimed ? 2 : 1;
+    // Accept score computed either way: ms-precision (new clients) or seconds*5 (old clients without ms)
+    $penaltyMs  = $isTimed ? 0 : (int)floor($ms * 0.005);
+    $penaltySec = $isTimed ? 0 : $seconds * 5;
+    $expectedMs  = max(0, ($guessBonus - $penaltyMs)  * $scoreMultiplier * $modeMultiplier);
+    $expectedSec = max(0, ($guessBonus - $penaltySec) * $scoreMultiplier * $modeMultiplier);
+    if ($score !== $expectedMs && $score !== $expectedSec) {
+        jsonResponse(['error' => 'Score mismatch: expected '.$expectedMs.' or '.$expectedSec.' got '.$score], 400);
+    }
 
     $stmt = $db->prepare("
         UPDATE tournament_entries
