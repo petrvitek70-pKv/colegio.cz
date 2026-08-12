@@ -195,8 +195,13 @@
             card?.after(panel);
 
             try {
-                const PLAYER_EMOJIS = {clap:'👏', fire:'🔥', handshake:'🤝'};
-                const EMOJI_ORDER = ['clap','fire','handshake'];
+                const TAUNT_TEXTS = {
+                    going_down:  "You're going down!",
+                    well_played: "Well played!",
+                    lucky:       "Lucky guess!",
+                    good_game:   "Good game!",
+                    watch_back:  "Watch your back!",
+                };
                 const [data, prData] = await Promise.all([
                     fetch('/api/tournament.php?action=leaderboard&id='+id).then(r=>r.json()),
                     fetch('/api/tournament.php?action=player_reactions&id='+id).then(r=>r.json()).catch(()=>({reactions:[]}))
@@ -207,21 +212,21 @@
                     tbody.innerHTML = '<tr><td colspan="5" class="lb-loading">No results yet.</td></tr>';
                     return;
                 }
-                // Group player reactions by recipient
-                const rxByNick = {};
+                // Group taunts by recipient: nick → [{from, text}]
+                const tauntsByNick = {};
                 for (const r of (prData.reactions||[])) {
-                    if (!rxByNick[r.to_nickname]) rxByNick[r.to_nickname] = {};
-                    rxByNick[r.to_nickname][r.emoji] = (rxByNick[r.to_nickname][r.emoji]||0) + 1;
+                    if (!tauntsByNick[r.to_nickname]) tauntsByNick[r.to_nickname] = [];
+                    const txt = TAUNT_TEXTS[r.emoji];
+                    if (txt) tauntsByNick[r.to_nickname].push({from: r.from_nickname, txt});
                 }
                 tbody.innerHTML = data.entries.map(e => {
-                    const rx = rxByNick[e.nickname] || {};
-                    const rxHtml = EMOJI_ORDER
-                        .filter(k => rx[k])
-                        .map(k => `<span class="trn-rx">${PLAYER_EMOJIS[k]}${rx[k]}</span>`)
-                        .join('');
+                    const taunts = tauntsByNick[e.nickname] || [];
+                    const tauntRows = taunts.map(t =>
+                        `<div class="trn-taunt">💬 <span class="trn-taunt-from">${esc(t.from)}:</span> "${esc(t.txt)}"</div>`
+                    ).join('');
                     return `<tr>
                         <td class="lb-rank rank-${e.rank}">${e.rank<=3?['🥇','🥈','🥉'][e.rank-1]:e.rank}</td>
-                        <td class="lb-nick">${esc(e.nickname)}${rxHtml ? '<span class="trn-rx-row">'+rxHtml+'</span>' : ''}</td>
+                        <td class="lb-nick">${esc(e.nickname)}${tauntRows ? '<div class="trn-taunt-wrap">'+tauntRows+'</div>' : ''}</td>
                         <td>${e.guesses}</td>
                         <td>${formatTime(e.seconds, e.ms||null)}</td>
                         <td class="lb-score">${e.score.toLocaleString()}</td>

@@ -700,8 +700,9 @@ footer {
     animation: fadeIn 0.2s ease;
 }
 .trn-inline-lb-title { color: var(--accent); margin-bottom: 1rem; font-size: 1.1rem; font-weight: 700; }
-.trn-rx-row { display: inline-flex; gap: 4px; margin-left: 8px; vertical-align: middle; }
-.trn-rx { font-size: 0.75rem; opacity: 0.75; }
+.trn-taunt-wrap { display: flex; flex-direction: column; gap: 2px; margin-top: 3px; }
+.trn-taunt { font-size: 0.72rem; color: var(--text-muted, #888); font-style: italic; }
+.trn-taunt-from { color: #aaa; font-style: normal; font-weight: 500; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
 
 /* RESPONSIVE */
