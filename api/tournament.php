@@ -502,7 +502,7 @@ if ($action === 'entries') {
 }
 
 // ── REACTIONS (tournament-level) ─────────────────────────────────────────────
-$ALLOWED_REACTIONS = ['fire', 'muscle', 'sweat', 'mindblown', 'party'];
+$ALLOWED_REACTIONS = ['fire', 'nice', 'gg', 'love', 'wow'];
 
 if ($action === 'reactions') {
     $id       = (int)($_GET['id'] ?? 0);
