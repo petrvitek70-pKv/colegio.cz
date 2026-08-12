@@ -104,7 +104,7 @@ if ($action === 'list') {
 
     // Active/upcoming: all; finished: max 10 newest
     $rows = $db->query("
-        SELECT t.*, COUNT(e.id) AS player_count
+        SELECT t.*, COUNT(CASE WHEN e.submitted_at IS NOT NULL THEN 1 END) AS player_count
         FROM tournaments t
         LEFT JOIN tournament_entries e ON e.tournament_id = t.id
         GROUP BY t.id
@@ -153,7 +153,7 @@ if ($action === 'my_tournaments') {
     if (!$nickname)             jsonResponse(['error' => 'Missing nickname'], 400);
 
     $stmt = $db->prepare("
-        SELECT t.*, COUNT(e.id) AS player_count
+        SELECT t.*, COUNT(CASE WHEN e.submitted_at IS NOT NULL THEN 1 END) AS player_count
         FROM tournaments t
         LEFT JOIN tournament_entries e ON e.tournament_id = t.id
         WHERE t.creator_nickname = ?
