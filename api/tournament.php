@@ -284,6 +284,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'submit') {
     $score    = (int)($body['score'] ?? -1);
     $guesses  = (int)($body['guesses'] ?? 0);
     $seconds  = (int)($body['seconds'] ?? 0);
+    $ms       = isset($body['ms']) ? (int)$body['ms'] : $seconds * 1000;
     $secret   = $body['secret'] ?? '';
 
     if ($secret !== API_SECRET)   jsonResponse(['error' => 'Unauthorized'], 401);
@@ -326,10 +327,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'submit') {
         $guesses === 2 => 3000,
         default        => ($maxGuesses - $guesses) * 500,
     };
-    $timePenalty   = $isTimed ? 0 : $seconds * 5;
+    $timePenalty    = $isTimed ? 0 : (int)floor($ms * 0.005);
     $modeMultiplier = $isTimed ? 2 : 1;
     $expected = max(0, ($guessBonus - $timePenalty) * $scoreMultiplier * $modeMultiplier);
-    if ($score !== $expected) jsonResponse(['error' => 'Score mismatch'], 400);
+    if ($score !== $expected) jsonResponse(['error' => 'Score mismatch: expected '.$expected.' got '.$score.' (ms='.$ms.' pen='.$timePenalty.')'], 400);
 
     $stmt = $db->prepare("
         UPDATE tournament_entries
