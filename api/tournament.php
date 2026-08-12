@@ -535,8 +535,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'react') {
     $secret   = $reqBody['secret'] ?? '';
 
     if ($secret !== API_SECRET)              jsonResponse(['error' => 'Unauthorized'], 401);
-    if (!$id || !$nickname || !$reaction)    jsonResponse(['error' => 'Missing params'], 400);
+    if (!$id || !$nickname)                  jsonResponse(['error' => 'Missing params'], 400);
     if (strlen($nickname) > 20)              jsonResponse(['error' => 'Invalid nickname'], 400);
+
+    if ($reaction === '') {
+        // Deselect — remove the row
+        $db->prepare("DELETE FROM tournament_reactions WHERE tournament_id = ? AND nickname = ?")
+           ->execute([$id, $nickname]);
+        jsonResponse(['ok' => true]);
+    }
+
     if (!in_array($reaction, $ALLOWED_REACTIONS)) jsonResponse(['error' => 'Invalid reaction'], 400);
 
     $db->prepare("INSERT INTO tournament_reactions (tournament_id, nickname, reaction) VALUES (?, ?, ?)
