@@ -1,7 +1,7 @@
 # Mastermind Web (colegio.cz) — Stav projektu
 
 > Tento soubor udržuj aktuální po každé větší změně. Slouží jako onboarding pro novou session nebo nového vývojáře.
-> Poslední aktualizace: 2026-08-13 (turnaje — reakce u prázdného žebříčku, playerCount = submitted only)
+> Poslední aktualizace: 2026-08-13 (lokalizace taunt textů + "No results yet" do 27 jazyků; cache-bust i18n.js)
 
 ---
 
@@ -133,6 +133,9 @@ Poslední pentest: **v9 2026-08-12** — opraveny 2 nálezy.
 - ✅ `$ALLOWED_REACTIONS` — opraveny klíče na `['fire','nice','gg','love','wow']` (bylo špatné staré hodnoty, 2026-08-12)
 - ✅ `playerCount` — počítá jen submitted výsledky (`submitted_at IS NOT NULL`), ne pouhé join/seed (2026-08-13)
 - ✅ Reakce u prázdného žebříčku — web zobrazí reakce i když žebříček je prázdný; opraveno předčasné `return` (2026-08-13)
+- ✅ Lokalizace taunt textů a "No results yet" — 27 jazyků v i18n.js, použito přes `tr.*` v index.html (2026-08-13)
+- ✅ Cache-bust i18n.js — `?v=20260813` v index.html; Active24 má server-side cache ignorující browser refresh (2026-08-13)
+- ℹ️ Reaction labels (Fire, Nice, GG, Love, Wow) záměrně ponechány anglicky — herní slang, mezinárodně srozumitelný
 
 **Akceptovaná rizika (nízká):**
 - Hardcoded API secret `mm_colegio_2026_xK9pQ` v mobilních appkách — dopad snížen server-side validací
