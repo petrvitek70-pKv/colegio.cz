@@ -449,8 +449,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'delete') {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'disqualify') {
     if (!isAdminRequest()) jsonResponse(['error' => 'Unauthorized'], 401);
 
-    $tournament_id = (int)($body['tournament_id'] ?? 0);
-    $nickname      = trim($body['nickname'] ?? '');
+    $tournament_id = (int)($reqBody['tournament_id'] ?? 0);
+    $nickname      = trim($reqBody['nickname'] ?? '');
     if (!$tournament_id || !$nickname) jsonResponse(['error' => 'Missing params'], 400);
 
     $stmt = $db->prepare("DELETE FROM tournament_entries WHERE tournament_id = ? AND nickname = ?");
@@ -528,6 +528,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'react') {
 
     if ($secret !== API_SECRET)              jsonResponse(['error' => 'Unauthorized'], 401);
     if (!$id || !$nickname || !$reaction)    jsonResponse(['error' => 'Missing params'], 400);
+    if (strlen($nickname) > 20)              jsonResponse(['error' => 'Invalid nickname'], 400);
     if (!in_array($reaction, $ALLOWED_REACTIONS)) jsonResponse(['error' => 'Invalid reaction'], 400);
 
     $db->prepare("INSERT INTO tournament_reactions (tournament_id, nickname, reaction) VALUES (?, ?, ?)
@@ -561,6 +562,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'player_react') {
 
     if ($secret !== API_SECRET)              jsonResponse(['error' => 'Unauthorized'], 401);
     if (!$id || !$fromNickname || !$toNickname || !$emoji) jsonResponse(['error' => 'Missing params'], 400);
+    if (strlen($fromNickname) > 20 || strlen($toNickname) > 20) jsonResponse(['error' => 'Invalid nickname'], 400);
     if ($fromNickname === $toNickname)       jsonResponse(['error' => 'Cannot react to yourself'], 400);
     if (!in_array($emoji, $ALLOWED_EMOJIS)) jsonResponse(['error' => 'Invalid emoji'], 400);
 
