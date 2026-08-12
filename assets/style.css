@@ -703,6 +703,9 @@ footer {
 .trn-taunt-wrap { display: flex; flex-direction: column; gap: 2px; margin-top: 3px; }
 .trn-taunt { font-size: 0.72rem; color: var(--text-muted, #888); font-style: italic; }
 .trn-taunt-from { color: #aaa; font-style: normal; font-weight: 500; }
+.trn-reactions-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.trn-reaction { display: inline-flex; align-items: center; gap: 4px; padding: 4px 12px; border-radius: 20px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); font-size: 0.82rem; color: #ccc; }
+.trn-reaction b { color: var(--accent); }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
 
 /* RESPONSIVE */

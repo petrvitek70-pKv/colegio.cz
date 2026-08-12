@@ -191,7 +191,8 @@
                         </tr></thead>
                         <tbody class="trn-inline-lb-body"><tr><td colspan="5" class="lb-loading">Loading…</td></tr></tbody>
                     </table>
-                </div>`;
+                </div>
+                <div class="trn-reactions-bar"></div>`;
             card?.after(panel);
 
             try {
@@ -206,9 +207,10 @@
                     fire:        "You're on fire!",
                     handshake:   "Good game!",
                 };
-                const [data, prData] = await Promise.all([
+                const [data, prData, rxData] = await Promise.all([
                     fetch('/api/tournament.php?action=leaderboard&id='+id).then(r=>r.json()),
-                    fetch('/api/tournament.php?action=player_reactions&id='+id).then(r=>r.json()).catch(()=>({reactions:[]}))
+                    fetch('/api/tournament.php?action=player_reactions&id='+id).then(r=>r.json()).catch(()=>({reactions:[]})),
+                    fetch('/api/tournament.php?action=reactions&id='+id).then(r=>r.json()).catch(()=>({counts:{}}))
                 ]);
                 panel.querySelector('.trn-inline-lb-title').textContent = data.tournament?.name || '';
                 const tbody = panel.querySelector('.trn-inline-lb-body');
@@ -223,6 +225,16 @@
                     const txt = TAUNT_TEXTS[r.emoji];
                     if (txt) tauntsByNick[r.to_nickname].push({from: r.from_nickname, txt});
                 }
+                // Render global reactions bar
+                const REACTION_LABELS = {fire:'🔥 Fire', nice:'👍 Nice', gg:'🏆 GG', love:'❤️ Love', wow:'⚡ Wow'};
+                const counts = rxData.counts || {};
+                const reactionHtml = Object.entries(REACTION_LABELS)
+                    .filter(([k]) => (counts[k]||0) > 0)
+                    .map(([k,label]) => `<span class="trn-reaction">${label} <b>${counts[k]}</b></span>`)
+                    .join('');
+                const rxBar = panel.querySelector('.trn-reactions-bar');
+                if (rxBar) rxBar.innerHTML = reactionHtml || '';
+
                 tbody.innerHTML = data.entries.map(e => {
                     const taunts = tauntsByNick[e.nickname] || [];
                     const tauntRows = taunts.map(t =>
