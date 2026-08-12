@@ -35,7 +35,26 @@ function getTournamentDb(): PDO {
             UNIQUE(tournament_id, nickname),
             FOREIGN KEY(tournament_id) REFERENCES tournaments(id)
         );
+        CREATE TABLE IF NOT EXISTS tournament_reactions (
+            id             INTEGER PRIMARY KEY AUTOINCREMENT,
+            tournament_id  INTEGER NOT NULL,
+            nickname       TEXT    NOT NULL,
+            reaction       TEXT    NOT NULL,
+            created_at     INTEGER NOT NULL DEFAULT (strftime('%s','now')),
+            UNIQUE(tournament_id, nickname)
+        );
+        CREATE TABLE IF NOT EXISTS player_reactions (
+            id             INTEGER PRIMARY KEY AUTOINCREMENT,
+            tournament_id  INTEGER NOT NULL,
+            from_nickname  TEXT    NOT NULL,
+            to_nickname    TEXT    NOT NULL,
+            emoji          TEXT    NOT NULL,
+            created_at     INTEGER NOT NULL DEFAULT (strftime('%s','now')),
+            UNIQUE(tournament_id, from_nickname, to_nickname)
+        );
         CREATE INDEX IF NOT EXISTS idx_te_tournament ON tournament_entries(tournament_id, score DESC);
+        CREATE INDEX IF NOT EXISTS idx_tr_tournament ON tournament_reactions(tournament_id);
+        CREATE INDEX IF NOT EXISTS idx_pr_tournament ON player_reactions(tournament_id);
     ");
     // Migrations for columns added after initial schema
     try { $db->exec("ALTER TABLE tournaments ADD COLUMN creator_nickname TEXT NOT NULL DEFAULT ''"); } catch (\Exception $e) {}
@@ -472,6 +491,84 @@ if ($action === 'entries') {
         ];
     }
     jsonResponse(['entries' => $out]);
+}
+
+// ── REACTIONS (tournament-level) ─────────────────────────────────────────────
+$ALLOWED_REACTIONS = ['fire', 'muscle', 'sweat', 'mindblown', 'party'];
+
+if ($action === 'reactions') {
+    $id       = (int)($_GET['id'] ?? 0);
+    $nickname = trim($_GET['nickname'] ?? '');
+    if (!$id) jsonResponse(['error' => 'Missing id'], 400);
+
+    $stmt = $db->prepare("SELECT reaction, COUNT(*) as cnt FROM tournament_reactions WHERE tournament_id = ? GROUP BY reaction");
+    $stmt->execute([$id]);
+    $counts = [];
+    foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+        $counts[$row['reaction']] = (int)$row['cnt'];
+    }
+
+    $myReaction = null;
+    if ($nickname) {
+        $s = $db->prepare("SELECT reaction FROM tournament_reactions WHERE tournament_id = ? AND nickname = ?");
+        $s->execute([$id, $nickname]);
+        $row = $s->fetch(PDO::FETCH_ASSOC);
+        if ($row) $myReaction = $row['reaction'];
+    }
+
+    jsonResponse(['counts' => $counts, 'my_reaction' => $myReaction]);
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'react') {
+    global $ALLOWED_REACTIONS;
+    $id       = (int)($reqBody['tournament_id'] ?? 0);
+    $nickname = trim($reqBody['nickname'] ?? '');
+    $reaction = trim($reqBody['reaction'] ?? '');
+    $secret   = $reqBody['secret'] ?? '';
+
+    if ($secret !== API_SECRET)              jsonResponse(['error' => 'Unauthorized'], 401);
+    if (!$id || !$nickname || !$reaction)    jsonResponse(['error' => 'Missing params'], 400);
+    if (!in_array($reaction, $ALLOWED_REACTIONS)) jsonResponse(['error' => 'Invalid reaction'], 400);
+
+    $db->prepare("INSERT INTO tournament_reactions (tournament_id, nickname, reaction) VALUES (?, ?, ?)
+                  ON CONFLICT(tournament_id, nickname) DO UPDATE SET reaction = excluded.reaction, created_at = strftime('%s','now')")
+       ->execute([$id, $nickname, $reaction]);
+
+    jsonResponse(['ok' => true]);
+}
+
+// ── PLAYER REACTIONS ─────────────────────────────────────────────────────────
+$ALLOWED_EMOJIS = ['clap', 'fire', 'handshake'];
+
+if ($action === 'player_reactions') {
+    $id = (int)($_GET['id'] ?? 0);
+    if (!$id) jsonResponse(['error' => 'Missing id'], 400);
+
+    $stmt = $db->prepare("SELECT from_nickname, to_nickname, emoji FROM player_reactions WHERE tournament_id = ?");
+    $stmt->execute([$id]);
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    jsonResponse(['reactions' => $rows]);
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'player_react') {
+    global $ALLOWED_EMOJIS;
+    $id            = (int)($reqBody['tournament_id'] ?? 0);
+    $fromNickname  = trim($reqBody['from_nickname'] ?? '');
+    $toNickname    = trim($reqBody['to_nickname'] ?? '');
+    $emoji         = trim($reqBody['emoji'] ?? '');
+    $secret        = $reqBody['secret'] ?? '';
+
+    if ($secret !== API_SECRET)              jsonResponse(['error' => 'Unauthorized'], 401);
+    if (!$id || !$fromNickname || !$toNickname || !$emoji) jsonResponse(['error' => 'Missing params'], 400);
+    if ($fromNickname === $toNickname)       jsonResponse(['error' => 'Cannot react to yourself'], 400);
+    if (!in_array($emoji, $ALLOWED_EMOJIS)) jsonResponse(['error' => 'Invalid emoji'], 400);
+
+    $db->prepare("INSERT INTO player_reactions (tournament_id, from_nickname, to_nickname, emoji) VALUES (?, ?, ?, ?)
+                  ON CONFLICT(tournament_id, from_nickname, to_nickname) DO UPDATE SET emoji = excluded.emoji, created_at = strftime('%s','now')")
+       ->execute([$id, $fromNickname, $toNickname, $emoji]);
+
+    jsonResponse(['ok' => true]);
 }
 
 jsonResponse(['error' => 'Unknown action'], 400);
