@@ -1,7 +1,7 @@
 # Mastermind Web (colegio.cz) — Stav projektu
 
 > Tento soubor udržuj aktuální po každé větší změně. Slouží jako onboarding pro novou session nebo nového vývojáře.
-> Poslední aktualizace: 2026-08-12 (pentest v9 — opraveny disqualify bug + reakce validace)
+> Poslední aktualizace: 2026-08-12 (turnaje — opraveny globální reakce, hecování, zarovnání, sdílecí karta, Play button; $ALLOWED_REACTIONS fix)
 
 ---
 
@@ -23,7 +23,9 @@ Vydavatel: **Colegio Solutions s.r.o.**
 - ✅ **GitHub Actions deploy** — každý push na `main` se automaticky deployuje přes FTP
 - ✅ **App Store tlačítko** — živý odkaz (iOS schválena)
 - ✅ **Google Play tlačítko** — živý odkaz (Android schválen)
-- ✅ **Turnajová sekce** — aktivní; 5 turnajů v databázi (přejmenováno 2026-08-04)
+- ✅ **Turnajová sekce** — aktivní; turnaje v databázi (přejmenováno 2026-08-04)
+- ✅ **Globální reakce na webu** — zobrazují se pod žebříčkem turnaje (fire/nice/gg/love/wow s počty, 2026-08-12)
+- ✅ **Hecování hráčů na webu** — zobrazuje se u každého hráče v turnajovém žebříčku
 - ✅ **Tournament Bot** — GitHub Actions, každých 6 h doplňuje turnaje na minimum 3; secret `TOURNAMENT_BOT_KEY` v GitHub secrets; 4× easy, 4× medium, 3× classic, 1× hard
 - ✅ **Knuth fun fact** — přesunuta za Pro sekci, lokalizováno do 26 jazyků
 - ✅ **Canonical tagy** — přidány do index.html, privacy.html, terms.html (oprava Google Search Console)
@@ -128,6 +130,7 @@ Poslední pentest: **v9 2026-08-12** — opraveny 2 nálezy.
 - ✅ Creator delete — opravena regrese `$body` → `$reqBody` (2026-07-28)
 - ✅ `action=disqualify` — opravena regrese `$body` → `$reqBody` (2026-08-12)
 - ✅ `react` + `player_react` — přidána délková validace nickname (max 20 znaků, 2026-08-12)
+- ✅ `$ALLOWED_REACTIONS` — opraveny klíče na `['fire','nice','gg','love','wow']` (bylo špatné staré hodnoty, 2026-08-12)
 
 **Akceptovaná rizika (nízká):**
 - Hardcoded API secret `mm_colegio_2026_xK9pQ` v mobilních appkách — dopad snížen server-side validací
