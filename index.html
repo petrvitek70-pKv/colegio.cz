@@ -199,7 +199,7 @@
                 const EMOJI_ORDER = ['clap','fire','handshake'];
                 const [data, prData] = await Promise.all([
                     fetch('/api/tournament.php?action=leaderboard&id='+id).then(r=>r.json()),
-                    fetch('/api/tournament.php?action=player_reactions&tournament_id='+id).then(r=>r.json()).catch(()=>({reactions:[]}))
+                    fetch('/api/tournament.php?action=player_reactions&id='+id).then(r=>r.json()).catch(()=>({reactions:[]}))
                 ]);
                 panel.querySelector('.trn-inline-lb-title').textContent = data.tournament?.name || '';
                 const tbody = panel.querySelector('.trn-inline-lb-body');
