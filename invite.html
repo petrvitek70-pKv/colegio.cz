@@ -117,28 +117,7 @@
             Get it on Google Play
         </a>
 
-        <a id="btn-all" class="btn btn-all hidden" href="https://colegio.cz">
-            View all platforms
-        </a>
-
         <p class="footer">© 2026 Colegio Solutions s.r.o.</p>
     </div>
-
-    <script>
-        var ua = navigator.userAgent || '';
-        var isIOS = /iPhone|iPad|iPod/.test(ua);
-        var isAndroid = /Android/.test(ua);
-
-        if (isIOS) {
-            // Hide Android button, go straight to App Store
-            document.getElementById('btn-android').classList.add('hidden');
-            document.getElementById('btn-all').classList.remove('hidden');
-        } else if (isAndroid) {
-            // Hide iOS button, go straight to Play Store
-            document.getElementById('btn-ios').classList.add('hidden');
-            document.getElementById('btn-all').classList.remove('hidden');
-        }
-        // Desktop: show both buttons
-    </script>
 </body>
 </html>
