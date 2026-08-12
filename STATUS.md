@@ -1,7 +1,7 @@
 # Mastermind Web (colegio.cz) — Stav projektu
 
 > Tento soubor udržuj aktuální po každé větší změně. Slouží jako onboarding pro novou session nebo nového vývojáře.
-> Poslední aktualizace: 2026-08-12 (turnaje — opraveny globální reakce, hecování, zarovnání, sdílecí karta, Play button; $ALLOWED_REACTIONS fix)
+> Poslední aktualizace: 2026-08-13 (turnaje — reakce u prázdného žebříčku, playerCount = submitted only)
 
 ---
 
@@ -131,6 +131,8 @@ Poslední pentest: **v9 2026-08-12** — opraveny 2 nálezy.
 - ✅ `action=disqualify` — opravena regrese `$body` → `$reqBody` (2026-08-12)
 - ✅ `react` + `player_react` — přidána délková validace nickname (max 20 znaků, 2026-08-12)
 - ✅ `$ALLOWED_REACTIONS` — opraveny klíče na `['fire','nice','gg','love','wow']` (bylo špatné staré hodnoty, 2026-08-12)
+- ✅ `playerCount` — počítá jen submitted výsledky (`submitted_at IS NOT NULL`), ne pouhé join/seed (2026-08-13)
+- ✅ Reakce u prázdného žebříčku — web zobrazí reakce i když žebříček je prázdný; opraveno předčasné `return` (2026-08-13)
 
 **Akceptovaná rizika (nízká):**
 - Hardcoded API secret `mm_colegio_2026_xK9pQ` v mobilních appkách — dopad snížen server-side validací
