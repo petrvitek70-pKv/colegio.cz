@@ -216,6 +216,14 @@
                 const tbody = panel.querySelector('.trn-inline-lb-body');
                 if (!data.entries?.length) {
                     tbody.innerHTML = '<tr><td colspan="5" class="lb-loading">No results yet.</td></tr>';
+                    const counts0 = rxData.counts || {};
+                    const REACTION_LABELS0 = {fire:'🔥 Fire', nice:'👍 Nice', gg:'🏆 GG', love:'❤️ Love', wow:'⚡ Wow'};
+                    const rxHtml0 = Object.entries(REACTION_LABELS0)
+                        .filter(([k]) => (counts0[k]||0) > 0)
+                        .map(([k,label]) => `<span class="trn-reaction">${label} <b>${counts0[k]}</b></span>`)
+                        .join('');
+                    const rxBar0 = panel.querySelector('.trn-reactions-bar');
+                    if (rxBar0) rxBar0.innerHTML = rxHtml0;
                     return;
                 }
                 // Group taunts by recipient: nick → [{from, text}]
