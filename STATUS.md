@@ -1,7 +1,7 @@
 # Mastermind Web (colegio.cz) — Stav projektu
 
 > Tento soubor udržuj aktuální po každé větší změně. Slouží jako onboarding pro novou session nebo nového vývojáře.
-> Poslední aktualizace: 2026-08-13 (trn_taunt_lucky CS — sjednoceno s iOS: Šťastný tip!)
+> Poslední aktualizace: 2026-08-13 (player_react_delete endpoint; oprava Android stavu na v1.2.2 live)
 
 ---
 
@@ -12,7 +12,7 @@ Vydavatel: **Colegio Solutions s.r.o.**
 | Platforma | Repozitář | Stav |
 |-----------|-----------|------|
 | iOS | github.com/petrvitek70-pKv/Mastermind | ✅ v1.2.2 Ready for Distribution od 2026-08-11 |
-| Android | github.com/petrvitek70-pKv/MastermindAndroid | 🔄 v1.2 release build hotov, čeká na upload |
+| Android | github.com/petrvitek70-pKv/MastermindAndroid | ✅ v1.2.2 live od 2026-08-05 |
 | Web + API (tento repo) | github.com/petrvitek70-pKv/colegio.cz | ✅ live na colegio.cz |
 
 ---
@@ -135,6 +135,7 @@ Poslední pentest: **v9 2026-08-12** — opraveny 2 nálezy.
 - `X-Forwarded-For` lze podvrhnout → falešná země v analytice (dopad jen na `country` sloupec)
 - GeoIP volání přes HTTP (`http://ip-api.com`) — MITM by podvrhl `countryCode`; dopad jen analytika
 - ✅ `$ALLOWED_REACTIONS` — opraveny klíče na `['fire','nice','gg','love','wow']` (bylo špatné staré hodnoty, 2026-08-12)
+- ✅ `player_react_delete` endpoint — DELETE reakce hráče na hráče (POST + tournament_id + from/to nickname + secret); 2026-08-13
 - ✅ `playerCount` — počítá jen submitted výsledky (`submitted_at IS NOT NULL`), ne pouhé join/seed (2026-08-13)
 - ✅ Reakce u prázdného žebříčku — web zobrazí reakce i když žebříček je prázdný; opraveno předčasné `return` (2026-08-13)
 - ✅ Lokalizace taunt textů a "No results yet" — 27 jazyků v i18n.js, použito přes `tr.*` v index.html (2026-08-13)
