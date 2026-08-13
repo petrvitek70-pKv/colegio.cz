@@ -309,8 +309,8 @@
           <div class="chart-x-labels" id="an-platform-labels"></div>
           <div class="chart-legend">
             <span><span class="legend-dot" style="background:#56B4E9"></span>iOS</span>
-            <span><span class="legend-dot" style="background:#6bff8e"></span>Android</span>
-            <span><span class="legend-dot" style="background:#444"></span>Unknown</span>
+            <span><span class="legend-dot" style="background:#009E73"></span>Android</span>
+            <span><span class="legend-dot" style="background:#888"></span>Unknown</span>
           </div>
         </div>
 
@@ -320,10 +320,10 @@
           <div class="stacked-chart" id="an-diff-chart"></div>
           <div class="chart-x-labels" id="an-diff-labels"></div>
           <div class="chart-legend">
-            <span><span class="legend-dot" style="background:#6bff8e"></span>Easy</span>
+            <span><span class="legend-dot" style="background:#009E73"></span>Easy</span>
             <span><span class="legend-dot" style="background:#F0E442"></span>Medium</span>
-            <span><span class="legend-dot" style="background:#ff9944"></span>Classic</span>
-            <span><span class="legend-dot" style="background:#ff6b6b"></span>Hard</span>
+            <span><span class="legend-dot" style="background:#E69F00"></span>Classic</span>
+            <span><span class="legend-dot" style="background:#CC79A7"></span>Hard</span>
           </div>
         </div>
 
@@ -727,14 +727,14 @@ function renderAnalytics(d) {
   renderStackedChart(
     'an-platform-chart', 'an-platform-labels',
     d.daily_by_platform, 'day', 'platform', 'cnt',
-    { ios: '#56B4E9', android: '#6bff8e', unknown: '#444' }
+    { ios: '#56B4E9', android: '#009E73', unknown: '#888' }
   );
 
   // ── Difficulty by week stacked bars ──
   renderStackedChart(
     'an-diff-chart', 'an-diff-labels',
     d.diff_by_week, 'week', 'difficulty', 'cnt',
-    { easy: '#6bff8e', medium: '#F0E442', classic: '#ff9944', hard: '#ff6b6b' }
+    { easy: '#009E73', medium: '#F0E442', classic: '#E69F00', hard: '#CC79A7' }
   );
 
   // Sparkline
