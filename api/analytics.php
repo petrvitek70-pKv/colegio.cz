@@ -78,11 +78,16 @@ $avgScores = $db->query("
 
 // Cumulative unique players per day (all time)
 $cumulativePlayers = $db->query("
-    SELECT day, SUM(new_nicks) OVER (ORDER BY day) as total
+    SELECT day, SUM(daily_new) OVER (ORDER BY day ROWS UNBOUNDED PRECEDING) as total
     FROM (
-        SELECT date(MIN(created_at)) as day, nickname, 1 as new_nicks
-        FROM scores GROUP BY nickname
-    ) GROUP BY day ORDER BY day
+        SELECT day, COUNT(*) as daily_new
+        FROM (
+            SELECT nickname, date(MIN(created_at)) as day
+            FROM scores GROUP BY nickname
+        )
+        GROUP BY day
+    )
+    ORDER BY day
 ")->fetchAll(PDO::FETCH_ASSOC);
 
 // Daily scores by platform (last 60 days)
