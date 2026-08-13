@@ -589,4 +589,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'player_react') {
     jsonResponse(['ok' => true]);
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'player_react_delete') {
+    $id           = (int)($reqBody['tournament_id'] ?? 0);
+    $fromNickname = trim($reqBody['from_nickname'] ?? '');
+    $toNickname   = trim($reqBody['to_nickname'] ?? '');
+    $secret       = $reqBody['secret'] ?? '';
+
+    if ($secret !== API_SECRET)              jsonResponse(['error' => 'Unauthorized'], 401);
+    if (!$id || !$fromNickname || !$toNickname) jsonResponse(['error' => 'Missing params'], 400);
+
+    $db->prepare("DELETE FROM player_reactions WHERE tournament_id = ? AND from_nickname = ? AND to_nickname = ?")
+       ->execute([$id, $fromNickname, $toNickname]);
+
+    jsonResponse(['ok' => true]);
+}
+
 jsonResponse(['error' => 'Unknown action'], 400);
