@@ -38,7 +38,7 @@ const TRANSLATIONS = {
     trn_players_web: "hráčů",
     trn_taunt_watch_back: "Dej si pozor!",
     trn_taunt_good_game: "Dobrá hra!",
-    trn_taunt_lucky: "Šťastná střela!",
+    trn_taunt_lucky: "Šťastný tip!",
     trn_taunt_well_played: "Dobře zahráno!",
     trn_taunt_going_down: "Jdeš dolů!",
     trn_no_results_yet: "Zatím žádné výsledky.",
