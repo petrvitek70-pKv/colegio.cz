@@ -1,7 +1,7 @@
 # Mastermind Web (colegio.cz) — Stav projektu
 
 > Tento soubor udržuj aktuální po každé větší změně. Slouží jako onboarding pro novou session nebo nového vývojáře.
-> Poslední aktualizace: 2026-08-13 (lokalizace taunt textů + "No results yet" do 27 jazyků; cache-bust i18n.js)
+> Poslední aktualizace: 2026-08-13 (trn_taunt_lucky CS — sjednoceno s iOS: Šťastný tip!)
 
 ---
 
