@@ -11,7 +11,7 @@ Vydavatel: **Colegio Solutions s.r.o.**
 
 | Platforma | Repozitář | Stav |
 |-----------|-----------|------|
-| iOS | github.com/petrvitek70-pKv/Mastermind | ✅ v1.2.2 Ready for Distribution od 2026-08-11 |
+| iOS | github.com/petrvitek70-pKv/Mastermind | ✅ v1.2.2 LIVE na App Store |
 | Android | github.com/petrvitek70-pKv/MastermindAndroid | ✅ v1.2.2 live od 2026-08-05 |
 | Web + API (tento repo) | github.com/petrvitek70-pKv/colegio.cz | ✅ live na colegio.cz |
 
