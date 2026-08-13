@@ -76,15 +76,49 @@ $avgScores = $db->query("
     FROM scores GROUP BY difficulty ORDER BY avg_score DESC
 ")->fetchAll(PDO::FETCH_ASSOC);
 
+// Cumulative unique players per day (all time)
+$cumulativePlayers = $db->query("
+    SELECT day, SUM(new_nicks) OVER (ORDER BY day) as total
+    FROM (
+        SELECT date(MIN(created_at)) as day, nickname, 1 as new_nicks
+        FROM scores GROUP BY nickname
+    ) GROUP BY day ORDER BY day
+")->fetchAll(PDO::FETCH_ASSOC);
+
+// Daily scores by platform (last 60 days)
+$dailyByPlatform = $db->query("
+    SELECT
+        date(created_at) as day,
+        CASE WHEN platform IS NULL OR platform = '' THEN 'unknown' ELSE platform END as platform,
+        COUNT(*) as cnt
+    FROM scores
+    WHERE created_at >= date('now', '-60 days')
+    GROUP BY day, platform ORDER BY day
+")->fetchAll(PDO::FETCH_ASSOC);
+
+// Difficulty over time — weekly counts (last 90 days)
+$diffByWeek = $db->query("
+    SELECT
+        strftime('%Y-W%W', created_at) as week,
+        difficulty,
+        COUNT(*) as cnt
+    FROM scores
+    WHERE created_at >= date('now', '-90 days')
+    GROUP BY week, difficulty ORDER BY week
+")->fetchAll(PDO::FETCH_ASSOC);
+
 jsonResponse([
-    'total'        => (int)$total,
-    'unique_nicks' => (int)$uniqueNicks,
-    'platforms'    => $platforms,
-    'countries'    => $countries,
-    'difficulties' => $difficulties,
-    'versions'     => $versions,
-    'languages'    => $languages,
-    'modes'        => $modes,
-    'daily'        => $daily,
-    'avg_scores'   => $avgScores,
+    'total'               => (int)$total,
+    'unique_nicks'        => (int)$uniqueNicks,
+    'platforms'           => $platforms,
+    'countries'           => $countries,
+    'difficulties'        => $difficulties,
+    'versions'            => $versions,
+    'languages'           => $languages,
+    'modes'               => $modes,
+    'daily'               => $daily,
+    'avg_scores'          => $avgScores,
+    'cumulative_players'  => $cumulativePlayers,
+    'daily_by_platform'   => $dailyByPlatform,
+    'diff_by_week'        => $diffByWeek,
 ]);

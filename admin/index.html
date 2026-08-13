@@ -81,6 +81,16 @@
   .spark-bar:hover::after { content: attr(data-tip); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
     background: #222; color: #fff; font-size: 11px; padding: 2px 6px; border-radius: 4px; white-space: nowrap; pointer-events: none; }
   .an-refresh { float: right; font-size: 12px; padding: 4px 10px; }
+  .line-chart { position: relative; height: 120px; margin-top: 12px; }
+  .line-chart svg { width: 100%; height: 100%; overflow: visible; }
+  .line-chart .grid-line { stroke: #1a1a2e; stroke-width: 1; }
+  .line-chart .axis-label { fill: #555; font-size: 10px; }
+  .chart-legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 8px; font-size: 12px; color: #888; }
+  .legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; }
+  .stacked-chart { position: relative; height: 100px; margin-top: 12px; display: flex; align-items: flex-end; gap: 3px; }
+  .stacked-col { display: flex; flex-direction: column-reverse; flex: 1; border-radius: 2px 2px 0 0; overflow: hidden; min-height: 2px; }
+  .stacked-seg { transition: height 0.3s; }
+  .chart-x-labels { display: flex; justify-content: space-between; font-size: 10px; color: #555; margin-top: 3px; }
 </style>
 </head>
 <body>
@@ -283,6 +293,38 @@
           <h3>📅 Skóre za posledních 30 dní</h3>
           <div id="an-daily-labels" style="display:flex;justify-content:space-between;font-size:11px;color:#555;margin-top:4px"></div>
           <div class="sparkline" id="an-sparkline"></div>
+        </div>
+
+        <!-- TIME CHART 1: Cumulative players -->
+        <div class="card" style="grid-column: span 2">
+          <h3>📈 Kumulativní hráči v čase</h3>
+          <div class="line-chart"><svg id="an-cumulative-svg" preserveAspectRatio="none"></svg></div>
+          <div class="chart-x-labels" id="an-cumulative-labels"></div>
+        </div>
+
+        <!-- TIME CHART 2: Daily scores by platform -->
+        <div class="card" style="grid-column: span 2">
+          <h3>📱 Denní skóre podle platformy (60 dní)</h3>
+          <div class="stacked-chart" id="an-platform-chart"></div>
+          <div class="chart-x-labels" id="an-platform-labels"></div>
+          <div class="chart-legend">
+            <span><span class="legend-dot" style="background:#56B4E9"></span>iOS</span>
+            <span><span class="legend-dot" style="background:#6bff8e"></span>Android</span>
+            <span><span class="legend-dot" style="background:#444"></span>Unknown</span>
+          </div>
+        </div>
+
+        <!-- TIME CHART 3: Difficulty by week -->
+        <div class="card" style="grid-column: span 2">
+          <h3>🎯 Obtížnost po týdnech (90 dní)</h3>
+          <div class="stacked-chart" id="an-diff-chart"></div>
+          <div class="chart-x-labels" id="an-diff-labels"></div>
+          <div class="chart-legend">
+            <span><span class="legend-dot" style="background:#6bff8e"></span>Easy</span>
+            <span><span class="legend-dot" style="background:#F0E442"></span>Medium</span>
+            <span><span class="legend-dot" style="background:#ff9944"></span>Classic</span>
+            <span><span class="legend-dot" style="background:#ff6b6b"></span>Hard</span>
+          </div>
         </div>
 
       </div>
@@ -678,6 +720,23 @@ function renderAnalytics(d) {
   const maxVer = Math.max(...d.versions.map(x=>parseInt(x.cnt)), 1);
   document.getElementById('an-versions').innerHTML = barRows(d.versions, 'app_version', 'cnt', maxVer, null);
 
+  // ── Cumulative players line chart ──
+  renderLineChart('an-cumulative-svg', 'an-cumulative-labels', d.cumulative_players, 'day', 'total', '#F0E442');
+
+  // ── Daily by platform stacked bars ──
+  renderStackedChart(
+    'an-platform-chart', 'an-platform-labels',
+    d.daily_by_platform, 'day', 'platform', 'cnt',
+    { ios: '#56B4E9', android: '#6bff8e', unknown: '#444' }
+  );
+
+  // ── Difficulty by week stacked bars ──
+  renderStackedChart(
+    'an-diff-chart', 'an-diff-labels',
+    d.diff_by_week, 'week', 'difficulty', 'cnt',
+    { easy: '#6bff8e', medium: '#F0E442', classic: '#ff9944', hard: '#ff6b6b' }
+  );
+
   // Sparkline
   const spark = document.getElementById('an-sparkline');
   spark.innerHTML = '';
@@ -695,6 +754,95 @@ function renderAnalytics(d) {
   const labels = document.getElementById('an-daily-labels');
   if (d.daily.length > 0) {
     labels.innerHTML = `<span>${d.daily[0].day}</span><span>${d.daily[d.daily.length-1].day}</span>`;
+  }
+}
+
+// ─── Time charts ──────────────────────────────────────────────────────────
+function renderLineChart(svgId, labelsId, data, xKey, yKey, color) {
+  const svg = document.getElementById(svgId);
+  svg.innerHTML = '';
+  if (!data || data.length === 0) { svg.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#555" font-size="12">Žádná data</text>'; return; }
+
+  const W = 800, H = 100, PAD = { t: 8, r: 8, b: 20, l: 32 };
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+  const vals = data.map(d => parseFloat(d[yKey]));
+  const minV = 0, maxV = Math.max(...vals, 1);
+  const n = data.length;
+
+  const px = i => PAD.l + (i / Math.max(n - 1, 1)) * (W - PAD.l - PAD.r);
+  const py = v => PAD.t + (1 - (v - minV) / (maxV - minV)) * (H - PAD.t - PAD.b);
+
+  // Grid lines
+  [0.25, 0.5, 0.75, 1].forEach(f => {
+    const y = PAD.t + (1 - f) * (H - PAD.t - PAD.b);
+    const v = Math.round(minV + f * (maxV - minV));
+    svg.innerHTML += `<line x1="${PAD.l}" y1="${y}" x2="${W - PAD.r}" y2="${y}" class="grid-line"/>
+      <text x="${PAD.l - 4}" y="${y + 3}" text-anchor="end" class="axis-label">${v}</text>`;
+  });
+
+  // Area fill
+  const pts = data.map((d, i) => `${px(i)},${py(parseFloat(d[yKey]))}`).join(' ');
+  const first = `${px(0)},${py(parseFloat(data[0][yKey]))}`;
+  const last  = `${px(n-1)},${py(parseFloat(data[n-1][yKey]))}`;
+  svg.innerHTML += `<polygon points="${first} ${pts} ${last} ${px(n-1)},${H - PAD.b} ${px(0)},${H - PAD.b}"
+    fill="${color}" opacity="0.12"/>`;
+
+  // Line
+  const path = data.map((d, i) => `${i === 0 ? 'M' : 'L'}${px(i)},${py(parseFloat(d[yKey]))}`).join(' ');
+  svg.innerHTML += `<path d="${path}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round"/>`;
+
+  // Dots (only if few points)
+  if (n <= 40) {
+    data.forEach((d, i) => {
+      svg.innerHTML += `<circle cx="${px(i)}" cy="${py(parseFloat(d[yKey]))}" r="3" fill="${color}">
+        <title>${d[xKey]}: ${d[yKey]}</title></circle>`;
+    });
+  }
+
+  // X labels (first + last)
+  const labelsEl = document.getElementById(labelsId);
+  if (labelsEl) labelsEl.innerHTML = `<span>${data[0][xKey]}</span><span>${data[n-1][xKey]}</span>`;
+}
+
+function renderStackedChart(chartId, labelsId, data, xKey, seriesKey, valKey, colorMap) {
+  const container = document.getElementById(chartId);
+  container.innerHTML = '';
+  if (!data || data.length === 0) { container.innerHTML = '<span style="color:#555;font-size:12px">Žádná data</span>'; return; }
+
+  // Group by x (day/week)
+  const grouped = {};
+  data.forEach(r => {
+    if (!grouped[r[xKey]]) grouped[r[xKey]] = {};
+    grouped[r[xKey]][r[seriesKey]] = parseInt(r[valKey]);
+  });
+  const days = Object.keys(grouped).sort();
+  const maxTotal = Math.max(...days.map(d => Object.values(grouped[d]).reduce((s, v) => s + v, 0)), 1);
+
+  days.forEach(day => {
+    const col = document.createElement('div');
+    col.className = 'stacked-col';
+    const total = Object.values(grouped[day]).reduce((s, v) => s + v, 0);
+    const pct = total / maxTotal * 96;
+    col.style.height = Math.max(pct, 2) + 'px';
+    col.title = day + ': ' + total;
+
+    Object.entries(colorMap).forEach(([series, color]) => {
+      const v = grouped[day][series] || 0;
+      if (v === 0) return;
+      const seg = document.createElement('div');
+      seg.className = 'stacked-seg';
+      seg.style.background = color;
+      seg.style.height = (v / total * 100) + '%';
+      seg.title = `${day} ${series}: ${v}`;
+      col.appendChild(seg);
+    });
+    container.appendChild(col);
+  });
+
+  const labelsEl = document.getElementById(labelsId);
+  if (labelsEl && days.length > 0) {
+    labelsEl.innerHTML = `<span>${days[0]}</span><span>${days[days.length-1]}</span>`;
   }
 }
 
