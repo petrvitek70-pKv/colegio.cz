@@ -1,7 +1,7 @@
 # Mastermind Web (colegio.cz) — Stav projektu
 
 > Tento soubor udržuj aktuální po každé větší změně. Slouží jako onboarding pro novou session nebo nového vývojáře.
-> Poslední aktualizace: 2026-08-13 (player_react_delete endpoint; oprava Android stavu na v1.2.2 live)
+> Poslední aktualizace: 2026-08-14 (tournament bot: garance free turnaje; v1.2.3 iOS In Review, Android LIVE)
 
 ---
 
@@ -11,8 +11,8 @@ Vydavatel: **Colegio Solutions s.r.o.**
 
 | Platforma | Repozitář | Stav |
 |-----------|-----------|------|
-| iOS | github.com/petrvitek70-pKv/Mastermind | ✅ v1.2.2 LIVE na App Store |
-| Android | github.com/petrvitek70-pKv/MastermindAndroid | ✅ v1.2.2 live od 2026-08-05 |
+| iOS | github.com/petrvitek70-pKv/Mastermind | ✅ v1.2.2 LIVE; v1.2.3 In Review |
+| Android | github.com/petrvitek70-pKv/MastermindAndroid | ✅ v1.2.3 LIVE od 2026-08-14 |
 | Web + API (tento repo) | github.com/petrvitek70-pKv/colegio.cz | ✅ live na colegio.cz |
 
 ---
@@ -46,7 +46,7 @@ api/
   score.php             — příjem a validace skóre (přepočítává server-side)
   leaderboard.php       — žebříček
   tournament.php        — turnaje (list, create, join, seed, submit, leaderboard, delete, disqualify)
-  tournament_bot.php    — bot pro automatické doplňování turnajů (volán přes GitHub Actions)
+  tournament_bot.php    — bot pro automatické doplňování turnajů (volán přes GitHub Actions každých 6h); garantuje vždy aspoň 1 free turnaj (easy/medium) mezi aktivními
   feedback.php          — zpětná vazba
 ```
 
