@@ -67,6 +67,13 @@ $count = (int)$db->query("
 $needed  = max(0, MIN_ACTIVE - $count);
 $created = [];
 
+// Check if there's already a free (easy/medium) tournament active
+$hasFree = (int)$db->query("
+    SELECT COUNT(*) FROM tournaments
+    WHERE ends_at > strftime('%s','now')
+      AND difficulty IN ('easy','medium')
+")->fetchColumn() > 0;
+
 if ($needed > 0) {
     // Determine colors based on difficulty (same logic as tournament.php)
     function randomSeedBot(string $difficulty, int $allowRepetition): array {
@@ -92,9 +99,24 @@ if ($needed > 0) {
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     ");
 
+    // Free templates for guaranteed easy/medium slot
+    $freeTemplates = [
+        ['Easy Open Challenge',  'easy',   'classic', 0],
+        ['Easy Blitz',           'easy',   'timed',   0],
+        ['Easy Weekend Cup',     'easy',   'classic', 0],
+        ['Medium Speed Run',     'medium', 'timed',   0],
+        ['Medium Precision Cup', 'medium', 'classic', 0],
+        ['Sprint Medium',        'medium', 'timed',   0],
+    ];
+
     $week = (int)date('W');
     for ($i = 0; $i < $needed; $i++) {
-        $tpl  = $templates[($week + $count + $i) % count($templates)];
+        // First slot: force free difficulty if none active yet
+        if ($i === 0 && !$hasFree) {
+            $tpl = $freeTemplates[$week % count($freeTemplates)];
+        } else {
+            $tpl = $templates[($week + $count + $i) % count($templates)];
+        }
         [$name, $diff, $mode, $rep] = $tpl;
         $now  = time();
         $seed = randomSeedBot($diff, $rep);
