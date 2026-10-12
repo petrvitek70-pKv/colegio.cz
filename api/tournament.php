@@ -310,7 +310,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'submit') {
     $issuedAt = (int)($entry['seed_issued_at'] ?? 0);
     if ($issuedAt > 0) {
         $elapsed = time() - $issuedAt;
-        $minRequired = $guesses * 5;  // at least 5s per guess
+        $minRequired = $guesses * 3;  // at least 3s per guess
         if ($elapsed < $minRequired) jsonResponse(['error' => 'Submitted too fast'], 400);
     }
 
@@ -322,7 +322,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'submit') {
     $isTimed = $t['game_mode'] === 'timed';
 
     if ($guesses < 1 || $guesses > $maxGuesses) jsonResponse(['error' => 'Invalid guesses'], 400);
-    if ($seconds < $guesses * 5)                jsonResponse(['error' => 'Invalid time'], 400);
+    if ($seconds < $guesses * 3)                jsonResponse(['error' => 'Invalid time'], 400);
 
     $guessBonus = match(true) {
         $guesses === 1 => 5000,
