@@ -120,15 +120,5 @@ if ($action === 'audit') {
     jsonResponse(['success' => true, 'deleted' => $stmt->rowCount(), 'entries' => $flagged]);
 }
 
-if ($action === 'tournament_unsubmitted') {
-    $rows = $db->query("
-        SELECT te.nickname, te.tournament_id, t.name, te.seed_issued_at, te.submitted_at
-        FROM tournament_entries te
-        JOIN tournaments t ON t.id = te.tournament_id
-        WHERE te.seed_issued_at IS NOT NULL AND te.submitted_at IS NULL
-        ORDER BY te.seed_issued_at DESC
-    ")->fetchAll(PDO::FETCH_ASSOC);
-    jsonResponse(['count' => count($rows), 'entries' => $rows]);
-}
 
 jsonResponse(['error' => 'Unknown action'], 422);
