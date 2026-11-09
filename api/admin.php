@@ -30,7 +30,7 @@ $DIFFICULTY_LIMITS = [
     'easy'    => ['maxGuesses' => 12, 'scoreMultiplier' => 1],
     'medium'  => ['maxGuesses' => 10, 'scoreMultiplier' => 3],
     'classic' => ['maxGuesses' => 10, 'scoreMultiplier' => 4],
-    'hard'    => ['maxGuesses' =>  8, 'scoreMultiplier' => 6],
+    'hard'    => ['maxGuesses' =>  8, 'scoreMaxGuesses' => 10, 'scoreMultiplier' => 6],
 ];
 
 $action = $body['action'] ?? '';
@@ -70,7 +70,7 @@ if ($action === 'audit') {
         $score   = (int)$row['score'];
         $isTimed    = (int)($row['timed']      ?? 0) === 1;
         $repetition = (int)($row['repetition'] ?? 0) === 1;
-        $maxG    = $limits['maxGuesses'];
+        $maxG    = $limits['scoreMaxGuesses'] ?? $limits['maxGuesses'];
         $mult    = $limits['scoreMultiplier'] * ($repetition ? 2 : 1);
 
         $reasons = [];
@@ -120,5 +120,24 @@ if ($action === 'audit') {
     jsonResponse(['success' => true, 'deleted' => $stmt->rowCount(), 'entries' => $flagged]);
 }
 
+
+// Jednorázový přepočet Hard skóre na nový vzorec (scoreMaxGuesses=10)
+if ($action === 'recalc_hard') {
+    $rows = $db->query("SELECT * FROM scores WHERE difficulty='hard'")->fetchAll(PDO::FETCH_ASSOC);
+    $updated = 0;
+    foreach ($rows as $row) {
+        $guesses    = (int)$row['guesses'];
+        $ms         = (int)($row['ms'] ?? 0) ?: (int)$row['seconds'] * 1000;
+        $isTimed    = (int)($row['timed']      ?? 0) === 1;
+        $repetition = (int)($row['repetition'] ?? 0) === 1;
+        $mult       = 6 * ($repetition ? 2 : 1);
+        $newScore   = computeExpectedScore($guesses, 10, $ms, $isTimed, $mult);
+        if ($newScore !== (int)$row['score']) {
+            $db->prepare("UPDATE scores SET score=? WHERE id=?")->execute([$newScore, $row['id']]);
+            $updated++;
+        }
+    }
+    jsonResponse(['success' => true, 'recalculated' => $updated, 'total_hard' => count($rows)]);
+}
 
 jsonResponse(['error' => 'Unknown action'], 422);

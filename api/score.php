@@ -21,7 +21,7 @@ $DIFFICULTY_LIMITS = [
     'easy'    => ['maxGuesses' => 12, 'scoreMultiplier' => 1],
     'medium'  => ['maxGuesses' => 10, 'scoreMultiplier' => 3],
     'classic' => ['maxGuesses' => 10, 'scoreMultiplier' => 4],
-    'hard'    => ['maxGuesses' =>  8, 'scoreMultiplier' => 6],
+    'hard'    => ['maxGuesses' =>  8, 'scoreMaxGuesses' => 10, 'scoreMultiplier' => 6],
 ];
 
 // Přepočet skóre — identický s GameLogic (iOS + Android)
@@ -95,8 +95,9 @@ if ($ms < $guesses * 5000) {
 }
 
 // Přepočet skóre — musí přesně odpovídat algoritmu hry
-$scoreMultiplier = $limits['scoreMultiplier'] * ($repetition ? 2 : 1);
-$expected = computeScore($guesses, $limits['maxGuesses'], $ms, $isTimed, $scoreMultiplier);
+$scoreMultiplier  = $limits['scoreMultiplier'] * ($repetition ? 2 : 1);
+$scoreMaxGuesses  = $limits['scoreMaxGuesses'] ?? $limits['maxGuesses'];
+$expected = computeScore($guesses, $scoreMaxGuesses, $ms, $isTimed, $scoreMultiplier);
 if ($score !== $expected) {
     jsonResponse(['error' => 'Score does not match game parameters'], 422);
 }

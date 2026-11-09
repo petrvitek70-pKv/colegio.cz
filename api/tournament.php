@@ -316,7 +316,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'submit') {
 
     // Validate score server-side
     $seed = json_decode($t['seed'], true);
-    $maxGuesses = match($t['difficulty']) { 'easy' => 12, 'hard' => 8, default => 10 };
+    $maxGuesses      = match($t['difficulty']) { 'easy' => 12, 'hard' => 8, default => 10 };
+    $scoreMaxGuesses = match($t['difficulty']) { 'hard' => 10, default => $maxGuesses };
     $scoreMultiplier = match($t['difficulty']) { 'easy' => 1, 'medium' => 3, 'classic' => 4, 'hard' => 6 };
     if ($t['allow_repetition']) $scoreMultiplier *= 2;
     $isTimed = $t['game_mode'] === 'timed';
@@ -327,7 +328,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'submit') {
     $guessBonus = match(true) {
         $guesses === 1 => 5000,
         $guesses === 2 => 3000,
-        default        => ($maxGuesses - $guesses) * 500,
+        default        => ($scoreMaxGuesses - $guesses) * 500,
     };
     $modeMultiplier  = $isTimed ? 2 : 1;
     // Accept score computed either way: ms-precision (new clients) or seconds*5 (old clients without ms)
