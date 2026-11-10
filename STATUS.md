@@ -1,7 +1,7 @@
 # Mastermind Web (colegio.cz) — Stav projektu
 
 > Tento soubor udržuj aktuální po každé větší změně. Slouží jako onboarding pro novou session nebo nového vývojáře.
-> Poslední aktualizace: 2026-08-14 (tournament bot: garance free turnaje; v1.2.3 iOS In Review, Android LIVE)
+> Poslední aktualizace: 2026-11-10 (přesun webu na hosting Colegio_hosting, ochrana data/ před stažením)
 
 ---
 
@@ -19,7 +19,7 @@ Vydavatel: **Colegio Solutions s.r.o.**
 
 ## Web — aktuální stav
 
-- ✅ **Live na colegio.cz** — HTTPS (Let's Encrypt), hosting Active24
+- ✅ **Live na colegio.cz** — HTTPS (Let's Encrypt, platnost do 15. 1. 2027), hosting Active24 **Colegio_hosting** (od 10. 11. 2026; dříve hosting hotairballoons_cz). Web leží ve složce `/colegio.cz/web` tohoto hostingu, vedle lachez.eu.
 - ✅ **GitHub Actions deploy** — každý push na `main` se automaticky deployuje přes FTP
 - ✅ **App Store tlačítko** — živý odkaz (iOS schválena)
 - ✅ **Google Play tlačítko** — živý odkaz (Android schválen)
@@ -98,9 +98,14 @@ Admin klíč je **pouze na serveru** v `config.local.php`, není v repozitáři.
 
 Push na `main` → GitHub Actions → FTP na Active24 → live za ~30 sekund.
 
-Secrets v GitHub repozitáři: `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`, `FTP_SERVER_DIR`, `TOURNAMENT_BOT_KEY`
+Secrets v GitHub repozitáři: `FTP_SERVER` (colegio.cz), `FTP_USERNAME` (FTP účet `deploy.colegio.cz` s kořenem přímo ve webu), `FTP_PASSWORD`, `FTP_SERVER_DIR` (`/`), `TOURNAMENT_BOT_KEY`, `ADMIN_SECRET` (audit)
 
 Vyloučeno z deploye: `.git*`, `data/`, `.DS_Store`
+
+**Jen na serveru (mimo git, při přesunu přenášet ručně):** `data/scores.db`, `data/feedback.db`, `config.local.php`, `data/.htaccess` (`Require all denied` — od 10. 11. 2026 brání stažení SQLite souborů přes web; do té doby byly `data/*.db` veřejně dostupné).
+
+### Přesun hostingu 10. 11. 2026
+hotairballoons_cz → Colegio_hosting (stejný účet Active24). DNS se neměnilo (A 37.9.175.163, frontendy Active24 směrují podle domény; MX smtp.google.com; doména i DNS zóna u Webglobe, účet Colegio Solutions). Záloha před přesunem: `~/Desktop/ebclaude/zaloha-colegio-cz/20261011/` (mimo git; 2605 skóre, 132 turnajů, 275 účastí, 8 zpětných vazeb). Postup a odchylky: `ebclaude/Lachez/release/prototyping/output/2026-11-10-presun-colegio/POSTUP.md`. Výpadek ~20:40–21:05 CET. Stará složka na hotairballoons_cz byla při odpojení domény smazána (záloha stažena předem). Ověřeno po přesunu: web, www, rewrite, API, zápis skóre, admin, deploy #141.
 
 ---
 
