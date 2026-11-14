@@ -1,7 +1,7 @@
 # Mastermind Web (colegio.cz) — Stav projektu
 
 > Tento soubor udržuj aktuální po každé větší změně. Slouží jako onboarding pro novou session nebo nového vývojáře.
-> Poslední aktualizace: 2026-11-10 (přesun webu na hosting Colegio_hosting, ochrana data/ před stažením)
+> Poslední aktualizace: 2026-11-15 (terms+privacy rozšířeny na Android/Google Play)
 
 ---
 
