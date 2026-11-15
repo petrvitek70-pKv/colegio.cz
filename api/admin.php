@@ -142,4 +142,53 @@ if ($action === 'recalc_hard') {
     jsonResponse(['success' => true, 'recalculated' => $updated, 'total_hard' => count($rows)]);
 }
 
+// Jednorázová obnova Hard záznamů smazaných auditem #98 (9. 11. 2026); dry_run=true jen ukáže náhled
+if ($action === 'restore_hard') {
+    $rows   = $body['rows'] ?? [];
+    $dryRun = ($body['dry_run'] ?? true) !== false;
+    if (!is_array($rows) || !$rows) jsonResponse(['error' => 'No rows'], 422);
+
+    $exists   = $db->prepare('SELECT 1 FROM scores WHERE id=?');
+    $profile  = $db->prepare("SELECT platform, app_version, app_lang, country FROM scores
+                              WHERE nickname=? AND platform<>'' ORDER BY ABS(id-?) LIMIT 1");
+    $before   = $db->prepare('SELECT created_at FROM scores WHERE id<? ORDER BY id DESC LIMIT 1');
+    $after    = $db->prepare('SELECT created_at FROM scores WHERE id>? ORDER BY id ASC LIMIT 1');
+    $insert   = $db->prepare('INSERT INTO scores (id, nickname, score, difficulty, guesses, seconds, ms, timed, repetition,
+                              platform, app_version, app_lang, country, created_at)
+                              VALUES (?, ?, ?, \'hard\', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+
+    $out = ['restored' => 0, 'skipped_existing' => 0, 'with_profile' => 0, 'preview' => []];
+    if (!$dryRun) $db->beginTransaction();
+    foreach ($rows as [$id, $nick, $oldScore, $g, $sec, $timed, $rep]) {
+        $exists->execute([$id]);
+        if ($exists->fetchColumn()) { $out['skipped_existing']++; continue; }
+
+        $mult = 6 * ($rep ? 2 : 1);
+        $mode = $timed ? 2 : 1;
+        // Přesná penalizace se dá dopočítat z původního skóre (starý vzorec maxGuesses=8)
+        $oldBonus = $g === 1 ? 5000 : ($g === 2 ? 3000 : (8 - $g) * 500);
+        if (!$timed && $oldScore > 0) {
+            $pen = $oldBonus - intdiv($oldScore, $mult);
+            $ms  = $pen * 200 + 100;
+        } else {
+            $ms  = $sec * 1000;
+        }
+        $newScore = computeExpectedScore($g, 10, $ms, (bool)$timed, $mult);
+
+        $profile->execute([$nick, $id]);
+        $p = $profile->fetch(PDO::FETCH_ASSOC) ?: ['platform' => '', 'app_version' => '', 'app_lang' => '', 'country' => ''];
+        if ($p['platform'] !== '') $out['with_profile']++;
+        $before->execute([$id]); $date = $before->fetchColumn();
+        if (!$date) { $after->execute([$id]); $date = $after->fetchColumn(); }
+
+        $rec = [$id, $nick, $newScore, $g, $sec, $ms, $timed, $rep, $p['platform'], $p['app_version'], $p['app_lang'], $p['country'], $date];
+        if (count($out['preview']) < 15) $out['preview'][] = $rec;
+        if (!$dryRun) $insert->execute($rec);
+        $out['restored']++;
+    }
+    if (!$dryRun) $db->commit();
+    $out['dry_run'] = $dryRun;
+    jsonResponse(['success' => true] + $out);
+}
+
 jsonResponse(['error' => 'Unknown action'], 422);

@@ -11,6 +11,12 @@ jobs:
     env:
       ADMIN_SECRET: ${{ secrets.ADMIN_SECRET }}
     steps:
+      - name: Recalc Hard scores (přechod v1.2.5)
+        run: |
+          curl -s -X POST https://colegio.cz/api/admin.php \
+            -H "Content-Type: application/json" \
+            -d "{\"admin_secret\":\"${ADMIN_SECRET}\",\"action\":\"recalc_hard\"}"
+          echo
       - name: Run leaderboard audit
         run: |
           RESPONSE=$(curl -s -X POST https://colegio.cz/api/admin.php \

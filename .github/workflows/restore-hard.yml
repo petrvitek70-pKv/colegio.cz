@@ -1,0 +1,29 @@
+name: Restore Hard (audit 98)
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Jen náhled, nic nezapisovat'
+        type: boolean
+        default: true
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    env:
+      ADMIN_SECRET: ${{ secrets.ADMIN_SECRET }}
+      DRY_RUN: ${{ inputs.dry_run }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore deleted Hard scores
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request
+          rows = json.load(open('data-recovery/2026-11-09_audit98_deleted_hard.json'))['rows']
+          body = {'admin_secret': os.environ['ADMIN_SECRET'], 'action': 'restore_hard',
+                  'dry_run': os.environ['DRY_RUN'] == 'true', 'rows': rows}
+          req = urllib.request.Request('https://colegio.cz/api/admin.php', data=json.dumps(body).encode(),
+                  headers={'Content-Type': 'application/json', 'User-Agent': 'colegio-admin-workflow'})
+          print(json.dumps(json.load(urllib.request.urlopen(req)), ensure_ascii=False, indent=1))
+          PY
