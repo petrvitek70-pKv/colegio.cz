@@ -1,7 +1,7 @@
 # Mastermind Web (colegio.cz) — Stav projektu
 
 > Tento soubor udržuj aktuální po každé větší změně. Slouží jako onboarding pro novou session nebo nového vývojáře.
-> Poslední aktualizace: 2026-11-15 (terms+privacy rozšířeny na Android/Google Play)
+> Poslední aktualizace: 2026-11-15 (Hard rebalancing přechod, obnova 188 Hard záznamů, terms+privacy pro Android)
 
 ---
 
@@ -11,11 +11,19 @@ Vydavatel: **Colegio Solutions s.r.o.**
 
 | Platforma | Repozitář | Stav |
 |-----------|-----------|------|
-| iOS | github.com/petrvitek70-pKv/Mastermind | ✅ v1.2.2 LIVE; v1.2.3 In Review |
-| Android | github.com/petrvitek70-pKv/MastermindAndroid | ✅ v1.2.3 LIVE od 2026-08-14 |
+| iOS | github.com/petrvitek70-pKv/Mastermind | ✅ v1.2.4 LIVE; v1.2.5 (build 10) Waiting for Review od 2026-11-15 (Hard rebalancing) |
+| Android | github.com/petrvitek70-pKv/MastermindAndroid | ✅ v1.2.4 LIVE; v1.2.5 (versionCode 9) v kontrole Google od 2026-11-15 (Hard rebalancing) |
 | Web + API (tento repo) | github.com/petrvitek70-pKv/colegio.cz | ✅ live na colegio.cz |
 
 ---
+
+## Hard rebalancing v1.2.5 — přechodné období (od 2026-11-15)
+
+- Nový vzorec Hard: bonus počítá s `scoreMaxGuesses=10` (hra dál 8 pokusů) → Hard = 1,5× Classic. Nasazeno 9. 11. (commit 8cf9683).
+- **Incident 9. 11.:** audit (běh #98) porovnal staré Hard záznamy s novým vzorcem a smazal 188. Obnoveno 15. 11. akcí `restore_hard` (workflow *Restore Hard (audit 98)*) z logu GitHub Actions — záloha v `data-recovery/` (mimo deploy). Profil (platforma/verze/jazyk/země) doplněn z nesmazaných záznamů hráče, datum z nejbližšího ID, ms dopočteny z původního skóre (u timed a skóre 0 jen celé sekundy). Hard má 206 záznamů.
+- **Přechod:** `score.php`, `tournament.php` a audit přijímají u Hard starý i nový vzorec (appky ≤1.2.4). Noční workflow *Leaderboard Audit* (03:00) nejdřív spouští `recalc_hard` → všechny Hard záznamy v žebříčku na nový vzorec. Turnaje se nepřepočítávají (rozhodnutí Petra).
+- **Úklid po přechodu hráčů na 1.2.5:** odstranit větve „Přechod v1.2.5" ze score/tournament/admin.php, krok recalc z `leaderboard-audit.yml`, akci `restore_hard` a workflow `restore-hard.yml`.
+- ⚠️ Při každé změně vzorce skóre nejdřív ošetřit noční audit — maže vše, co novému vzorci neodpovídá.
 
 ## Web — aktuální stav
 
