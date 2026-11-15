@@ -88,7 +88,9 @@ if ($action === 'audit') {
         // Pravidlo 3: skóre neodpovídá uloženému módu
         if (empty($reasons)) {
             $expected = computeExpectedScore($guesses, $maxG, $ms, $isTimed, $mult);
-            if ($score !== $expected) {
+            // Přechod v1.2.5: Hard záznamy ze starých appek (maxGuesses=8) nemazat — odstranit po recalc_hard
+            $expectedLegacy = computeExpectedScore($guesses, $limits['maxGuesses'], $ms, $isTimed, $mult);
+            if ($score !== $expected && $score !== $expectedLegacy) {
                 $reasons[] = "score mismatch (got=$score, expected=$expected, timed=" . ($isTimed?'true':'false') . ")";
             }
         }

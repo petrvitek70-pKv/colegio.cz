@@ -98,7 +98,9 @@ if ($ms < $guesses * 5000) {
 $scoreMultiplier  = $limits['scoreMultiplier'] * ($repetition ? 2 : 1);
 $scoreMaxGuesses  = $limits['scoreMaxGuesses'] ?? $limits['maxGuesses'];
 $expected = computeScore($guesses, $scoreMaxGuesses, $ms, $isTimed, $scoreMultiplier);
-if ($score !== $expected) {
+// Přechod v1.2.5: appky ≤1.2.4 počítají Hard ještě s maxGuesses=8 — odstranit po recalc_hard
+$expectedLegacy = computeScore($guesses, $limits['maxGuesses'], $ms, $isTimed, $scoreMultiplier);
+if ($score !== $expected && $score !== $expectedLegacy) {
     jsonResponse(['error' => 'Score does not match game parameters'], 422);
 }
 

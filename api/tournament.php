@@ -336,7 +336,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'submit') {
     $penaltySec = $isTimed ? 0 : $seconds * 5;
     $expectedMs  = max(0, ($guessBonus - $penaltyMs)  * $scoreMultiplier * $modeMultiplier);
     $expectedSec = max(0, ($guessBonus - $penaltySec) * $scoreMultiplier * $modeMultiplier);
-    if ($score !== $expectedMs && $score !== $expectedSec) {
+    // Přechod v1.2.5: appky ≤1.2.4 počítají Hard s maxGuesses=8 — odstranit po recalc_hard
+    $legacyBonus  = $guesses <= 2 ? $guessBonus : ($maxGuesses - $guesses) * 500;
+    $legacyMs     = max(0, ($legacyBonus - $penaltyMs)  * $scoreMultiplier * $modeMultiplier);
+    $legacySec    = max(0, ($legacyBonus - $penaltySec) * $scoreMultiplier * $modeMultiplier);
+    if (!in_array($score, [$expectedMs, $expectedSec, $legacyMs, $legacySec], true)) {
         jsonResponse(['error' => 'Score mismatch: expected '.$expectedMs.' or '.$expectedSec.' got '.$score], 400);
     }
 
