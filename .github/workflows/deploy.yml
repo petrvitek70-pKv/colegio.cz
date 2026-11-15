@@ -24,5 +24,6 @@ jobs:
             **/.git*
             **/.git*/**
             **/data/**
+            **/data-recovery/**
             **/.DS_Store
             **/Thumbs.db
