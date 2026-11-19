@@ -19,7 +19,7 @@ if ($difficulty === 'all') {
     $stmt = $db->prepare(
         'SELECT nickname, score, difficulty, guesses, seconds, ms, timed, repetition, created_at
          FROM scores
-         ORDER BY score DESC
+         ORDER BY score DESC, COALESCE(ms, seconds*1000) ASC, created_at ASC
          LIMIT ? OFFSET ?'
     );
     $stmt->execute([$limit, $offset]);
@@ -34,7 +34,7 @@ if ($difficulty === 'all') {
         'SELECT nickname, score, difficulty, guesses, seconds, ms, timed, repetition, created_at
          FROM scores
          WHERE difficulty = ?
-         ORDER BY score DESC
+         ORDER BY score DESC, COALESCE(ms, seconds*1000) ASC, created_at ASC
          LIMIT ? OFFSET ?'
     );
     $stmt->execute([$difficulty, $limit, $offset]);
@@ -71,13 +71,14 @@ if ($myNick !== '') {
             $myStmt = $db->prepare(
                 'SELECT nickname, score, difficulty, guesses, seconds, ms, timed, repetition, created_at
                  FROM scores WHERE nickname = ?
-                 ORDER BY score DESC LIMIT 1'
+                 ORDER BY score DESC, COALESCE(ms, seconds*1000) ASC, created_at ASC LIMIT 1'
             );
             $myStmt->execute([$myNick]);
             $myRow = $myStmt->fetch(PDO::FETCH_ASSOC);
             if ($myRow) {
-                $rankStmt = $db->prepare('SELECT COUNT(*) FROM scores WHERE score > ?');
-                $rankStmt->execute([(int)$myRow['score']]);
+                $rankStmt = $db->prepare('SELECT COUNT(*) FROM scores WHERE score > ? OR (score = ? AND COALESCE(ms, seconds*1000) < ?)');
+                $myMs = (int)($myRow['ms'] ?? ((int)$myRow['seconds'] * 1000));
+                $rankStmt->execute([(int)$myRow['score'], (int)$myRow['score'], $myMs]);
                 $myRank = (int)$rankStmt->fetchColumn() + 1;
                 $myEntry = buildEntry($myRow, $myRank);
             }
@@ -85,13 +86,14 @@ if ($myNick !== '') {
             $myStmt = $db->prepare(
                 'SELECT nickname, score, difficulty, guesses, seconds, ms, timed, repetition, created_at
                  FROM scores WHERE nickname = ? AND difficulty = ?
-                 ORDER BY score DESC LIMIT 1'
+                 ORDER BY score DESC, COALESCE(ms, seconds*1000) ASC, created_at ASC LIMIT 1'
             );
             $myStmt->execute([$myNick, $difficulty]);
             $myRow = $myStmt->fetch(PDO::FETCH_ASSOC);
             if ($myRow) {
-                $rankStmt = $db->prepare('SELECT COUNT(*) FROM scores WHERE difficulty = ? AND score > ?');
-                $rankStmt->execute([$difficulty, (int)$myRow['score']]);
+                $rankStmt = $db->prepare('SELECT COUNT(*) FROM scores WHERE difficulty = ? AND (score > ? OR (score = ? AND COALESCE(ms, seconds*1000) < ?))');
+                $myMs = (int)($myRow['ms'] ?? ((int)$myRow['seconds'] * 1000));
+                $rankStmt->execute([$difficulty, (int)$myRow['score'], (int)$myRow['score'], $myMs]);
                 $myRank = (int)$rankStmt->fetchColumn() + 1;
                 $myEntry = buildEntry($myRow, $myRank);
             }
