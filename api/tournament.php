@@ -228,7 +228,7 @@ if ($action === 'leaderboard') {
         SELECT nickname, score, guesses, seconds, ms, submitted_at
         FROM tournament_entries
         WHERE tournament_id = ? AND submitted_at IS NOT NULL
-        ORDER BY score DESC, guesses ASC, seconds ASC
+        ORDER BY score DESC, guesses ASC, CASE WHEN ms > 0 THEN ms ELSE seconds * 1000 END ASC, submitted_at ASC
         LIMIT 100
     ");
     $stmt->execute([$id]);
@@ -484,7 +484,7 @@ if ($action === 'entries') {
             SELECT nickname, score, guesses, seconds, seed_issued_at, submitted_at
             FROM tournament_entries
             WHERE tournament_id = ?
-            ORDER BY score DESC, guesses ASC, seconds ASC
+            ORDER BY score DESC, guesses ASC, CASE WHEN ms > 0 THEN ms ELSE seconds * 1000 END ASC, submitted_at ASC
         ");
         $stmt->execute([$id]);
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
