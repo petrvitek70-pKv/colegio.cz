@@ -21,6 +21,9 @@ $platforms = $db->query("
     FROM scores GROUP BY platform ORDER BY cnt DESC
 ")->fetchAll(PDO::FETCH_ASSOC);
 
+// Počet všech zemí (bez prázdných)
+$countryCount = (int)$db->query("SELECT COUNT(DISTINCT country) FROM scores WHERE country IS NOT NULL AND country <> ''")->fetchColumn();
+
 // Country top 15
 $countries = $db->query("
     SELECT
@@ -117,6 +120,7 @@ jsonResponse([
     'unique_nicks'        => (int)$uniqueNicks,
     'platforms'           => $platforms,
     'countries'           => $countries,
+    'country_count'       => $countryCount,
     'difficulties'        => $difficulties,
     'versions'            => $versions,
     'languages'           => $languages,

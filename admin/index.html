@@ -685,7 +685,7 @@ function renderAnalytics(d) {
   document.getElementById('an-kpis').innerHTML = `
     <div class="stat"><div class="val">${d.total}</div><div class="lbl">Celkem skóre</div></div>
     <div class="stat"><div class="val">${d.unique_nicks}</div><div class="lbl">Unikátních hráčů</div></div>
-    <div class="stat"><div class="val">${d.countries.filter(c=>c.country!=='unknown').length}</div><div class="lbl">Zemí</div></div>
+    <div class="stat"><div class="val">${d.country_count ?? d.countries.filter(c=>c.country!=='unknown').length}</div><div class="lbl">Zemí</div></div>
     <div class="stat"><div class="val">${d.daily.reduce((s,x)=>s+parseInt(x.cnt),0)}</div><div class="lbl">Skóre za 30 dní</div></div>`;
 
   // Platforms
