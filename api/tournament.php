@@ -331,17 +331,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'submit') {
         default        => ($scoreMaxGuesses - $guesses) * 500,
     };
     $modeMultiplier  = $isTimed ? 2 : 1;
-    // Accept score computed either way: ms-precision (new clients) or seconds*5 (old clients without ms)
+    // Penalizace z ms (appky posílají ms od v1.2.3; bez ms se bere seconds*1000 → totéž co seconds*5)
     $penaltyMs  = $isTimed ? 0 : (int)floor($ms * 0.005);
-    $penaltySec = $isTimed ? 0 : $seconds * 5;
     $expectedMs  = max(0, ($guessBonus - $penaltyMs)  * $scoreMultiplier * $modeMultiplier);
-    $expectedSec = max(0, ($guessBonus - $penaltySec) * $scoreMultiplier * $modeMultiplier);
     // Přechod v1.2.5: appky ≤1.2.4 počítají Hard s maxGuesses=8 — odstranit po recalc_hard
     $legacyBonus  = $guesses <= 2 ? $guessBonus : ($maxGuesses - $guesses) * 500;
     $legacyMs     = max(0, ($legacyBonus - $penaltyMs)  * $scoreMultiplier * $modeMultiplier);
-    $legacySec    = max(0, ($legacyBonus - $penaltySec) * $scoreMultiplier * $modeMultiplier);
-    if (!in_array($score, [$expectedMs, $expectedSec, $legacyMs, $legacySec], true)) {
-        jsonResponse(['error' => 'Score mismatch: expected '.$expectedMs.' or '.$expectedSec.' got '.$score], 400);
+    if (!in_array($score, [$expectedMs, $legacyMs], true)) {
+        jsonResponse(['error' => 'Score mismatch: expected '.$expectedMs.' got '.$score], 400);
     }
 
     $stmt = $db->prepare("
