@@ -1,0 +1,29 @@
+name: Uptime Check
+
+# Každých 15 minut ověří web a API. Při výpadku job selže → GitHub pošle e-mail
+# o neúspěšném běhu (uživateli, který naposledy upravil tento cron).
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check colegio.cz + API (3 pokusy po 60 s)
+        run: |
+          urls="https://colegio.cz/ https://colegio.cz/api/leaderboard.php?limit=1 https://colegio.cz/api/tournament.php?action=list"
+          for attempt in 1 2 3; do
+            failed=""
+            for u in $urls; do
+              code=$(curl -s -o /dev/null -m 20 -w "%{http_code}" "$u" || echo 000)
+              echo "pokus $attempt: $u → $code"
+              [ "$code" = "200" ] || failed="$failed $u($code)"
+            done
+            [ -z "$failed" ] && { echo "OK"; exit 0; }
+            [ $attempt -lt 3 ] && sleep 60
+          done
+          echo "::error::colegio.cz nedostupné:$failed"
+          exit 1
